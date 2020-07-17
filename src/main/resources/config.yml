@@ -1,0 +1,52 @@
+######################################################################
+#   ______    _________________________     ______          ______   #
+#  |      \   \                        |   |      \        /      |  #
+#  |       \   \    ___________________|   |       \      /       |  #
+#  |   |\   \   \   \                      |   |\   \    /   /|   |  #
+#  |   | \   \   \   \                     |   | \   \  /   / |   |  #
+#  |   |__\   \   \   \     ___________    |   |  \   \/   /  |   |  #
+#  |           \   \   \    \          |   |   |   \      /   |   |  #
+#  |    ____    \   \   \    \_____    |   |   |    \____/    |   |  #
+#  |   |    \    \   \   \         |   |   |   |              |   |  #
+#  |   |     \    \   \   \________|   |   |   |              |   |  #
+#  |   |      \    \   \               |   |   |              |   |  #
+#  |___|       \____\   \______________|   |___|              |___|  #
+#                                                                    #
+######################################################################
+#  AGM Ranks                                                         #
+#  Website: https://agmdev.xyz/                                      #
+#  Discord: https://agmdev.xyz/discord                               #
+#  Wiki: Would be added in next updates                              #
+######################################################################
+
+Prefix: AGMEnchants
+
+Debug:
+  Enable: false
+  General: true
+  Enchants: true
+  Users: true
+  GUI: true
+  Vault: true
+  PlaceholderAPI: true
+
+InGameMessages:
+  Info: true
+  Debug: true
+  Warning: true
+
+ItemsList:
+  SWORDS:
+    - NETHERITE_SWORD
+    - DIAMOND_SWORD
+    - IRON_SWORD
+    - GOLD_SWORD
+    - STONE_SWORD
+    - WOODEN_SWORD
+  AXES:
+    - NETHERITE_AXE
+    - DIAMOND_AXE
+    - IRON_AXE
+    - GOLD_AXE
+    - STONE_AXE
+    - WOODEN_AXE
