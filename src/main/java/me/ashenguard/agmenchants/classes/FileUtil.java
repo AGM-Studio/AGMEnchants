@@ -1,28 +1,26 @@
 package me.ashenguard.agmenchants.classes;
 
-import me.ashenguard.agmenchants.AGMEnchants;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 public class FileUtil {
 
-    public static List<Class<?>> getClasses(String folder, Class<?> type) {
+    public static List<Class<?>> getClasses(File folder, Class<?> type) {
         return getClasses(folder, null, type);
     }
 
-    public static List<Class<?>> getClasses(String folder, String fileName, Class<?> type) {
+    public static List<Class<?>> getClasses(File folder, String fileName, Class<?> type) {
         List<Class<?>> list = new ArrayList<>();
 
         try {
-            File f = new File(AGMEnchants.getInstance().getDataFolder(), folder);
-            if (!f.exists()) return list;
+            if (!folder.exists()) return list;
 
             FilenameFilter fileNameFilter = (dir, name) -> {
                 boolean isJar = name.endsWith(".jar");
@@ -34,9 +32,11 @@ public class FileUtil {
                 return isJar;
             };
 
-            File[] jars = f.listFiles(fileNameFilter);
+            File[] jars = folder.listFiles(fileNameFilter);
             if (jars == null) return list;
 
+            System.out.println("Found these jars");
+            System.out.println(Arrays.toString(jars));
             for (File file : jars) {
                 gather(file.toURI().toURL(), list, type);
             }

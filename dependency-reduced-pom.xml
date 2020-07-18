@@ -4,7 +4,7 @@
   <groupId>me.ashenguard</groupId>
   <artifactId>AGMEnchants</artifactId>
   <name>AGMEnchants</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <description>More magics in game</description>
   <url>https://agmdev.xyz</url>
   <build>
