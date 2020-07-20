@@ -6,3 +6,34 @@ softdepend: [PlaceholderAPI, Vault]
 authors: [Ashenguard]
 description: More magics in game
 website: https://agmdev.xyz
+commands:
+  CustomEnchantments:
+    description: Access to enchantments list
+    aliases: [ce, customenchants, enchants]
+
+permissions:
+  AGMEnchants.*:
+    description: All perms
+    default: op
+    children:
+      - AGMEnchants.admin
+      - AGMEnchants.Messages.*
+    AGMEnchants.admin:
+      description: AGMEnchants command permission
+      default: op
+    AGMEnchants.Messages.*:
+      description: All messages perms
+      default: op
+      children:
+        - AGMEnchants.Messages.Info
+        - AGMEnchants.Messages.Warning
+        - AGMEnchants.Messages.Debug
+    AGMEnchants.Messages.Info:
+      description: Allows in game Info messages
+      default: op
+    AGMEnchants.Messages.Warning:
+      description: Allows in game Warning messages
+      default: op
+    AGMEnchants.Messages.Debug:
+      description: Allows in game Debug messages
+      default: op

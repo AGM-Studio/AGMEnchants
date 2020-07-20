@@ -7,15 +7,6 @@
 
 GUI:
   Title: AGMRanks
-  PlayerInfo:
-    Material:
-      ID: Player_Head
-      Value: self
-    Name: '&e&l%player_name%'
-    Lore:
-      - '&dYour Balance&7: &6%vault_eco_balance%'
-      - '&5Current Rank&7: &6%AGMRanks_RankName%'
-      - '&2Rank UP Cost&7: &6%AGMRanks_Next_RankCost%'
   TopBorder:
     Material:
       ID: YELLOW_STAINED_GLASS_PANE
@@ -34,58 +25,3 @@ GUI:
       Value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE1M2QwNDc5N2I0N2E2ODQ4NGQxMTEwMjVkOTQwYTM0ODg2YTBmYThkYzgwNmU3NDU3MDI0YTg3ZjFhYmQ1NiJ9fX0=
     Name: '&e&lMove to left'
     Lore: []
-  RankUp:
-    Material:
-      ID: Custom_Head
-      Value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTQ3ZDFkZDRhN2RhZmYyYWFmMjhlNmExMmEwMWY0MmQ3ZTUxNTkzZWYzZGVhNzYyZWY4MTg0N2IxZDRjNTUzOCJ9fX0=
-    Name: '&2&lRANK UP'
-    Lore:
-      - '&7Left-Click to level up once'
-      - '&7Right-Click to level up to max'
-
-AdminGUI:
-  TopBorder:
-    Material:
-      ID: YELLOW_STAINED_GLASS_PANE
-  MiddleBorder:
-    Material:
-      ID: RED_STAINED_GLASS_PANE
-  BottomBorder:
-    Material:
-      ID: RED_STAINED_GLASS_PANE
-  Rank:
-    Material:
-      ID: Custom_Head
-      Value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTU4MjdmNDVhYWU2NTY4MWJiMjdlM2UwNDY1YWY2MjI4ZWQ2MjkyYmI2M2IwYTc3NjQ1OTYyMjQ3MjdmOGQ4MSJ9fX0=
-  RightButton:
-    Material:
-      ID: Custom_Head
-      Value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjVhODRlNjM5NGJhZjhiZDc5NWZlNzQ3ZWZjNTgyY2RlOTQxNGZjY2YyZjFjODYwOGYxYmUxOGMwZTA3OTEzOCJ9fX0=
-    Name: '&e&lMove to right'
-    Lore: []
-  LeftButton:
-    Material:
-      ID: Custom_Head
-      Value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE1M2QwNDc5N2I0N2E2ODQ4NGQxMTEwMjVkOTQwYTM0ODg2YTBmYThkYzgwNmU3NDU3MDI0YTg3ZjFhYmQ1NiJ9fX0=
-    Name: '&e&lMove to left'
-    Lore: []
-  NextButton:
-    Material:
-      ID: Custom_Head
-      Value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjVhODRlNjM5NGJhZjhiZDc5NWZlNzQ3ZWZjNTgyY2RlOTQxNGZjY2YyZjFjODYwOGYxYmUxOGMwZTA3OTEzOCJ9fX0=
-    Name: '&e&lNext page'
-    Lore: []
-  PreviousButton:
-    Material:
-      ID: Custom_Head
-      Value: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE1M2QwNDc5N2I0N2E2ODQ4NGQxMTEwMjVkOTQwYTM0ODg2YTBmYThkYzgwNmU3NDU3MDI0YTg3ZjFhYmQ1NiJ9fX0=
-    Name: '&e&lPrevious page'
-    Lore: []
-  PlayerHead:
-    Material:
-      ID: Player_Head
-      Value: self
-    Name: '&e&l%player_name%'
-    Lore:
-      - '&5Balance&7: &6%Vault_eco_balance%'
-      - '&5Last rank&7: &6%AGMRanks_Max_RankName%'

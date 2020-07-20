@@ -1,22 +1,10 @@
-package me.ashenguard.agmenchants.classes.gui;
+package me.ashenguard.agmenchants.api.gui;
 
 public enum Items {
     TopBorder,
     BottomBorder,
-    PlayerInfo,
     LeftButton,
-    RightButton,
-    RankUp,
-    AdminTopBorder("AdminGUI.TopBorder"),
-    AdminMiddleBorder("AdminGUI.MiddleBorder"),
-    AdminBottomBorder("AdminGUI.BottomBorder"),
-    AdminLeftButton("AdminGUI.LeftButton"),
-    AdminRightButton("AdminGUI.RightButton"),
-    AdminPreviousButton("AdminGUI.PreviousButton"),
-    AdminNextButton("AdminGUI.NextButton"),
-    AdminRank("AdminGUI.Rank"),
-    AdminPlayerHead("AdminGUI.PlayerHead", "Player_Head", "self");
-
+    RightButton;
 
     private String path;
     private String ID = "Stone";

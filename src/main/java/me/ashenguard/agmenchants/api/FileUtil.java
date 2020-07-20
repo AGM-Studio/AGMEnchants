@@ -1,11 +1,10 @@
-package me.ashenguard.agmenchants.classes;
+package me.ashenguard.agmenchants.api;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -35,8 +34,6 @@ public class FileUtil {
             File[] jars = folder.listFiles(fileNameFilter);
             if (jars == null) return list;
 
-            System.out.println("Found these jars");
-            System.out.println(Arrays.toString(jars));
             for (File file : jars) {
                 gather(file.toURI().toURL(), list, type);
             }

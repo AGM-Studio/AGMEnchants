@@ -1,6 +1,6 @@
-package me.ashenguard.agmenchants.classes.papi;
+package me.ashenguard.agmenchants.dependencies.papi;
 
-import me.ashenguard.agmenchants.agmclasses.AGMMessenger;
+import me.ashenguard.agmenchants.api.Messenger;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,8 +42,7 @@ public class PAPIExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier){
         if(player == null) return null;
 
-
-        AGMMessenger.Debug("PlaceholderAPI", "Try to replace placeholder", "Player= §6" + player.getName(), "Identifier= §6" + identifier);
+        Messenger.Debug("PlaceholderAPI", "Try to replace placeholder", "Player= §6" + player.getName(), "Identifier= §6" + identifier);
 
         if (identifier.equals("Version")) {
             return plugin.getDescription().getVersion();

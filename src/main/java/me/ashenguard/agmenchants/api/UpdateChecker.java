@@ -1,6 +1,6 @@
-package me.ashenguard.agmenchants.classes;
+package me.ashenguard.agmenchants.api;
 
-import me.ashenguard.agmenchants.agmclasses.AGMMessenger;
+import me.ashenguard.agmenchants.AGMEnchants;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Consumer;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UpdateChecker {
 
@@ -31,8 +32,18 @@ public class UpdateChecker {
                     consumer.accept(scanner.next());
                 }
             } catch (IOException exception) {
-                AGMMessenger.Warning("Cannot look for updates: " + exception.getMessage());
+                Messenger.Warning("Cannot look for updates: " + exception.getMessage());
             }
         });
+    }
+
+    public boolean checkVersion() {
+        return !AGMEnchants.getInstance().getDescription().getVersion().equalsIgnoreCase(getVersion());
+    }
+
+    public String getVersion() {
+        AtomicReference<String> newVersion = new AtomicReference<>("1.0");
+        getVersion(newVersion::set);
+        return newVersion.get();
     }
 }

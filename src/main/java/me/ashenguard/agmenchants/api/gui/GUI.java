@@ -1,10 +1,9 @@
-package me.ashenguard.agmenchants.classes.gui;
+package me.ashenguard.agmenchants.api.gui;
 
 import com.cryptomorin.xseries.SkullUtils;
 import com.cryptomorin.xseries.XMaterial;
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.agmclasses.AGMException;
-import me.ashenguard.agmenchants.agmclasses.AGMMessenger;
+import me.ashenguard.agmenchants.api.Messenger;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,8 +35,8 @@ public class GUI implements Listener {
     private void saveConfig() {
         try {
             config.save(configFile);
-        } catch (IOException e) {
-            AGMException.ExceptionHandler(e, AGMEnchants.getExceptionFolder());
+        } catch (IOException exception) {
+            Messenger.ExceptionHandler(exception);
         }
     }
 
@@ -46,10 +45,10 @@ public class GUI implements Listener {
         config = YamlConfiguration.loadConfiguration(configFile);
 
         if (legacy) {
-            /*
             config.set("GUI.TopBorder.Material.ID", "STAINED_GLASS_PANE");
             config.set("GUI.TopBorder.Material.Value", 4);
-            */
+            config.set("GUI.BottomBorder.Material.ID", "STAINED_GLASS_PANE");
+            config.set("GUI.BottomBorder.Material.Value", 14);
         }
 
         saveConfig();
@@ -63,12 +62,12 @@ public class GUI implements Listener {
 
         if (!configFile.exists()) setDefaults();
 
-        AGMMessenger.Debug("GUI", "§5GUI§r has been loaded");
+        Messenger.Debug("GUI", "§5GUI§r has been loaded");
 
         // ---- Register Listener ---- //
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
-        AGMMessenger.Debug("GUI", "Listener has been registered");
+        Messenger.Debug("GUI", "Listener has been registered");
     }
 
     // ---- GUI Inventories ---- //
@@ -166,8 +165,8 @@ public class GUI implements Listener {
      * @param itemStack the item; name and lore will be set for this item
      */
     public ItemStack getItemStack(@NotNull ItemStack itemStack, OfflinePlayer player, String name, List<String> lore) {
-        name = AGMEnchants.getPAPI().translate(player, name);
-        lore = AGMEnchants.getPAPI().translate(player, lore);
+        name = AGMEnchants.PAPI.translate(player, name);
+        lore = AGMEnchants.PAPI.translate(player, lore);
 
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(name);
@@ -230,15 +229,7 @@ public class GUI implements Listener {
      * @param value  skin value for custom head or value for player head as player's name or self to use target player
      */
     public ItemStack getItemHead(OfflinePlayer player, boolean custom, String value) {
-        ItemStack item;
-
-        if (legacy)
-            item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-        else {
-            Material itemMaterial = XMaterial.PLAYER_HEAD.parseMaterial();
-            if (itemMaterial == null) itemMaterial = Material.SKULL;
-            item = new ItemStack(itemMaterial, 1, (short) 3);
-        }
+        ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
 
         if (custom) {
             SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
@@ -247,7 +238,7 @@ public class GUI implements Listener {
         } else {
             SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
             if (value.equals("self"))
-                skullMeta.setOwner(player.getName());
+                skullMeta.setOwningPlayer(player);
             else
                 skullMeta.setOwner(value);
 
@@ -287,7 +278,7 @@ public class GUI implements Listener {
         if (guiInventory == null) return;
 
         removeGUIInventory(player);
-        AGMMessenger.Debug("GUI", "Inventory close detected", "Player= §6" + player.getName(), "Inventory= §6" + guiInventory.title);
+        Messenger.Debug("GUI", "Inventory close detected", "Player= §6" + player.getName(), "Inventory= §6" + guiInventory.title);
     }
 
 

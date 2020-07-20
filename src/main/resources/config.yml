@@ -25,9 +25,7 @@ Debug:
   Enable: false
   General: true
   Enchants: true
-  Users: true
   GUI: true
-  Vault: true
   PlaceholderAPI: true
 
 InGameMessages:

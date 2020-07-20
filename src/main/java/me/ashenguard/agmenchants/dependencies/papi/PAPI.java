@@ -1,7 +1,7 @@
-package me.ashenguard.agmenchants.classes.papi;
+package me.ashenguard.agmenchants.dependencies.papi;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.agmclasses.AGMMessenger;
+import me.ashenguard.agmenchants.api.Messenger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -20,9 +20,9 @@ public class PAPI {
         if(agmRanks.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             papiExpansion = new PAPIExpansion(agmRanks);
             papiExpansion.register();
-            AGMMessenger.Info("§6PlaceholderAPI§r hooked");
+            Messenger.Info("§6PlaceholderAPI§r hooked");
         } else {
-            AGMMessenger.Warning("§6PlaceholderAPI§r hook failed");
+            Messenger.Warning("§6PlaceholderAPI§r hook failed");
             enable = false;
         }
     }
