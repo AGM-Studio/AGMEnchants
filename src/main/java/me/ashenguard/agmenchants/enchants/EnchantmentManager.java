@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.api.RomanInteger;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +36,7 @@ public class EnchantmentManager {
     // ---- Get & Set Enchantments ---- //
     public static HashMap<CustomEnchantment, Integer> extractEnchantments(ItemStack item) {
         HashMap<CustomEnchantment, Integer> enchants = new HashMap<>();
-        if (item == null) return enchants;
+        if (item == null || item.getType().equals(Material.AIR)) return enchants;
         List<String> lore = item.getItemMeta().getLore();
         if (lore == null) return enchants;
 
@@ -51,7 +52,7 @@ public class EnchantmentManager {
     }
 
     public static int getEnchantmentLevel(ItemStack item, CustomEnchantment enchantment) {
-        if (item == null) return 0;
+        if (item == null || item.getType().equals(Material.AIR)) return 0;
         List<String> lore = item.getItemMeta().getLore();
         if (lore == null) return 0;
 
@@ -63,7 +64,7 @@ public class EnchantmentManager {
     }
 
     public static ItemStack clearEnchantments(ItemStack item) {
-        if (item == null) return null;
+        if (item == null || item.getType().equals(Material.AIR)) return item;
         ItemMeta itemMeta = item.getItemMeta();
         List<String> lore = itemMeta.getLore();
         if (lore == null) return item;
@@ -78,13 +79,14 @@ public class EnchantmentManager {
         return item;
     }
     public static ItemStack addEnchantments(ItemStack item, HashMap<CustomEnchantment, Integer> enchantments) {
-        if (item == null) return null;
+        if (item == null || item.getType().equals(Material.AIR)) return item;
 
         for (Map.Entry<CustomEnchantment, Integer> enchantment : enchantments.entrySet()) addEnchantment(item, enchantment.getKey(), enchantment.getValue());
 
         return item;
     }
     public static void addEnchantment(ItemStack item, CustomEnchantment enchantment, int level) {
+        if (item == null || item.getType().equals(Material.AIR)) return;
         ItemMeta itemMeta = item.getItemMeta();
 
         List<String> lore = itemMeta.getLore();

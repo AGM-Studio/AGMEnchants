@@ -15,7 +15,7 @@ import java.util.List;
 
 public final class AGMEnchants extends JavaPlugin {
     public static final int pluginID = 8218;
-    public static final int resourceID = 0;
+    public static final int resourceID = 81800;
     public static FileConfiguration config;
     public static UpdateChecker updateChecker;
 
