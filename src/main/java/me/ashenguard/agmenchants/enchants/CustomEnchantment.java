@@ -4,6 +4,7 @@ import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.api.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,6 +13,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +24,14 @@ public abstract class CustomEnchantment {
 
     protected File configFile;
     protected YamlConfiguration config;
+
+    public void loadConfig() {
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            Messenger.ExceptionHandler(e);
+        }
+    }
 
     public void saveConfig() {
         try {
@@ -44,15 +54,13 @@ public abstract class CustomEnchantment {
             Messenger.Debug("General", "Config folder wasn't found, A new one created");
 
         configFile = new File(configFolder, name + ".yml");
-        if (!configFile.exists()) {
-            config = new YamlConfiguration();
-            HashMap<String, Object> defaults = getDefaultConfig();
-            for (String path : defaults.keySet())
-                config.set(path, defaults.get(path));
+        config = configFile.exists() ? YamlConfiguration.loadConfiguration(configFile) : new YamlConfiguration();
+        HashMap<String, Object> defaults = getDefaultConfig();
+        for (String path : defaults.keySet())
+            if (!config.contains(path)) config.set(path, defaults.get(path));
 
-            saveConfig();
-        }
-        config = YamlConfiguration.loadConfiguration(configFile);
+        saveConfig();
+        loadConfig();
 
         this.name = name;
         this.description = config.getString("Description", "");
@@ -88,8 +96,7 @@ public abstract class CustomEnchantment {
         ItemMeta itemMeta = book.getItemMeta();
         itemMeta.setDisplayName(EnchantmentManager.getColoredName(this));
 
-        List<String> lore = new ArrayList<>();
-        lore.add(getDescription());
+        List<String> lore = new ArrayList<>(getDescription());
         lore.add("§m----------------------");
         lore.add("Levels: " + getMaxLevel());
         itemMeta.setLore(lore);
@@ -102,8 +109,7 @@ public abstract class CustomEnchantment {
         ItemMeta itemMeta = book.getItemMeta();
         itemMeta.setDisplayName(EnchantmentManager.getColoredName(this));
 
-        List<String> lore = new ArrayList<>();
-        lore.add(getDescription());
+        List<String> lore = new ArrayList<>(getDescription());
         lore.add("§m----------------------");
         lore.addAll(getLevelDetails(level));
         itemMeta.setLore(lore);
@@ -118,7 +124,7 @@ public abstract class CustomEnchantment {
     public String getName() {
         return name;
     }
-    public String getDescription() { return description; }
+    public List<String> getDescription() { return Arrays.asList(description.split("\n")); }
 
     public boolean isCursed() {
         return cursed;

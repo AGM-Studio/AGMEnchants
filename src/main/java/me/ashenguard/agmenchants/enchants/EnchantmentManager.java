@@ -90,7 +90,7 @@ public class EnchantmentManager {
         List<String> lore = itemMeta.getLore();
         if (lore == null) lore = new ArrayList<>();
 
-        lore.add(getColoredName(enchantment) + " " + RomanInteger.toRoman(level));
+        lore.add(getColoredName(enchantment) + " " + RomanInteger.toRoman(level + 1));
         itemMeta.setLore(lore);
 
         item.setItemMeta(itemMeta);

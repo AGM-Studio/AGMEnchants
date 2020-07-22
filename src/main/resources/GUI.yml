@@ -2,11 +2,10 @@
 #  Ranks GUI                                                         #
 #  Website: https://agmdev.xyz                                       #
 #  Discord: https://agmdev.xyz/discord                               #
-#  Wiki: Would be added in next update                               #
+#  Wiki: https://github.com/Ashengaurd/AGMEnchants/wiki              #
 ######################################################################
 
 GUI:
-  Title: AGMRanks
   TopBorder:
     Material:
       ID: YELLOW_STAINED_GLASS_PANE

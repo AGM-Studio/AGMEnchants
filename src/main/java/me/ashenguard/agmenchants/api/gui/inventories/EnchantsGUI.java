@@ -53,7 +53,7 @@ public class EnchantsGUI extends GUIInventory {
                 selected = enchantments.get(slot - 9);
                 reload();
             } else if (slot - 9 < selected.getMaxLevel() && player.hasPermission("AGMEnchants.admin"))
-                player.getInventory().addItem(selected.getBook(slot - 9));
+                player.getInventory().addItem(selected.getBook(slot - 8));
         }
     }
 
@@ -73,17 +73,18 @@ public class EnchantsGUI extends GUIInventory {
     }
 
     private void addEnchants() {
+        enchantments = new ArrayList<>();
         List<String> enchants = new ArrayList<>(EnchantmentManager.getEnchantments());
         for (int i = 0; i < 36; i++) {
-            if (page * 36 + i > enchants.size()) {
+            if (page * 36 + i >= enchants.size()) {
                 inventory.setItem(i + 9, null);
-                enchantments.set(i, null);
+                enchantments.add(null);
                 continue;
             }
 
             CustomEnchantment customEnchantment = EnchantmentManager.getEnchantment(enchants.get(page * 36 + i));
             inventory.setItem(i + 9, customEnchantment.getInfoBook());
-            enchantments.set(i, customEnchantment);
+            enchantments.add(customEnchantment);
         }
     }
 

@@ -36,16 +36,17 @@ public class Listeners implements Listener {
         HashMap<CustomEnchantment, Integer> newEnchants = EnchantmentManager.extractEnchantments(added);
         int cost = 0;
 
-
         for (Map.Entry<CustomEnchantment, Integer> enchant: newEnchants.entrySet()) {
             if (!enchant.getKey().canEnchantItem(item)) continue;
             int oldLevel = oldEnchants.getOrDefault(enchant.getKey(), 0);
             if (enchant.getValue() > oldLevel) {
                 oldEnchants.put(enchant.getKey(), enchant.getValue());
-                cost += Math.pow(2, enchant.getValue());
+                cost += Math.pow(2, enchant.getValue()) - 1;
+                Messenger.Debug("Enchants", "Trying to add enchantment to item", "Enchantment= §6" + enchant.getKey().getName(), "Item= §6" + item.getType().name());
             } else if (enchant.getValue() == oldLevel && enchant.getKey().getMaxLevel() > enchant.getValue()) {
                 oldEnchants.put(enchant.getKey(), enchant.getValue() + 1);
-                cost += Math.pow(2, enchant.getValue() + 1);
+                cost += Math.pow(2, enchant.getValue() + 1) - 1;
+                Messenger.Debug("Enchants", "Trying to add enchantment to item", "Enchantment= §6" + enchant.getKey().getName(), "Item= §6" + item.getType().name());
             }
         }
 
