@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
+
 public class EnchantmentManager {
     private static HashMap<String, CustomEnchantment> enchantmentHashMap = new HashMap<>();
     public static CustomEnchantment getEnchantment(String name) { return enchantmentHashMap.getOrDefault(name, null); }
