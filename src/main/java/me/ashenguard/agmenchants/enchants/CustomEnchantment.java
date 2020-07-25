@@ -8,6 +8,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public abstract class CustomEnchantment {
     }
 
     protected BukkitScheduler scheduler = Bukkit.getScheduler();
+    protected JavaPlugin plugin = AGMEnchants.getInstance();
 
     protected String name;
     protected String description;
