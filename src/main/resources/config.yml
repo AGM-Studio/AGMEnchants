@@ -20,6 +20,11 @@
 ######################################################################
 
 Prefix: AGMEnchants
+Check:
+  Enchantments: true
+  Updates: true
+
+  BlacklistedEnchantments: []
 
 Debug:
   Enable: false

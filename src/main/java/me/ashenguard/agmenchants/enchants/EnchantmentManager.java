@@ -1,6 +1,8 @@
 package me.ashenguard.agmenchants.enchants;
 
+import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.api.RomanInteger;
+import me.ashenguard.agmenchants.api.WebReader;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -130,5 +132,22 @@ public class EnchantmentManager {
         color = enchantment.isCursed() ? "§c" : color;
 
         return color + enchantment.getName();
+    }
+
+    public static List<String> checkEnchantments() {
+        List<String> found = new ArrayList<>();
+        for (String line: WebReader.readLines("https://raw.githubusercontent.com/wiki/Ashengaurd/AGMEnchants/Enchantments.md")) {
+            if (line.startsWith("### ")) found.add(line.replace("\n", "").substring(4));
+        }
+
+        Set<String> installed = getEnchantments();
+        List<String> blacklist = AGMEnchants.config.getStringList("Check.BlacklistedEnchantments");
+        List<String> notInstalled = new ArrayList<>();
+
+        for (String enchant: found) {
+            if (!installed.contains(enchant) && !blacklist.contains(enchant)) notInstalled.add(enchant);
+        }
+
+        return notInstalled;
     }
 }

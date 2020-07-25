@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.api;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.enchants.EnchantmentManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Collection;
+import java.util.List;
 
 public class Messenger {
     public static FileConfiguration config = null;
@@ -86,16 +88,18 @@ public class Messenger {
         BukkitScheduler scheduler = AGMEnchants.getInstance().getServer().getScheduler();
         scheduler.scheduleSyncDelayedTask(AGMEnchants.getInstance(), () -> {
             // Update Check
-            if (AGMEnchants.updateChecker.checkVersion()) {
+            if (config.getBoolean("Check.Updates", true) && AGMEnchants.updateChecker.checkForUpdates()) {
                 PlayerSend(player, "There is a §anew update§r available on SpigotMC");
                 PlayerSend(player, "This version: §c" + AGMEnchants.getInstance().getDescription().getVersion() + "§r");
-                PlayerSend(player, "SpigotMC version: §a" + AGMEnchants.updateChecker.getVersion() + "§r");
+                PlayerSend(player, "SpigotMC version: §a" + AGMEnchants.updateChecker.getLatestVersion() + "§r");
             }
 
-            PlayerSend(player, "Check our website at: §bhttps://agmdev.xyz/§r");
-            PlayerSend(player, "Join our discord server if you look for support: §6https://discord.gg/6exsySK");
-            PlayerSend(player, "If you like this plugin, make sure you support us on §cPatreon§r: " +
-                    "§bhttps://www.patreon.com/agmdevelopment/§r");
+            if (config.getBoolean("Check.Enchantments", true)) {
+                List<String> newEnchants = EnchantmentManager.checkEnchantments();
+                if (newEnchants.size() == 0) return;
+                PlayerSend(player, "There are " + newEnchants.size() + " enchantments which are not installed.");
+                PlayerSend(player, "Please have a look at: https://github.com/Ashengaurd/AGMEnchants/wiki/Enchantments");
+            }
         }, 100L);
     }
 

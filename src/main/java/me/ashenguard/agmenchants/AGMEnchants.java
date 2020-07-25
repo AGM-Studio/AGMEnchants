@@ -1,7 +1,7 @@
 package me.ashenguard.agmenchants;
 
 import me.ashenguard.agmenchants.api.Messenger;
-import me.ashenguard.agmenchants.api.UpdateChecker;
+import me.ashenguard.agmenchants.api.SpigotUpdater;
 import me.ashenguard.agmenchants.api.gui.GUI;
 import me.ashenguard.agmenchants.dependencies.papi.PAPI;
 import me.ashenguard.agmenchants.enchants.EnchantmentLoader;
@@ -17,7 +17,7 @@ public final class AGMEnchants extends JavaPlugin {
     public static final int pluginID = 8218;
     public static final int resourceID = 81800;
     public static FileConfiguration config;
-    public static UpdateChecker updateChecker;
+    public static SpigotUpdater updateChecker;
 
     private static boolean legacy;
     private static JavaPlugin instance;
@@ -64,11 +64,11 @@ public final class AGMEnchants extends JavaPlugin {
 
         // ---- Metrics ---- //
         new Metrics(this, pluginID);
-        updateChecker = new UpdateChecker(this, resourceID);
-        if (updateChecker.checkVersion()) {
+        updateChecker = new SpigotUpdater(this, resourceID);
+        if (config.getBoolean("Check.Updates", true) && updateChecker.checkForUpdates()) {
             Messenger.Info("There is a §anew update§r available at §6spigotmc.org§r");
             Messenger.Info("Current version: §c" + getDescription().getVersion() + "§r");
-            Messenger.Info("New version: §a" + updateChecker.getVersion() + "§r");
+            Messenger.Info("New version: §a" + updateChecker.getLatestVersion() + "§r");
         }
     }
 
