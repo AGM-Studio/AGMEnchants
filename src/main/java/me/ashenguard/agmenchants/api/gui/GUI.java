@@ -209,15 +209,11 @@ public class GUI implements Listener {
      * @param data the data value; It would be used for legacy version
      */
     public ItemStack getItemStack(String ID, short data) {
-        ItemStack item;
-        if (legacy)
-            item = new ItemStack(Material.getMaterial(ID), 1, data);
-        else {
-            XMaterial material = XMaterial.valueOf(ID);
-            Material itemMaterial = material.parseMaterial();
-            if (itemMaterial == null) itemMaterial = Material.STONE;
-            item = new ItemStack(itemMaterial, 1, material.getData());
-        }
+        ItemStack item = XMaterial.matchXMaterial(ID).orElse(XMaterial.STONE).parseItem();
+        if (item == null) item = new ItemStack(Material.STONE);
+
+        if (legacy) item.setDurability(data);
+
         return item;
     }
 
@@ -229,7 +225,7 @@ public class GUI implements Listener {
      * @param value  skin value for custom head or value for player head as player's name or self to use target player
      */
     public ItemStack getItemHead(OfflinePlayer player, boolean custom, String value) {
-        ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
 
         if (custom) {
             SkullMeta skullMeta = (SkullMeta) item.getItemMeta();

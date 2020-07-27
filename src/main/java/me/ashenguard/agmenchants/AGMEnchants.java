@@ -16,6 +16,7 @@ import java.util.List;
 public final class AGMEnchants extends JavaPlugin {
     public static final int pluginID = 8218;
     public static final int resourceID = 81800;
+
     public static FileConfiguration config;
     public static SpigotUpdater updateChecker;
 
@@ -26,8 +27,6 @@ public final class AGMEnchants extends JavaPlugin {
 
     public static PAPI PAPI;
     public static GUI GUI;
-
-
 
     // ---- Getters ---- //
     public static JavaPlugin getInstance() {

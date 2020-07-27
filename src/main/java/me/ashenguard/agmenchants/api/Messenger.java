@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 
 public class Messenger {
     public static FileConfiguration config = null;
@@ -95,9 +95,9 @@ public class Messenger {
             }
 
             if (config.getBoolean("Check.Enchantments", true)) {
-                List<String> newEnchants = EnchantmentManager.checkEnchantments();
+                HashMap<String, String> newEnchants = EnchantmentManager.checkEnchantments();
                 if (newEnchants.size() == 0) return;
-                PlayerSend(player, "There are " + newEnchants.size() + " enchantments which are not installed.");
+                PlayerSend(player, "There are " + newEnchants.size() + " enchantments which are not installed or outdated.");
                 PlayerSend(player, "Please have a look at: https://github.com/Ashengaurd/AGMEnchants/wiki/Enchantments");
             }
         }, 100L);

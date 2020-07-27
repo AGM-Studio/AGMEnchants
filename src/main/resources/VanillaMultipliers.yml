@@ -1,0 +1,154 @@
+# This config is generated based on https://minecraft.gamepedia.com/Anvil/Mechanics
+# If you don't know what is it please don't touch this
+ARROW_DAMAGE:
+  Item: 1
+  Book: 1
+  # Provides extra damage when shooting arrows from bows
+ARROW_FIRE:
+  Item: 4
+  Book: 2
+  # Sets entities on fire when hit by arrows shot from a bow
+ARROW_INFINITE:
+  Item: 8
+  Book: 4
+  # Provides infinite arrows when shooting a bow
+ARROW_KNOCKBACK:
+  Item: 4
+  Book: 2
+  # Provides a knockback when an entity is hit by an arrow from a bow
+BINDING_CURSE:
+  Item: 8
+  Book: 4
+  # Item cannot be removed
+CHANNELING:
+  Item: 8
+  Book: 4
+  # Strikes lightning when a mob is hit with a trident if conditions are stormy
+DAMAGE_ALL:
+  Item: 1
+  Book: 1
+  # Increases damage against all targets
+DAMAGE_ARTHROPODS:
+  Item: 2
+  Book: 1
+  # Increases damage against arthropod targets
+DAMAGE_UNDEAD:
+  Item: 2
+  Book: 1
+  # Increases damage against undead targets
+DEPTH_STRIDER:
+  Item: 4
+  Book: 2
+  # Increases walking speed while in water
+DIG_SPEED:
+  Item: 1
+  Book: 1
+  # Increases the rate at which you mine/dig
+DURABILITY:
+  Item: 2
+  Book: 1
+  # Decreases the rate at which a tool looses durability
+FIRE_ASPECT:
+  Item: 4
+  Book: 2
+  # When attacking a target, has a chance to set them on fire
+FROST_WALKER:
+  Item: 4
+  Book: 2
+  # Freezes any still water adjacent to ice / frost which player is walking on
+IMPALING:
+  Item: 4
+  Book: 2
+  # Deals more damage to mobs that live in the ocean
+KNOCKBACK:
+  Item: 2
+  Book: 1
+  # All damage to other targets will knock them back when hit
+LOOT_BONUS_BLOCKS:
+  Item: 4
+  Book: 2
+  # Provides a chance of gaining extra loot when destroying blocks
+LOOT_BONUS_MOBS:
+  Item: 4
+  Book: 2
+  # Provides a chance of gaining extra loot when killing monsters
+LOYALTY:
+  Item: 1
+  Book: 1
+  # Causes a thrown trident to return to the player who threw it
+LUCK:
+  Item: 4
+  Book: 2
+  # Decreases odds of catching worthless junk
+LURE:
+  Item: 4
+  Book: 2
+  # Increases rate of fish biting your hook
+MENDING:
+  Item: 4
+  Book: 2
+  # Allows mending the item using experience orbs
+MULTISHOT:
+  Item: 4
+  Book: 2
+  # Shoot multiple arrows from crossbows
+OXYGEN:
+  Item: 4
+  Book: 2
+  # Decreases the rate of air loss whilst underwater
+PIERCING:
+  Item: 1
+  Book: 1
+  # Crossbow projectiles pierce entities
+PROTECTION_ENVIRONMENTAL:
+  Item: 1
+  Book: 1
+  # Provides protection against environmental damage
+PROTECTION_EXPLOSIONS:
+  Item: 4
+  Book: 2
+  # Provides protection against explosive damage
+PROTECTION_FALL:
+  Item: 2
+  Book: 1
+  # Provides protection against fall damage
+PROTECTION_FIRE:
+  Item: 2
+  Book: 1
+  # Provides protection against fire damage
+PROTECTION_PROJECTILE:
+  Item: 2
+  Book: 1
+  # Provides protection against projectile damage
+QUICK_CHARGE:
+  Item: 2
+  Book: 1
+  # Charges crossbows quickly
+RIPTIDE:
+  Item: 4
+  Book: 2
+  # When it is rainy, launches the player in the direction their trident is thrown
+SILK_TOUCH:
+  Item: 8
+  Book: 4
+  # Allows blocks to drop themselves instead of fragments (for example, stone instead of cobblestone)
+SOUL_SPEED:
+  Item: 8
+  Book: 4
+  # Walk quicker on soul blocks
+SWEEPING_EDGE:
+  Item: 4
+  Book: 2
+  # Increases damage against targets when using a sweep attack
+THORNS:
+  Item: 1
+  Book: 1
+  # Damages the attacker
+VANISHING_CURSE:
+  Item: 8
+  Book: 4
+  # Item disappears instead of dropping
+WATER_WORKER:
+  Item: 4
+  Book: 2
+  # Increases the speed at which a player may mine underwater

@@ -65,7 +65,7 @@ public class EnchantsGUI extends GUIInventory {
     }
 
     private void right() {
-        int count = EnchantmentManager.getEnchantments().size();
+        int count = EnchantmentManager.getCustomEnchantments().size();
         if (page * 36 < count) return;
 
         page += 1;
@@ -74,7 +74,7 @@ public class EnchantsGUI extends GUIInventory {
 
     private void addEnchants() {
         enchantments = new ArrayList<>();
-        List<String> enchants = new ArrayList<>(EnchantmentManager.getEnchantments());
+        List<String> enchants = new ArrayList<>(EnchantmentManager.getCustomEnchantments());
         for (int i = 0; i < 36; i++) {
             if (page * 36 + i >= enchants.size()) {
                 inventory.setItem(i + 9, null);
@@ -82,7 +82,7 @@ public class EnchantsGUI extends GUIInventory {
                 continue;
             }
 
-            CustomEnchantment customEnchantment = EnchantmentManager.getEnchantment(enchants.get(page * 36 + i));
+            CustomEnchantment customEnchantment = EnchantmentManager.getCustomEnchantment(enchants.get(page * 36 + i));
             inventory.setItem(i + 9, customEnchantment.getInfoBook());
             enchantments.add(customEnchantment);
         }

@@ -24,7 +24,7 @@ public class RomanInteger {
     public static String toRoman(int i) {
         StringBuilder roman = new StringBuilder();
         for(Map.Entry<String, Integer> entry : roman_numerals.entrySet()) {
-            while (i > entry.getValue()) {
+            while (i >= entry.getValue()) {
                 roman.append(entry.getKey());
                 i -= entry.getValue();
             }
