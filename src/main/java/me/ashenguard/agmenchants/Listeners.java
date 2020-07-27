@@ -33,7 +33,6 @@ public class Listeners implements Listener {
 
         if (item == null || item.getType().equals(Material.AIR)) return;
         if (sacrifice == null || !(sacrifice.getType().equals(Material.ENCHANTED_BOOK) || item.getType().equals(sacrifice.getType()))) return;
-        Messenger.Debug("Enchants", "Items inserted: ", "Item: " + item, "Sacrifice: " + sacrifice);
 
         // ---- Get all required things ---- //
         Map<Enchantment, Integer> oldEnchants = item.getEnchantments();
@@ -43,11 +42,6 @@ public class Listeners implements Listener {
 
         Map<CustomEnchantment, Integer> oldCustomEnchants = EnchantmentManager.extractEnchantments(item);
         Map<CustomEnchantment, Integer> newCustomEnchants = EnchantmentManager.extractEnchantments(sacrifice);
-        Messenger.Debug("Enchants", "CEs that are found:",
-                "Old: " + oldCustomEnchants,
-                "New: " + newCustomEnchants,
-                "OE: " + oldEnchants,
-                "NE: " + newEnchants);
 
         // ---- Prior Penalty ---- //
         int initCost = 0;
@@ -55,7 +49,6 @@ public class Listeners implements Listener {
             initCost = ((Repairable) item.getItemMeta()).getRepairCost();
 
         int repairCost = initCost;
-        Messenger.Info("Cost: " + repairCost);
 
         // ---- Create Result ---- //
         ItemStack result = item.clone();
@@ -123,7 +116,6 @@ public class Listeners implements Listener {
             }
         }
         EnchantmentManager.addEnchantments(result, customEnchants);
-        Messenger.Debug("Enchants", "Applying custom enchants", "Item: " + result);
 
         // ---- Set result ---- //
         if (initCost < repairCost) {
@@ -134,8 +126,6 @@ public class Listeners implements Listener {
                     result.setItemMeta(itemMeta);
                 }
             }
-
-            Messenger.Debug("Enchants", "Applying custom enchants", "Item: " + result);
 
             event.setResult(result);
 
