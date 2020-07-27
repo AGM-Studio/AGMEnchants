@@ -195,7 +195,7 @@ public class EnchantmentManager {
                 String version = getCustomEnchantment(enchant.getKey()).getVersion();
                 if (!version.equals(enchant.getValue())) {
                     found.put(enchant.getKey(), enchant.getValue());
-                    Messenger.Debug("Enchants", "An update was found on page for an enchantment", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue());
+                    Messenger.Debug("Enchants", "An update was found on page for an enchantment", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue(), "Installed Version= §6" + version);
                 }
             }
         }
