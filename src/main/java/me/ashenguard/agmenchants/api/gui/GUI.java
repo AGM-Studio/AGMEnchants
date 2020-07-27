@@ -226,6 +226,7 @@ public class GUI implements Listener {
      */
     public ItemStack getItemHead(OfflinePlayer player, boolean custom, String value) {
         ItemStack item = XMaterial.PLAYER_HEAD.parseItem();
+        if (item == null) return new ItemStack(Material.STONE);
 
         if (custom) {
             SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
