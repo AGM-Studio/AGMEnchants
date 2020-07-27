@@ -172,12 +172,12 @@ public class EnchantmentManager {
     public static HashMap<String, String> checkEnchantments() {
         HashMap<String, String> found = new HashMap<>();
         boolean enchants = false;
-        for (String line: WebReader.readLines("https://raw.githubusercontent.com/wiki/Ashengaurd/AGMEnchants/Enchantments.md")) {
+        List<String> lines = WebReader.readLines("https://raw.githubusercontent.com/wiki/Ashengaurd/AGMEnchants/Enchantments.md");
+        for (String line: lines) {
             if (line.startsWith("***")) enchants = true;
             if (enchants && line.startsWith("### ")) {
                 String name = line.substring(4).replace("\n", "");
-                String version = name.substring(name.lastIndexOf(" " + 1));
-                name = name.substring(0, name.lastIndexOf(" "));
+                String version = lines.get(lines.indexOf(line) + 1).replace("Version:", "").replace("\n", "").replace(" ", "");
                 found.put(name, version);
             }
         }
