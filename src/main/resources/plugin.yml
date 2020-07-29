@@ -19,7 +19,7 @@ permissions:
       - AGMEnchants.admin
       - AGMEnchants.Messages.*
     AGMEnchants.admin:
-      description: AGMEnchants command permission
+      description: AGMEnchants admin permission
       default: op
     AGMEnchants.Messages.*:
       description: All messages perms

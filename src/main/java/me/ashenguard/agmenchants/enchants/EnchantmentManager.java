@@ -38,20 +38,13 @@ public class EnchantmentManager {
         return randomBook(false);
     }
 
-
     // ---- Get & Set Enchantments ---- //
     public static HashMap<CustomEnchantment, Integer> extractEnchantments(ItemStack item) {
         HashMap<CustomEnchantment, Integer> enchants = new HashMap<>();
         if (item == null || item.getType().equals(Material.AIR)) return enchants;
-        List<String> lore = item.getItemMeta().getLore();
-        if (lore == null) return enchants;
-
-        for (String line : lore) {
-            CustomEnchantment enchantment = getCustomEnchantment(line.substring(2, line.lastIndexOf(" ")));
-            if (enchantment != null) {
-                int level = RomanInteger.toInteger(line.substring(line.lastIndexOf(" ")));
-                enchants.put(enchantment, level);
-            }
+        for (CustomEnchantment enchantment: enchantmentHashMap.values()) {
+            int level = getEnchantmentLevel(item, enchantment);
+            if (level > 0) enchants.put(enchantment, level);
         }
 
         return enchants;
@@ -71,55 +64,19 @@ public class EnchantmentManager {
         return 0;
     }
 
-    public static void clearEnchantments(ItemStack item) {
-        if (item == null || item.getType().equals(Material.AIR)) return;
-        ItemMeta itemMeta = item.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) return;
-
-        lore.removeIf(line -> getCustomEnchantment(line.substring(2, line.lastIndexOf(" "))) != null);
-
-        itemMeta.setLore(lore);
-        item.setItemMeta(itemMeta);
-
-        glow(item);
+    public static void removeAllEnchantments(ItemStack item) {
+        rebase(item, new HashMap<>());
     }
-    public static void removeEnchantment(ItemStack item, CustomEnchantment enchantment) {
-        if (item == null || item.getType().equals(Material.AIR)) return;
-        ItemMeta itemMeta = item.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) return;
-
-        lore.removeIf(line -> line.contains(enchantment.getName()));
-
-        itemMeta.setLore(lore);
-        item.setItemMeta(itemMeta);
-
-        glow(item);
+    public static void removeEnchantment(ItemStack item, CustomEnchantment customEnchantment) {
+        Map<CustomEnchantment, Integer> customEnchantments = extractEnchantments(item);
+        customEnchantments.remove(customEnchantment);
+        rebase(item, customEnchantments);
     }
-    public static void addEnchantments(ItemStack item, Map<CustomEnchantment, Integer> enchantments) {
-        if (item == null || item.getType().equals(Material.AIR)) return;
-
-        for (Map.Entry<CustomEnchantment, Integer> enchantment : enchantments.entrySet())
-            addEnchantment(item, enchantment.getKey(), enchantment.getValue());
+    public static void addEnchantments(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments) {
+        rebase(item, customEnchantments, true);
     }
     public static void addEnchantment(ItemStack item, CustomEnchantment enchantment, int level) {
-        if (item == null || item.getType().equals(Material.AIR)) return;
-
-        if (getEnchantmentLevel(item, enchantment) > 0) {
-            removeEnchantment(item, enchantment);
-        }
-
-        ItemMeta itemMeta = item.getItemMeta();
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) lore = new ArrayList<>();
-
-        lore.add(getColoredName(enchantment, level));
-        itemMeta.setLore(lore);
-
-        item.setItemMeta(itemMeta);
-
-        glow(item);
+        rebase(item, Collections.singletonMap(enchantment, level), true);
     }
 
     public static boolean canEnchantItem(CustomEnchantment enchantment, ItemStack item) {
@@ -132,15 +89,29 @@ public class EnchantmentManager {
         return enchantment.canEnchantItem(item);
     }
 
-    public static void glow(ItemStack item) {
-        ItemMeta itemMeta = item.getItemMeta();
+    public static void rebase(ItemStack item) {
+        rebase(item, extractEnchantments(item));
+    }
+    public static void rebase(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments) {
+        if (item == null || item.getType().equals(Material.AIR)) return;
 
-        boolean flagged = extractEnchantments(item).entrySet().size() > 0;
-        Map<Enchantment, Integer> vanillaEnchants = itemMeta.getEnchants();
-        for (Map.Entry<Enchantment, Integer> vanillaEnchant: vanillaEnchants.entrySet()) {
-            if (!vanillaEnchant.getKey().equals(Enchantment.PROTECTION_ENVIRONMENTAL) || vanillaEnchant.getValue() != 0) {
-                flagged = false;
-                break;
+        removeAllEnchantments(item);
+        List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
+        List<String> lore = new ArrayList<>();
+
+        for (Map.Entry<CustomEnchantment, Integer> customEnchantment: customEnchantments.entrySet())
+            lore.add(getColoredName(customEnchantment.getKey(), customEnchantment.getValue()));
+
+        lore.addAll(itemLore);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setLore(lore);
+
+        boolean flagged = customEnchantments.size() > 0;
+        Map<Enchantment, Integer> enchantments = item.getEnchantments();
+        for (Map.Entry<Enchantment, Integer> enchantment: enchantments.entrySet()) {
+            if (!flagged || !enchantment.getKey().equals(Enchantment.PROTECTION_ENVIRONMENTAL) || enchantment.getValue() != 0) {
+                flagged = false; break;
             }
         }
 
@@ -154,6 +125,13 @@ public class EnchantmentManager {
         }
 
         item.setItemMeta(itemMeta);
+    }
+    public static void rebase(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments, boolean keep) {
+        if (keep) {
+            for (Map.Entry<CustomEnchantment, Integer> extracted: extractEnchantments(item).entrySet())
+                customEnchantments.put(extracted.getKey(), Math.max(extracted.getValue(), customEnchantments.getOrDefault(extracted.getKey(), 0)));
+        }
+        rebase(item, customEnchantments);
     }
 
     public static String getColoredName(CustomEnchantment enchantment) {
@@ -203,8 +181,7 @@ public class EnchantmentManager {
         return notInstalled;
     }
 
-
-    // ---- Configs ---- //
+    // ---- Multipliers ---- //
     private static File configFile = new File(AGMEnchants.getPluginFolder(), "VanillaMultipliers.yml");
     static {
         if (!configFile.exists())
