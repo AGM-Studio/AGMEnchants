@@ -65,7 +65,19 @@ public class EnchantmentManager {
     }
 
     public static void removeAllEnchantments(ItemStack item) {
-        rebase(item, new HashMap<>());
+        if (item == null || item.getType().equals(Material.AIR)) return;
+
+        List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
+        Set<String> enchants = getCustomEnchantments();
+
+        for (String line: itemLore) {
+            for (String enchant: enchants)
+                if (line.contains(enchant)) itemLore.remove(line);
+        }
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setLore(itemLore);
+        item.setItemMeta(itemMeta);
     }
     public static void removeEnchantment(ItemStack item, CustomEnchantment customEnchantment) {
         Map<CustomEnchantment, Integer> customEnchantments = extractEnchantments(item);
