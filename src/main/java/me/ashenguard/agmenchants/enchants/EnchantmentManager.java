@@ -67,30 +67,28 @@ public class EnchantmentManager {
     public static void removeAllEnchantments(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return;
 
-        List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
-        Set<String> enchants = getCustomEnchantments();
+        for (CustomEnchantment enchantment : enchantmentHashMap.values())
+            removeEnchantment(item, enchantment);
+    }
+    public static void removeEnchantment(ItemStack item, CustomEnchantment customEnchantment) {
+        if (item == null || item.getType().equals(Material.AIR)) return;
 
-        for (String line: itemLore) {
-            for (String enchant: enchants)
-                if (line.contains(enchant)) {
-                    itemLore.remove(line);
-                }
-        }
+        List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
+
+        itemLore.removeIf(line -> line.contains(customEnchantment.getName()));
 
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setLore(itemLore);
         item.setItemMeta(itemMeta);
-    }
-    public static void removeEnchantment(ItemStack item, CustomEnchantment customEnchantment) {
-        Map<CustomEnchantment, Integer> customEnchantments = extractEnchantments(item);
-        customEnchantments.remove(customEnchantment);
-        rebase(item, customEnchantments);
+
+        customEnchantment.disenchanted(item);
     }
     public static void addEnchantments(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments) {
         rebase(item, customEnchantments, true);
     }
     public static void addEnchantment(ItemStack item, CustomEnchantment enchantment, int level) {
         rebase(item, Collections.singletonMap(enchantment, level), true);
+        enchantment.enchanted(item);
     }
 
     public static boolean canEnchantItem(CustomEnchantment enchantment, ItemStack item) {
