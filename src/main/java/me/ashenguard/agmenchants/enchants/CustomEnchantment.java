@@ -1,7 +1,7 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.api.Messenger;
+import me.ashenguard.api.messenger.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -34,8 +34,8 @@ public abstract class CustomEnchantment {
     public void loadConfig() {
         try {
             config.load(configFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            Messenger.ExceptionHandler(e);
+        } catch (IOException | InvalidConfigurationException exception) {
+            Messenger.handleException(exception);
         }
     }
 
@@ -43,7 +43,7 @@ public abstract class CustomEnchantment {
         try {
             config.save(configFile);
         } catch (IOException exception) {
-            Messenger.ExceptionHandler(exception);
+            Messenger.handleException(exception);
         }
     }
 
@@ -139,6 +139,9 @@ public abstract class CustomEnchantment {
     protected abstract List<String> getLevelDetails(int level);
     protected abstract boolean conflictsWith(Enchantment enchantment);
     protected abstract boolean conflictsWith(CustomEnchantment enchantment);
+
+    protected void enchanted(ItemStack item) {}
+    protected void disenchanted(ItemStack item) {}
 
     public String getVersion() {
         return version;

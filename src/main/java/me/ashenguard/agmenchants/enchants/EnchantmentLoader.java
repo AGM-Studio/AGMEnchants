@@ -1,8 +1,8 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.api.FileUtil;
-import me.ashenguard.agmenchants.api.Messenger;
+import me.ashenguard.api.FileUtil;
+import me.ashenguard.api.messenger.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;

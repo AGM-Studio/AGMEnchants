@@ -1,10 +1,7 @@
-package me.ashenguard.agmenchants.api.gui.inventories;
+package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.api.gui.GUIInventory;
-import me.ashenguard.agmenchants.api.gui.Items;
-import me.ashenguard.agmenchants.enchants.CustomEnchantment;
-import me.ashenguard.agmenchants.enchants.EnchantmentManager;
+import me.ashenguard.api.gui.GUIInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -17,8 +14,8 @@ public class EnchantsGUI extends GUIInventory {
     private List<CustomEnchantment> enchantments = new ArrayList<>();
 
     public EnchantsGUI(Player player) {
-        super(AGMEnchants.config.getString("Prefix"), player, 54);
-        gui.saveGUIInventory(player, this);
+        super(AGMEnchants.GUI, AGMEnchants.config.getString("Prefix"), player, 54);
+        GUI.saveGUIInventory(player, this);
 
         page = 0;
         selected = null;
@@ -29,13 +26,13 @@ public class EnchantsGUI extends GUIInventory {
     @Override
     protected void design() {
         for (int i=0; i<9; i++)
-            inventory.setItem(i, gui.getItemStack(null, Items.TopBorder));
+            inventory.setItem(i, GUI.getItemStack(player, Items.TopBorder.getPath()));
 
         for (int i=45; i<53; i++)
-            inventory.setItem(i, gui.getItemStack(null, Items.BottomBorder));
+            inventory.setItem(i, GUI.getItemStack(player, Items.BottomBorder.getPath()));
 
-        inventory.setItem(45, gui.getItemStack(player, Items.LeftButton));
-        inventory.setItem(53, gui.getItemStack(player, Items.RightButton));
+        inventory.setItem(45, GUI.getItemStack(player, Items.LeftButton.getPath()));
+        inventory.setItem(53, GUI.getItemStack(player, Items.RightButton.getPath()));
 
         if (selected == null) addEnchants();
         else showLevels();
@@ -95,3 +92,21 @@ public class EnchantsGUI extends GUIInventory {
         }
     }
 }
+
+enum Items {
+    TopBorder,
+    BottomBorder,
+    LeftButton,
+    RightButton;
+
+    private String path;
+
+    Items() {
+        this.path = "GUI." + this.name();
+    }
+
+    public String getPath() {
+        return path;
+    }
+}
+

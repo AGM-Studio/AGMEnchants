@@ -1,9 +1,9 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.api.Messenger;
-import me.ashenguard.agmenchants.api.RomanInteger;
-import me.ashenguard.agmenchants.api.WebReader;
+import me.ashenguard.api.RomanInteger;
+import me.ashenguard.api.WebReader;
+import me.ashenguard.api.messenger.Messenger;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -72,7 +72,9 @@ public class EnchantmentManager {
 
         for (String line: itemLore) {
             for (String enchant: enchants)
-                if (line.contains(enchant)) itemLore.remove(line);
+                if (line.contains(enchant)) {
+                    itemLore.remove(line);
+                }
         }
 
         ItemMeta itemMeta = item.getItemMeta();
@@ -162,7 +164,7 @@ public class EnchantmentManager {
     public static HashMap<String, String> checkEnchantments() {
         HashMap<String, String> found = new HashMap<>();
         boolean enchants = false;
-        List<String> lines = WebReader.readLines("https://raw.githubusercontent.com/wiki/Ashengaurd/AGMEnchants/Enchantments.md");
+        List<String> lines = new WebReader("https://raw.githubusercontent.com/wiki/Ashengaurd/AGMEnchants/Enchantments.md").readLines();
         for (String line: lines) {
             if (line.startsWith("***")) enchants = true;
             if (enchants && line.startsWith("### ")) {

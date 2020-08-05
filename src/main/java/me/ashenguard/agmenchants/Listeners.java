@@ -1,13 +1,16 @@
 package me.ashenguard.agmenchants;
 
-import me.ashenguard.agmenchants.api.Messenger;
 import me.ashenguard.agmenchants.enchants.CustomEnchantment;
 import me.ashenguard.agmenchants.enchants.EnchantmentManager;
+import me.ashenguard.api.messenger.Messenger;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +30,7 @@ public class Listeners implements Listener {
     }
 
     @EventHandler
-    public void onAnvilUsage(PrepareAnvilEvent event) {
+    public void onAnvil(PrepareAnvilEvent event) {
         ItemStack item = event.getInventory().getItem(0);
         ItemStack sacrifice = event.getInventory().getItem(1);
 
@@ -165,7 +168,37 @@ public class Listeners implements Listener {
     }
 
     @EventHandler
+    public void onGrindStone(InventoryClickEvent event) {
+        InventoryType type = event.getInventory().getType();
+
+        if (!type.name().equals("GRIND_STONE")) return;
+        ItemStack result = event.getInventory().getItem(2);
+
+        if (result == null || result.getType().equals(Material.AIR)) return;
+        EnchantmentManager.removeAllEnchantments(result);
+
+        if (event.getSlot() != 2) return;
+        ItemStack item1 = event.getInventory().getItem(0);
+        ItemStack item2 = event.getInventory().getItem(1);
+
+        Map<CustomEnchantment, Integer> customEnchants1 = EnchantmentManager.extractEnchantments(item1);
+        Map<CustomEnchantment, Integer> customEnchants2 = EnchantmentManager.extractEnchantments(item2);
+        Map<Enchantment, Integer> enchants1 = item1.getEnchantments();
+        Map<Enchantment, Integer> enchants2 = item1.getEnchantments();
+
+        Player player = (Player) event.getWhoClicked();
+
+        double exp = 0;
+        for (Map.Entry<CustomEnchantment, Integer> enchant: customEnchants1.entrySet()) exp += enchant.getValue() * enchant.getKey().getBookMultiplier();
+        for (Map.Entry<CustomEnchantment, Integer> enchant: customEnchants2.entrySet()) exp += enchant.getValue() * enchant.getKey().getBookMultiplier();
+        for (Map.Entry<Enchantment, Integer> enchant: enchants1.entrySet()) exp += enchant.getValue() * EnchantmentManager.getMultiplier(enchant.getKey(), true);
+        for (Map.Entry<Enchantment, Integer> enchant: enchants2.entrySet()) exp += enchant.getValue() * EnchantmentManager.getMultiplier(enchant.getKey(), true);
+        exp *= new Random().nextDouble() * 0.3 + 0.85;
+        player.giveExp((int) exp);
+    }
+
+    @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Messenger.OPRemind(event.getPlayer());
+        Messenger.updateNotification(event.getPlayer(), AGMEnchants.updateChecker);
     }
 }

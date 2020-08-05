@@ -1,8 +1,8 @@
 package me.ashenguard.agmenchants;
 
-import me.ashenguard.agmenchants.api.Messenger;
-import me.ashenguard.agmenchants.api.gui.inventories.EnchantsGUI;
 import me.ashenguard.agmenchants.enchants.EnchantmentManager;
+import me.ashenguard.agmenchants.enchants.EnchantsGUI;
+import me.ashenguard.api.messenger.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,18 +24,18 @@ public class Commands implements CommandExecutor, TabCompleter {
         if (command.getName().equalsIgnoreCase("CustomEnchantments")) {
             if (!(sender instanceof Player)) {
                 if (args.length == 0 || !args[0].equalsIgnoreCase("list")) {
-                    Messenger.PlayerSend(sender, "This command can be executed by a player");
-                    Messenger.PlayerSend(sender, "Use §6/" + command.getName() + " list§r to see all loaded enchantments");
+                    Messenger.send(sender, "This command can be executed by a player");
+                    Messenger.send(sender, "Use §6/" + command.getName() + " list§r to see all loaded enchantments");
                 } else {
                     String loaded = "§a" + String.join("§r, §a", EnchantmentManager.getCustomEnchantments()) + "§r";
-                    Messenger.PlayerSend(sender, "Custom enchantments: " + loaded);
+                    Messenger.send(sender, "Custom enchantments: " + loaded);
                 }
                 return true;
             }
 
             if (args.length > 0 && args[0].equalsIgnoreCase("list")) {
                 String loaded = "§a" + String.join("§r, §a", EnchantmentManager.getCustomEnchantments()) + "§r";
-                Messenger.PlayerSend(sender, "Custom enchantments: " + loaded);
+                Messenger.send(sender, "Custom enchantments: " + loaded);
                 return true;
             }
 

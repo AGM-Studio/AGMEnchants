@@ -1,10 +1,10 @@
 package me.ashenguard.agmenchants;
 
-import me.ashenguard.agmenchants.api.Messenger;
-import me.ashenguard.agmenchants.api.SpigotUpdater;
-import me.ashenguard.agmenchants.api.gui.GUI;
-import me.ashenguard.agmenchants.dependencies.papi.PAPI;
 import me.ashenguard.agmenchants.enchants.EnchantmentLoader;
+import me.ashenguard.api.SpigotUpdater;
+import me.ashenguard.api.gui.GUI;
+import me.ashenguard.api.messenger.Messenger;
+import me.ashenguard.api.placeholderapi.PAPI;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,9 +45,10 @@ public final class AGMEnchants extends JavaPlugin {
     @Override
     public void onEnable() {
         // ---- Load config ---- //
-        Messenger.setup(this.getConfig(), this);
-        instance = this;
         loadConfig();
+
+        Messenger.setup(this, config);
+        instance = this;
 
         // ---- Check legacy ---- //
         List<String> versions = Arrays.asList("1.13", "1.14", "1.15", "1.16");
@@ -64,11 +65,8 @@ public final class AGMEnchants extends JavaPlugin {
         // ---- Metrics ---- //
         new Metrics(this, pluginID);
         updateChecker = new SpigotUpdater(this, resourceID);
-        if (config.getBoolean("Check.Updates", true) && updateChecker.checkForUpdates()) {
-            Messenger.Info("There is a §anew update§r available at §6spigotmc.org§r");
-            Messenger.Info("Current version: §c" + getDescription().getVersion() + "§r");
-            Messenger.Info("New version: §a" + updateChecker.getLatestVersion() + "§r");
-        }
+
+        Messenger.updateNotification(getServer().getConsoleSender(), updateChecker);
     }
 
     public static void loadConfig() {
@@ -92,8 +90,8 @@ public final class AGMEnchants extends JavaPlugin {
     }
 
     public static void setup() {
-        PAPI = new PAPI();
-        GUI = new GUI(isLegacy(), getInstance());
+        PAPI = new PAPI(getInstance());
+        GUI = new GUI(getInstance(), PAPI, isLegacy());
 
         new Listeners();
         new Commands();
