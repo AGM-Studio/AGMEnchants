@@ -1,9 +1,8 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.api.RomanInteger;
 import me.ashenguard.api.WebReader;
-import me.ashenguard.api.messenger.Messenger;
+import me.ashenguard.api.numeral.RomanInteger;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -21,22 +20,6 @@ public class EnchantmentManager {
     public static Set<String> getCustomEnchantments() { return enchantmentHashMap.keySet(); }
     public static void save(CustomEnchantment enchantment) { enchantmentHashMap.put(enchantment.getName(), enchantment); }
 
-    // ---- Randomize ---- //
-    public static ItemStack randomBook(CustomEnchantment enchantment) {
-        Random random = new Random();
-        return enchantment.getBook(random.nextInt(enchantment.getMaxLevel() - 1) + 1);
-    }
-    public static ItemStack randomBook(boolean force) {
-        Random random = new Random();
-        if (!force && random.nextBoolean()) return null;
-
-        List<CustomEnchantment> enchantments = (List<CustomEnchantment>) enchantmentHashMap.values();
-        CustomEnchantment enchantment = enchantments.get(random.nextInt(enchantments.size()));
-        return randomBook(enchantment);
-    }
-    public static ItemStack randomBook() {
-        return randomBook(false);
-    }
 
     // ---- Get & Set Enchantments ---- //
     public static HashMap<CustomEnchantment, Integer> extractEnchantments(ItemStack item) {
@@ -180,12 +163,12 @@ public class EnchantmentManager {
             if (blacklist.contains(enchant.getKey())) continue;
             if (!installed.contains(enchant.getKey())) {
                 notInstalled.put(enchant.getKey(), enchant.getValue());
-                Messenger.Debug("Enchants", "A new enchantment found on page", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue());
+                AGMEnchants.Messenger.Debug("Enchants", "A new enchantment found on page", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue());
             } else {
                 String version = getCustomEnchantment(enchant.getKey()).getVersion();
                 if (!version.equals(enchant.getValue())) {
                     found.put(enchant.getKey(), enchant.getValue());
-                    Messenger.Debug("Enchants", "An update was found on page for an enchantment", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue(), "Installed Version= §6" + version);
+                    AGMEnchants.Messenger.Debug("Enchants", "An update was found on page for an enchantment", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue(), "Installed Version= §6" + version);
                 }
             }
         }
@@ -194,7 +177,7 @@ public class EnchantmentManager {
     }
 
     // ---- Multipliers ---- //
-    private static File configFile = new File(AGMEnchants.getPluginFolder(), "VanillaMultipliers.yml");
+    private static File configFile = new File(AGMEnchants.getInstance().getDataFolder(), "VanillaMultipliers.yml");
     static {
         if (!configFile.exists())
             AGMEnchants.getInstance().saveResource("VanillaMultipliers.yml", false);
