@@ -1,8 +1,7 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.api.FileUtil;
-import me.ashenguard.api.messenger.Messenger;
+import me.ashenguard.api.utils.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,12 +23,12 @@ public class EnchantmentLoader {
             Bukkit.getPluginManager().registerEvents((Listener) enchantment, plugin);
         }
 
-        Messenger.Debug("Enchants", "Enchantment registered successfully", "Enchantment= §6" + enchantment.getName());
+        AGMEnchants.Messenger.Debug("Enchants", "Enchantment registered successfully", "Enchantment= §6" + enchantment.getName());
         return true;
     }
 
     public CustomEnchantment registerEnchantment(String fileName) {
-        List<Class<?>> subs = FileUtil.getClasses(AGMEnchants.getEnchantsFolder(), fileName, CustomEnchantment.class);
+        List<Class<?>> subs = FileUtils.getClasses(AGMEnchants.getEnchantsFolder(), fileName, CustomEnchantment.class);
         if (subs == null || subs.isEmpty()) return null;
 
         CustomEnchantment enchantment = createInstance(subs.get(0));
@@ -38,7 +37,7 @@ public class EnchantmentLoader {
     }
 
     public void registerAllEnchantments() {
-        List<Class<?>> subs = FileUtil.getClasses(AGMEnchants.getEnchantsFolder(), CustomEnchantment.class);
+        List<Class<?>> subs = FileUtils.getClasses(AGMEnchants.getEnchantsFolder(), CustomEnchantment.class);
         if (subs == null || subs.isEmpty()) return;
 
         for (Class<?> klass : subs) {
@@ -47,7 +46,7 @@ public class EnchantmentLoader {
                 try {
                     registerEnchantment(enchantment);
                 } catch (Exception e) {
-                    Messenger.Warning("Unable to register enchantment called " + enchantment.getName());
+                    AGMEnchants.Messenger.Warning("Unable to register enchantment called " + enchantment.getName());
                     e.printStackTrace();
                 }
             }
@@ -72,7 +71,7 @@ public class EnchantmentLoader {
                 }
             }
         } catch (Throwable t) {
-            Messenger.Warning("Failed to initialize enchantment from class: " + clazz.getName());
+            AGMEnchants.Messenger.Warning("Failed to initialize enchantment from class: " + clazz.getName());
             t.printStackTrace();
         }
 
