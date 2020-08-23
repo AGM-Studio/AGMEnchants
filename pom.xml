@@ -6,7 +6,7 @@
 
     <groupId>me.ashenguard</groupId>
     <artifactId>AGMEnchants</artifactId>
-    <version>2.1</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
 
     <name>AGMEnchants</name>
@@ -89,7 +89,7 @@
             <groupId>me.ashenguard</groupId>
             <artifactId>AGMCore</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -110,10 +110,10 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>19.0.0</version>
-            <scope>compile</scope>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.8</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
