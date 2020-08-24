@@ -2,6 +2,7 @@ package me.ashenguard.agmenchants;
 
 import me.ashenguard.agmenchants.listeners.Anvil;
 import me.ashenguard.agmenchants.listeners.EnchantmentTable;
+import me.ashenguard.agmenchants.listeners.Fishing;
 import me.ashenguard.agmenchants.listeners.Grindstone;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,7 @@ public class Listeners implements Listener {
         new Anvil();
         new EnchantmentTable();
         new Grindstone();
+        new Fishing();
 
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
 
