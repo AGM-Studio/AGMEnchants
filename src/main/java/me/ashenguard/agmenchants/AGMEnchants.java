@@ -1,32 +1,31 @@
 package me.ashenguard.agmenchants;
 
+import me.ashenguard.agmenchants.commands.CommandCustomEnchantment;
 import me.ashenguard.agmenchants.enchants.EnchantmentLoader;
 import me.ashenguard.api.SpigotUpdater;
 import me.ashenguard.api.gui.GUI;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.placeholderapi.PAPI;
+import me.ashenguard.api.utils.VersionUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 public final class AGMEnchants extends JavaPlugin {
     public static final int pluginID = 8218;
     public static final int resourceID = 81800;
-
+    public static SpigotUpdater spigotupdater;
     public static FileConfiguration config;
-    public static SpigotUpdater updateChecker;
+
+    public static GUI GUI = null;
+    public static PAPI PAPI = null;
+    public static Messenger Messenger = null;
 
     private static boolean legacy;
     private static JavaPlugin instance;
-    private static File pluginFolder;
     private static File enchantsFolder;
-
-    public static PAPI PAPI;
-    public static GUI GUI;
 
     // ---- Getters ---- //
     public static JavaPlugin getInstance() {
@@ -35,9 +34,6 @@ public final class AGMEnchants extends JavaPlugin {
     public static boolean isLegacy() {
         return legacy;
     }
-    public static File getPluginFolder() {
-        return pluginFolder;
-    }
     public static File getEnchantsFolder() {
         return enchantsFolder;
     }
@@ -45,28 +41,24 @@ public final class AGMEnchants extends JavaPlugin {
     @Override
     public void onEnable() {
         // ---- Load config ---- //
+        instance = this;
         loadConfig();
 
-        Messenger.setup(this, config);
-        instance = this;
+        Messenger = new Messenger(this, config);
+        Messenger.Info("§5Config§r has been loaded");
+
+        // ---- Development ---- //
+        new Metrics(this, pluginID);
+        spigotupdater = new SpigotUpdater(this, resourceID);
+        Messenger.updateNotification(getServer().getConsoleSender(), spigotupdater);
 
         // ---- Check legacy ---- //
-        List<String> versions = Arrays.asList("1.13", "1.14", "1.15", "1.16");
-        legacy = true;
-        for (String version : versions)
-            if (getServer().getVersion().contains(version))
-                legacy = false;
-
+        legacy = VersionUtils.isLegacy(this);
         if (isLegacy()) Messenger.Debug("General", "Legacy version detected");
-
         // ---- Setup data ---- //
         setup();
-
-        // ---- Metrics ---- //
-        new Metrics(this, pluginID);
-        updateChecker = new SpigotUpdater(this, resourceID);
-
-        Messenger.updateNotification(getServer().getConsoleSender(), updateChecker);
+        new CommandCustomEnchantment();
+        new Placeholders(this).register();
     }
 
     public static void loadConfig() {
@@ -74,19 +66,15 @@ public final class AGMEnchants extends JavaPlugin {
         JavaPlugin plugin = getInstance();
 
         config = plugin.getConfig();
+
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
-        Messenger.Info("§5Config§r has been loaded");
 
         // ---- Set other configs ---- //
-        pluginFolder = plugin.getDataFolder();
-        if (!pluginFolder.exists())
-            if (pluginFolder.mkdirs())
-                Messenger.Debug("General", "Plugin folder wasn't found, A new one created");
+        File pluginFolder = plugin.getDataFolder();
+        if (!pluginFolder.exists()) pluginFolder.mkdirs();
         enchantsFolder = new File(pluginFolder, "Enchants");
-        if (!enchantsFolder.exists())
-            if (enchantsFolder.mkdirs())
-                Messenger.Debug("General", "Enchant folder wasn't found, A new one created");
+        if (!enchantsFolder.exists()) enchantsFolder.mkdirs();
     }
 
     public static void setup() {
@@ -94,7 +82,6 @@ public final class AGMEnchants extends JavaPlugin {
         GUI = new GUI(getInstance(), PAPI, isLegacy());
 
         new Listeners();
-        new Commands();
 
         new EnchantmentLoader(getInstance()).registerAllEnchantments();
     }

@@ -4,13 +4,11 @@ import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.api.WebReader;
 import me.ashenguard.api.numeral.RomanInteger;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.File;
 import java.util.*;
 
 
@@ -18,7 +16,13 @@ public class EnchantmentManager {
     private static HashMap<String, CustomEnchantment> enchantmentHashMap = new HashMap<>();
     public static CustomEnchantment getCustomEnchantment(String name) { return enchantmentHashMap.getOrDefault(name, null); }
     public static Set<String> getCustomEnchantments() { return enchantmentHashMap.keySet(); }
-    public static void save(CustomEnchantment enchantment) { enchantmentHashMap.put(enchantment.getName(), enchantment); }
+    public static void save(CustomEnchantment enchantment) {
+        if (!enchantment.canRegister()) {
+            AGMEnchants.Messenger.Debug("Enchants", "Enchantment ignores to be loaded", "Enchantment= §6" + enchantment.name);
+            return;
+        }
+        enchantmentHashMap.put(enchantment.getName(), enchantment);
+    }
 
 
     // ---- Get & Set Enchantments ---- //
@@ -26,25 +30,11 @@ public class EnchantmentManager {
         HashMap<CustomEnchantment, Integer> enchants = new HashMap<>();
         if (item == null || item.getType().equals(Material.AIR)) return enchants;
         for (CustomEnchantment enchantment: enchantmentHashMap.values()) {
-            int level = getEnchantmentLevel(item, enchantment);
+            int level = enchantment.getEnchantLevel(item);
             if (level > 0) enchants.put(enchantment, level);
         }
 
         return enchants;
-    }
-
-    public static int getEnchantmentLevel(ItemStack item, CustomEnchantment enchantment) {
-        if (item == null || item.getType().equals(Material.AIR)) return 0;
-        List<String> lore = item.getItemMeta().getLore();
-        if (lore == null) return 0;
-
-        for (String line : lore)
-            if (line.contains(enchantment.getName())) {
-                if (enchantment.getMaxLevel() == 1) return 1;
-                return Math.min(RomanInteger.toInteger(line.substring(line.lastIndexOf(" "))), enchantment.getMaxLevel());
-            }
-
-        return 0;
     }
 
     public static void removeAllEnchantments(ItemStack item) {
@@ -58,7 +48,7 @@ public class EnchantmentManager {
 
         List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
 
-        itemLore.removeIf(line -> line.contains(customEnchantment.getName()));
+        itemLore.removeIf(line -> customEnchantment.getLevelFromLine(item, line) > 0);
 
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setLore(itemLore);
@@ -89,8 +79,8 @@ public class EnchantmentManager {
     }
     public static void rebase(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments) {
         if (item == null || item.getType().equals(Material.AIR)) return;
-
         removeAllEnchantments(item);
+
         List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
         List<String> lore = new ArrayList<>();
 
@@ -174,20 +164,5 @@ public class EnchantmentManager {
         }
 
         return notInstalled;
-    }
-
-    // ---- Multipliers ---- //
-    private static File configFile = new File(AGMEnchants.getInstance().getDataFolder(), "VanillaMultipliers.yml");
-    static {
-        if (!configFile.exists())
-            AGMEnchants.getInstance().saveResource("VanillaMultipliers.yml", false);
-    }
-    private static YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-
-    public static int getMultiplier(Enchantment enchantment, boolean book) {
-        return config.getInt(enchantment.getName() + (book ? ".Book" : ".Item"), 1);
-    }
-    public static int getMultiplier(CustomEnchantment enchantment, boolean book) {
-        return book ? enchantment.getBookMultiplier() : enchantment.getItemMultiplier();
     }
 }
