@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
 import me.ashenguard.api.WebReader;
 import me.ashenguard.api.numeral.RomanInteger;
 import org.bukkit.Material;
@@ -18,10 +19,10 @@ public class EnchantmentManager {
     public static Set<String> getCustomEnchantments() { return enchantmentHashMap.keySet(); }
     public static void save(CustomEnchantment enchantment) {
         if (!enchantment.canRegister()) {
-            AGMEnchants.Messenger.Debug("Enchants", "Enchantment ignores to be loaded", "Enchantment= §6" + enchantment.name);
+            AGMEnchants.Messenger.Debug("Enchants", "Enchantment ignores to be loaded", "Enchantment= §6" + enchantment.getID());
             return;
         }
-        enchantmentHashMap.put(enchantment.getName(), enchantment);
+        enchantmentHashMap.put(enchantment.getID(), enchantment);
     }
 
 
@@ -48,7 +49,7 @@ public class EnchantmentManager {
 
         List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
 
-        itemLore.removeIf(line -> customEnchantment.getLevelFromLine(item, line) > 0);
+        itemLore.removeIf(line -> customEnchantment.getLevelFromLine(line) > 0);
 
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setLore(itemLore);
@@ -129,7 +130,7 @@ public class EnchantmentManager {
         String name = getColoredName(enchantment);
 
         if (enchantment.getMaxLevel() == 1) return name;
-        return name + " " + RomanInteger.toRoman(Math.min(level, enchantment.maxLevel));
+        return name + " " + RomanInteger.toRoman(Math.min(level, enchantment.getMaxLevel()));
     }
 
     public static HashMap<String, String> checkEnchantments() {

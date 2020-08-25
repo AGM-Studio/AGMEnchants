@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
 import me.ashenguard.api.gui.GUIInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

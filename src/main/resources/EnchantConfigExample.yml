@@ -1,0 +1,39 @@
+# -------------------------------------------------------------------------------------------------------------------- #
+# Configuration tutorial                                                                                               #
+# -------------------------------------------------------------------------------------------------------------------- #
+# Name :                                                                                                               #
+#     The enchantment name, This name is used to be showed in item description                                         #
+# OtherNames :                                                                                                         #
+#     When ever you change the "Name" add the name to this list.                                                       #
+#     It is possible to some items remain with old name and don't be recognized                                        #
+# Description :                                                                                                        #
+#     This description will be showed on GUI                                                                           #
+# Applicable :                                                                                                         #
+#     Items that this enchantment can be applied to, You can use Items list defined in main config file or materials   #
+# Treasure :                                                                                                           #
+#     Treasure enchantments can not be obtained with enchantment table, These enchantments have a cyan color           #
+# Cursed :                                                                                                             #
+#     Cursed enchantments have a red color and means they has negative effects. A cursed enchantment can be obtained   #
+#     with enchantment table while enchanting unless you specify it as treasure (Red color overrides the cyan)         #
+# Multiplier :                                                                                                         #
+#     While using anvil/enchantment table these values determine the enchantment price and value, Higher values means  #
+#     more cost while enchanting                                                                                       #
+# MaxLevel :                                                                                                           #
+#     This number determine how many levels this enchantment has.                                                      #
+#     Unlike the vanilla enchantments, Custom enchantments can not pass the max level or be lower than level 1         #
+# Levels :                                                                                                             #
+#     This section determines level details, This section is different in each enchantment                             #
+#     You need to start with "1" and continue to reach max level.                                                      #
+# -------------------------------------------------------------------------------------------------------------------- #
+
+Name: Example
+OtherNames: []
+Description: |-
+  Example Description
+Applicable: []
+Treasure: false
+Cursed: false
+Multiplier:
+  Book: 1
+  Item: 1
+MaxLevel: 1
