@@ -1,9 +1,9 @@
 package me.ashenguard.agmenchants.listeners;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.enchants.CustomEnchantment;
 import me.ashenguard.agmenchants.enchants.EnchantmentManager;
-import me.ashenguard.agmenchants.enchants.EnchantmentMultiplier;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantmentMultiplier;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -60,7 +60,7 @@ public class Fishing implements Listener {
             int level = 1;
             while (level < enchant.getMaxLevel() && (30 - power - level) / (double) 30 < new Random().nextDouble()) level += 1;
             EnchantmentManager.addEnchantment(itemStack, enchant, level);
-            power += level * EnchantmentMultiplier.getMultiplier(enchant).bookMultiplier;
+            power += level * CustomEnchantmentMultiplier.getMultiplier(enchant).bookMultiplier;
         }
     }
 }

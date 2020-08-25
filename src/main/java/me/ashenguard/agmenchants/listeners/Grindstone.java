@@ -1,9 +1,9 @@
 package me.ashenguard.agmenchants.listeners;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.enchants.CustomEnchantment;
 import me.ashenguard.agmenchants.enchants.EnchantmentManager;
-import me.ashenguard.agmenchants.enchants.EnchantmentMultiplier;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantmentMultiplier;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -50,8 +50,8 @@ public class Grindstone implements Listener {
         double exp = 0;
         for (Map.Entry<CustomEnchantment, Integer> enchant: customEnchants1.entrySet()) exp += enchant.getValue() * enchant.getKey().getMultiplier().bookMultiplier;
         for (Map.Entry<CustomEnchantment, Integer> enchant: customEnchants2.entrySet()) exp += enchant.getValue() * enchant.getKey().getMultiplier().bookMultiplier;
-        for (Map.Entry<Enchantment, Integer> enchant: enchants1.entrySet()) exp += enchant.getValue() * EnchantmentMultiplier.getMultiplier(enchant.getKey()).bookMultiplier;
-        for (Map.Entry<Enchantment, Integer> enchant: enchants2.entrySet()) exp += enchant.getValue() * EnchantmentMultiplier.getMultiplier(enchant.getKey()).bookMultiplier;
+        for (Map.Entry<Enchantment, Integer> enchant: enchants1.entrySet()) exp += enchant.getValue() * CustomEnchantmentMultiplier.getMultiplier(enchant.getKey()).bookMultiplier;
+        for (Map.Entry<Enchantment, Integer> enchant: enchants2.entrySet()) exp += enchant.getValue() * CustomEnchantmentMultiplier.getMultiplier(enchant.getKey()).bookMultiplier;
         exp *= new Random().nextDouble() * 0.2 + 0.4;
         player.giveExp((int) exp);
     }

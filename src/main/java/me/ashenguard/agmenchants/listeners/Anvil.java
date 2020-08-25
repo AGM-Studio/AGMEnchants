@@ -1,9 +1,9 @@
 package me.ashenguard.agmenchants.listeners;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.enchants.CustomEnchantment;
 import me.ashenguard.agmenchants.enchants.EnchantmentManager;
-import me.ashenguard.agmenchants.enchants.EnchantmentMultiplier;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantmentMultiplier;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
@@ -82,13 +82,13 @@ public class Anvil implements Listener {
 
             if (level > oldLevel) {
                 enchants.put(enchantment, level);
-                repairCost += level * EnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += level * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
             } else if (level == oldLevel) {
                 enchants.put(enchantment, Math.min(level + 1, enchantment.getMaxLevel()));
-                repairCost += Math.min(level + 1, enchantment.getMaxLevel())  * EnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += Math.min(level + 1, enchantment.getMaxLevel())  * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
             } else {
                 enchants.put(enchantment, oldLevel);
-                repairCost += oldLevel * EnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += oldLevel * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
             }
         }
         result.addUnsafeEnchantments(enchants);
@@ -106,13 +106,13 @@ public class Anvil implements Listener {
 
             if (level > oldLevel) {
                 customEnchants.put(enchantment, level);
-                repairCost += level * EnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += level * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
             } else if (level == oldLevel) {
                 customEnchants.put(enchantment, Math.min(level + 1, enchantment.getMaxLevel()));
-                repairCost += Math.min(level + 1, enchantment.getMaxLevel()) * EnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += Math.min(level + 1, enchantment.getMaxLevel()) * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
             } else {
                 customEnchants.put(enchantment, oldLevel);
-                repairCost += oldLevel * EnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += oldLevel * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
             }
         }
         EnchantmentManager.addEnchantments(result, customEnchants);

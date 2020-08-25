@@ -1,9 +1,9 @@
 package me.ashenguard.agmenchants.listeners;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.enchants.CustomEnchantment;
 import me.ashenguard.agmenchants.enchants.EnchantmentManager;
-import me.ashenguard.agmenchants.enchants.EnchantmentMultiplier;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
+import me.ashenguard.agmenchants.enchants.custom.CustomEnchantmentMultiplier;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
@@ -48,7 +48,7 @@ public class EnchantmentTable implements Listener {
             int level = 1;
             while (level < enchant.getMaxLevel() && (cost - power - level) / (double) cost < new Random().nextDouble()) level += 1;
             EnchantmentManager.addEnchantment(item, enchant, level);
-            power += level * EnchantmentMultiplier.getMultiplier(enchant).bookMultiplier;
+            power += level * CustomEnchantmentMultiplier.getMultiplier(enchant).bookMultiplier;
         }
     }
 
