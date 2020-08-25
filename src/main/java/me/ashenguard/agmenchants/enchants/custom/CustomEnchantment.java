@@ -47,7 +47,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues {
         this.ID = ID;
         this.version = version;
 
-        File configFolder = new File(plugin.getDataFolder(), "configs");
+        File configFolder = new File(AGMEnchants.getEnchantsFolder(), "configs");
         if (!configFolder.exists()) configFolder.mkdirs();
         saveDefaultConfig();
 

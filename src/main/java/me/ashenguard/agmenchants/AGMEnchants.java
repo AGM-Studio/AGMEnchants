@@ -55,6 +55,7 @@ public final class AGMEnchants extends JavaPlugin {
         // ---- Check legacy ---- //
         legacy = VersionUtils.isLegacy(this);
         if (isLegacy()) Messenger.Debug("General", "Legacy version detected");
+
         // ---- Setup data ---- //
         setup();
         new CommandCustomEnchantment();
