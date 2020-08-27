@@ -2,7 +2,6 @@ package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
-import me.ashenguard.api.WebReader;
 import me.ashenguard.api.numeral.RomanInteger;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -15,7 +14,7 @@ import java.util.*;
 
 public class EnchantmentManager {
     private static HashMap<String, CustomEnchantment> enchantmentHashMap = new HashMap<>();
-    public static CustomEnchantment getCustomEnchantment(String name) { return enchantmentHashMap.getOrDefault(name, null); }
+    public static CustomEnchantment getCustomEnchantment(String id) { return enchantmentHashMap.getOrDefault(id, null); }
     public static Set<String> getCustomEnchantments() { return enchantmentHashMap.keySet(); }
     public static void save(CustomEnchantment enchantment) {
         if (!enchantment.canRegister()) {
@@ -131,39 +130,5 @@ public class EnchantmentManager {
 
         if (enchantment.getMaxLevel() == 1) return name;
         return name + " " + RomanInteger.toRoman(Math.min(level, enchantment.getMaxLevel()));
-    }
-
-    public static HashMap<String, String> checkEnchantments() {
-        HashMap<String, String> found = new HashMap<>();
-        boolean enchants = false;
-        List<String> lines = new WebReader("https://raw.githubusercontent.com/wiki/Ashengaurd/AGMEnchants/Enchantments.md").readLines();
-        for (String line: lines) {
-            if (line.startsWith("***")) enchants = true;
-            if (enchants && line.startsWith("### ")) {
-                String name = line.substring(4).replace("\n", "");
-                String version = lines.get(lines.indexOf(line) + 1).replace("Version:", "").replace("\n", "").replace(" ", "");
-                found.put(name, version);
-            }
-        }
-
-        Set<String> installed = getCustomEnchantments();
-        List<String> blacklist = AGMEnchants.config.getStringList("Check.BlacklistedEnchantments");
-        HashMap<String, String> notInstalled = new HashMap<>();
-
-        for (Map.Entry<String, String> enchant: found.entrySet()) {
-            if (blacklist.contains(enchant.getKey())) continue;
-            if (!installed.contains(enchant.getKey())) {
-                notInstalled.put(enchant.getKey(), enchant.getValue());
-                AGMEnchants.Messenger.Debug("Enchants", "A new enchantment found on page", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue());
-            } else {
-                String version = getCustomEnchantment(enchant.getKey()).getVersion();
-                if (!version.equals(enchant.getValue())) {
-                    found.put(enchant.getKey(), enchant.getValue());
-                    AGMEnchants.Messenger.Debug("Enchants", "An update was found on page for an enchantment", "Name= §6" + enchant.getKey(), "Version= §6" + enchant.getValue(), "Installed Version= §6" + version);
-                }
-            }
-        }
-
-        return notInstalled;
     }
 }

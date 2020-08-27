@@ -5,6 +5,7 @@ import me.ashenguard.agmenchants.enchants.EnchantmentManager;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.numeral.RomanInteger;
 import me.ashenguard.api.utils.FileUtils;
+import me.ashenguard.api.utils.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -25,7 +26,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues {
     protected JavaPlugin plugin = AGMEnchants.getInstance();
 
     protected final String ID; public String getID() { return ID; }
-    protected final String version; public String getVersion() { return version; }
+    protected final Version version; public Version getVersion() { return version; }
 
     protected final String name; public String getName() { return name; }
     protected final List<String> otherNames; public List<String> getOtherNames() { return otherNames; }
@@ -44,6 +45,9 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues {
 
     public boolean canRegister() { return true; }
     public CustomEnchantment(@NotNull String ID, String version) {
+        this(ID, new Version(version));
+    }
+    public CustomEnchantment(@NotNull String ID, Version version) {
         this.ID = ID;
         this.version = version;
 

@@ -1,5 +1,6 @@
 package me.ashenguard.agmenchants;
 
+import me.ashenguard.agmenchants.enchants.remote.RemoteEnchantment;
 import me.ashenguard.agmenchants.listeners.Anvil;
 import me.ashenguard.agmenchants.listeners.EnchantmentTable;
 import me.ashenguard.agmenchants.listeners.Fishing;
@@ -25,5 +26,14 @@ public class Listeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         AGMEnchants.Messenger.updateNotification(event.getPlayer(), AGMEnchants.spigotupdater);
+
+        if (!event.getPlayer().isOp()) {
+            int size = RemoteEnchantment.getRemoteEnchantments().size();
+            if (size > 0) {
+                AGMEnchants.Messenger.reminder(() -> {
+                    AGMEnchants.Messenger.send(event.getPlayer(), "There " + (size == 1 ? "is one" : "are " + size) + " enchantments that are not installed or requires update");
+                }, 100L);
+            }
+        }
     }
 }
