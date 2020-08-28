@@ -23,7 +23,7 @@ public class Anvil implements Listener {
     public Anvil() {
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
 
-        AGMEnchants.Messenger.Debug("Listeners", "Anvil has been implemented");
+        AGMEnchants.Messenger.Debug("General", "Anvil has been implemented");
     }
 
     @EventHandler

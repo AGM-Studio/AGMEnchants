@@ -20,7 +20,7 @@ public class Listeners implements Listener {
 
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
 
-        AGMEnchants.Messenger.Debug("Listeners", "Listeners has been registered");
+        AGMEnchants.Messenger.Debug("General", "All listeners has been registered");
     }
 
     @EventHandler

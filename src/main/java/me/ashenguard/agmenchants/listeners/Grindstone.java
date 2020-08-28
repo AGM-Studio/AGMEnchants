@@ -22,7 +22,7 @@ public class Grindstone implements Listener {
     public Grindstone() {
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
 
-        AGMEnchants.Messenger.Debug("Listeners", "Grindstone has been implemented");
+        AGMEnchants.Messenger.Debug("General", "Grindstone has been implemented");
     }
 
     @EventHandler

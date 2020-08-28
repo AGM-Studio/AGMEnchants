@@ -25,7 +25,7 @@ public class Fishing implements Listener {
     public Fishing() {
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
 
-        AGMEnchants.Messenger.Debug("Listeners", "Fishing has been implemented");
+        AGMEnchants.Messenger.Debug("General", "Fishing has been implemented");
     }
 
     @EventHandler

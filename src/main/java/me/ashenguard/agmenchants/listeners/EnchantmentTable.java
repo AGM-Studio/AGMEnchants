@@ -19,7 +19,7 @@ public class EnchantmentTable implements Listener {
     public EnchantmentTable() {
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
 
-        AGMEnchants.Messenger.Debug("Listeners", "Enchantment table has been implemented");
+        AGMEnchants.Messenger.Debug("General", "Enchantment table has been implemented");
     }
 
     @EventHandler
