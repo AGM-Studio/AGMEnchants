@@ -2,7 +2,6 @@ package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.custom.CustomEnchantment;
-import me.ashenguard.api.numeral.RomanInteger;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -18,12 +17,11 @@ public class EnchantmentManager {
     public static Set<String> getCustomEnchantments() { return enchantmentHashMap.keySet(); }
     public static void save(CustomEnchantment enchantment) {
         if (!enchantment.canRegister()) {
-            AGMEnchants.Messenger.Debug("Enchants", "Enchantment ignores to be loaded", "Enchantment= §6" + enchantment.getID());
+            AGMEnchants.Messenger.Warning("An enchantment ignores to be loaded", "Enchantment= §6" + enchantment.getID());
             return;
         }
         enchantmentHashMap.put(enchantment.getID(), enchantment);
     }
-
 
     // ---- Get & Set Enchantments ---- //
     public static HashMap<CustomEnchantment, Integer> extractEnchantments(ItemStack item) {
@@ -56,12 +54,19 @@ public class EnchantmentManager {
 
         customEnchantment.disenchanted(item);
     }
+    public static void addEnchantments(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments, boolean call) {
+        for (Map.Entry<CustomEnchantment, Integer> enchantment: customEnchantments.entrySet())
+            addEnchantment(item, enchantment.getKey(), enchantment.getValue(), call);
+    }
     public static void addEnchantments(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments) {
-        rebase(item, customEnchantments, true);
+        addEnchantments(item, customEnchantments, false);
+    }
+    public static void addEnchantment(ItemStack item, CustomEnchantment enchantment, int level, boolean call) {
+        rebase(item, Collections.singletonMap(enchantment, level), true);
+        if (call) enchantment.enchanted(item);
     }
     public static void addEnchantment(ItemStack item, CustomEnchantment enchantment, int level) {
-        rebase(item, Collections.singletonMap(enchantment, level), true);
-        enchantment.enchanted(item);
+        addEnchantment(item, enchantment, level, false);
     }
 
     public static boolean canEnchantItem(CustomEnchantment enchantment, ItemStack item) {
@@ -84,8 +89,10 @@ public class EnchantmentManager {
         List<String> itemLore = item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>();
         List<String> lore = new ArrayList<>();
 
-        for (Map.Entry<CustomEnchantment, Integer> customEnchantment: customEnchantments.entrySet())
-            lore.add(getColoredName(customEnchantment.getKey(), customEnchantment.getValue()));
+        List<CustomEnchantment> enchants = new ArrayList<>(customEnchantments.keySet());
+        Collections.sort(enchants);
+        for (CustomEnchantment enchant: enchants)
+            lore.add(enchant.getColoredName(customEnchantments.get(enchant)));
 
         lore.addAll(itemLore);
 
@@ -95,9 +102,10 @@ public class EnchantmentManager {
         boolean flagged = customEnchantments.size() > 0;
         Map<Enchantment, Integer> enchantments = item.getEnchantments();
         for (Map.Entry<Enchantment, Integer> enchantment: enchantments.entrySet()) {
-            if (!flagged || !enchantment.getKey().equals(Enchantment.PROTECTION_ENVIRONMENTAL) || enchantment.getValue() != 0) {
-                flagged = false; break;
-            }
+            if (!flagged || !enchantment.getKey().equals(Enchantment.PROTECTION_ENVIRONMENTAL) || enchantment.getValue() != 0)
+                flagged = false;
+            if (enchantment.getKey().equals(Enchantment.PROTECTION_ENVIRONMENTAL) && enchantment.getValue() == 0)
+                item.removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
         }
 
         if (flagged) {
@@ -112,23 +120,10 @@ public class EnchantmentManager {
         item.setItemMeta(itemMeta);
     }
     public static void rebase(ItemStack item, Map<CustomEnchantment, Integer> customEnchantments, boolean keep) {
-        if (keep) {
-            for (Map.Entry<CustomEnchantment, Integer> extracted: extractEnchantments(item).entrySet())
-                customEnchantments.put(extracted.getKey(), Math.max(extracted.getValue(), customEnchantments.getOrDefault(extracted.getKey(), 0)));
-        }
-        rebase(item, customEnchantments);
-    }
+        Map<CustomEnchantment, Integer> previousCustomEnchantments = keep ? extractEnchantments(item) : new HashMap<>();
+        for (Map.Entry<CustomEnchantment, Integer> customEnchantment: customEnchantments.entrySet())
+            previousCustomEnchantments.put(customEnchantment.getKey(), Math.max(customEnchantment.getValue(), previousCustomEnchantments.getOrDefault(customEnchantment.getKey(), 0)));
 
-    public static String getColoredName(CustomEnchantment enchantment) {
-        String color = enchantment.isTreasure() ? "§b" : "§7";
-        color = enchantment.isCursed() ? "§c" : color;
-
-        return color + enchantment.getName();
-    }
-    public static String getColoredName(CustomEnchantment enchantment, int level) {
-        String name = getColoredName(enchantment);
-
-        if (enchantment.getMaxLevel() == 1) return name;
-        return name + " " + RomanInteger.toRoman(Math.min(level, enchantment.getMaxLevel()));
+        rebase(item, previousCustomEnchantments);
     }
 }

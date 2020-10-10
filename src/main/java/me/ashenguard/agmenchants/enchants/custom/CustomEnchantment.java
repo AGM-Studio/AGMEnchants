@@ -16,12 +16,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
-public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues {
+public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues implements Comparable<CustomEnchantment> {
     protected BukkitScheduler scheduler = Bukkit.getScheduler();
     protected JavaPlugin plugin = AGMEnchants.getInstance();
 
@@ -102,12 +99,8 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues {
     public ItemStack getInfoBook() {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = book.getItemMeta();
-        itemMeta.setDisplayName(EnchantmentManager.getColoredName(this));
-
-        List<String> lore = new ArrayList<>(sliceDescription());
-        lore.add("§7§m----------------------");
-        lore.add("§6Total Levels: " + maxLevel);
-        itemMeta.setLore(lore);
+        itemMeta.setDisplayName(getColoredName());
+        itemMeta.setLore(sliceDescription());
         book.setItemMeta(itemMeta);
 
         return book;
@@ -115,18 +108,43 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues {
     public ItemStack getInfoBook(int level) {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta itemMeta = book.getItemMeta();
-        itemMeta.setDisplayName(EnchantmentManager.getColoredName(this));
+        itemMeta.setDisplayName(getColoredName());
 
-        List<String> lore = new ArrayList<>(sliceDescription());
-        lore.add("§7§m----------------------");
-        lore.addAll(getLevelDetails(level));
+        List<String> lore = getLevelDetails(level);
         itemMeta.setLore(lore);
         book.setItemMeta(itemMeta);
 
         return book;
     }
 
-    protected abstract List<String> getLevelDetails(int level);
+    public String getColoredName() {
+        String color = isTreasure() ? "§b" : "§7";
+        color = isCursed() ? "§c" : color;
+
+        return color + getName();
+    }
+    public String getColoredName(int level) {
+        String name = getColoredName();
+
+        if (getMaxLevel() == 1) return name;
+        return name + " " + RomanInteger.toRoman(Math.min(level, getMaxLevel()));
+    }
+
+    protected abstract CustomEnchantmentLevel getLevelInfo(int level);
+    public List<String> getLevelDetails(Map<String, Object> details) {
+        details = details == null ? new LinkedHashMap<>() : details;
+        String levelInfo = config.getString("LevelInfo");
+        for(Map.Entry<String, Object> detail: details.entrySet())
+            levelInfo = levelInfo.replace("%" + detail.getKey() + "%", String.valueOf(detail.getValue()));
+
+        return new ArrayList<>(Arrays.asList(levelInfo.split("\n")));
+    }
+    public List<String> getLevelDetails(int level) {
+        CustomEnchantmentLevel customLevel = getLevelInfo(level);
+        LinkedHashMap<String, Object> details = customLevel == null? new LinkedHashMap<>() : customLevel.getLevelDetails();
+
+        return getLevelDetails(details);
+    }
 
     public boolean conflictsWith(Enchantment enchantment) {
         return conflicts().contains(enchantment.getName());
@@ -188,5 +206,10 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues {
                 return Math.min(RomanInteger.toInteger(line.substring(line.lastIndexOf(" "))), maxLevel);
             }
         return 0;
+    }
+
+    @Override
+    public int compareTo(@NotNull CustomEnchantment o) {
+        return ID.compareTo(o.ID);
     }
 }

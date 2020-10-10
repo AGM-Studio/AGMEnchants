@@ -27,7 +27,7 @@ public class Listeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         AGMEnchants.Messenger.updateNotification(event.getPlayer(), AGMEnchants.spigotupdater);
 
-        if (!event.getPlayer().isOp()) {
+        if (AGMEnchants.config.getBoolean("Check.Enchantments") && event.getPlayer().isOp()) {
             int size = RemoteEnchantment.getRemoteEnchantments().size();
             if (size > 0) {
                 AGMEnchants.Messenger.reminder(() -> {

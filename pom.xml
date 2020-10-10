@@ -6,7 +6,7 @@
 
     <groupId>me.ashenguard</groupId>
     <artifactId>AGMEnchants</artifactId>
-    <version>3.0</version>
+    <version>3.1</version>
     <packaging>jar</packaging>
 
     <name>AGMEnchants</name>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>me.ashenguard</groupId>
             <artifactId>AGMCore</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

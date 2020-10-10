@@ -35,10 +35,8 @@ public class Anvil implements Listener {
         if (sacrifice == null || !(sacrifice.getType().equals(Material.ENCHANTED_BOOK) || item.getType().equals(sacrifice.getType()))) return;
 
         // ---- Get all required things ---- //
-        Map<Enchantment, Integer> oldEnchants = item.getEnchantments();
-        Map<Enchantment, Integer> newEnchants;
-        if (sacrifice.getType().equals(Material.ENCHANTED_BOOK)) newEnchants = ((EnchantmentStorageMeta) sacrifice.getItemMeta()).getStoredEnchants();
-        else newEnchants = sacrifice.getEnchantments();
+        Map<Enchantment, Integer> oldEnchants = item.getType().equals(Material.ENCHANTED_BOOK) ? ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants() : item.getEnchantments();
+        Map<Enchantment, Integer> newEnchants = sacrifice.getType().equals(Material.ENCHANTED_BOOK) ? ((EnchantmentStorageMeta) sacrifice.getItemMeta()).getStoredEnchants() : sacrifice.getEnchantments();
 
         Map<CustomEnchantment, Integer> oldCustomEnchants = EnchantmentManager.extractEnchantments(item);
         Map<CustomEnchantment, Integer> newCustomEnchants = EnchantmentManager.extractEnchantments(sacrifice);
@@ -51,6 +49,9 @@ public class Anvil implements Listener {
         int repairCost = initCost;
 
         // ---- Create Result ---- //
+        boolean enchanting = false;
+        boolean repairing = false;
+        boolean naming = false;
         ItemStack result = item.clone();
         ItemMeta resultMeta = result.getItemMeta();
 
@@ -60,12 +61,14 @@ public class Anvil implements Listener {
             resultMeta.setDisplayName(name);
             result.setItemMeta(resultMeta);
             repairCost += 1;
+            naming = true;
         }
         if (item.getType().equals(sacrifice.getType())) {
             if (result.getDurability() < result.getType().getMaxDurability()) {
                 short durability = (short) (item.getDurability() + sacrifice.getDurability() + Math.floor(item.getType().getMaxDurability() / 20.0));
                 result.setDurability((short) Math.max(item.getType().getMaxDurability(), durability));
                 repairCost += 2;
+                repairing = true;
             }
         }
 
@@ -73,22 +76,23 @@ public class Anvil implements Listener {
         Map<Enchantment, Integer> enchants = new HashMap<>(oldEnchants);
         for (Map.Entry<Enchantment, Integer> entry : newEnchants.entrySet()) {
             Enchantment enchantment = entry.getKey();
-            if (!EnchantmentManager.canEnchantItem(enchantment, result)) {
-                repairCost += 1;
-                continue;
-            }
-            int level = entry.getValue();
-            int oldLevel = enchants.getOrDefault(enchantment, 0);
+            if (EnchantmentManager.canEnchantItem(enchantment, result)) {
+                enchanting = true;
+                int level = entry.getValue();
+                int oldLevel = enchants.getOrDefault(enchantment, 0);
 
-            if (level > oldLevel) {
-                enchants.put(enchantment, level);
-                repairCost += level * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
-            } else if (level == oldLevel) {
-                enchants.put(enchantment, Math.min(level + 1, enchantment.getMaxLevel()));
-                repairCost += Math.min(level + 1, enchantment.getMaxLevel())  * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                if (level > oldLevel) {
+                    enchants.put(enchantment, level);
+                    repairCost += level * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                } else if (level == oldLevel) {
+                    enchants.put(enchantment, Math.min(level + 1, enchantment.getMaxLevel()));
+                    repairCost += Math.min(level + 1, enchantment.getMaxLevel()) * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                } else {
+                    enchants.put(enchantment, oldLevel);
+                    repairCost += oldLevel * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                }
             } else {
-                enchants.put(enchantment, oldLevel);
-                repairCost += oldLevel * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += 1;
             }
         }
         result.addUnsafeEnchantments(enchants);
@@ -97,32 +101,33 @@ public class Anvil implements Listener {
         Map<CustomEnchantment, Integer> customEnchants = new HashMap<>(oldCustomEnchants);
         for (Map.Entry<CustomEnchantment, Integer> entry : newCustomEnchants.entrySet()) {
             CustomEnchantment enchantment = entry.getKey();
-            if (!EnchantmentManager.canEnchantItem(enchantment, result)) {
-                repairCost += 1;
-                continue;
-            }
-            int level = entry.getValue();
-            int oldLevel = customEnchants.getOrDefault(enchantment, 0);
+            if (EnchantmentManager.canEnchantItem(enchantment, result)) {
+                enchanting = true;
+                int level = entry.getValue();
+                int oldLevel = customEnchants.getOrDefault(enchantment, 0);
 
-            if (level > oldLevel) {
-                customEnchants.put(enchantment, level);
-                repairCost += level * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
-            } else if (level == oldLevel) {
-                customEnchants.put(enchantment, Math.min(level + 1, enchantment.getMaxLevel()));
-                repairCost += Math.min(level + 1, enchantment.getMaxLevel()) * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                if (level > oldLevel) {
+                    customEnchants.put(enchantment, level);
+                    repairCost += level * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                } else if (level == oldLevel) {
+                    customEnchants.put(enchantment, Math.min(level + 1, enchantment.getMaxLevel()));
+                    repairCost += Math.min(level + 1, enchantment.getMaxLevel()) * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                } else {
+                    customEnchants.put(enchantment, oldLevel);
+                    repairCost += oldLevel * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                }
             } else {
-                customEnchants.put(enchantment, oldLevel);
-                repairCost += oldLevel * CustomEnchantmentMultiplier.getMultiplier(enchantment).get(sacrifice.getType().equals(Material.ENCHANTED_BOOK));
+                repairCost += 1;
             }
         }
-        EnchantmentManager.addEnchantments(result, customEnchants);
+        EnchantmentManager.addEnchantments(result, customEnchants, true);
 
         // ---- Set result ---- //
-        if (initCost < repairCost) {
-            if (!(name != null && !name.equals("") && repairCost == initCost + 1)) {
+        if (enchanting || repairing || naming) {
+            if (enchanting || repairing) {
                 if (result.getItemMeta() instanceof Repairable) {
                     ItemMeta itemMeta = result.getItemMeta();
-                    ((Repairable) itemMeta).setRepairCost((initCost * 2) + 1);
+                    ((Repairable) itemMeta).setRepairCost((repairCost * 2) + 1);
                     result.setItemMeta(itemMeta);
                 }
             }

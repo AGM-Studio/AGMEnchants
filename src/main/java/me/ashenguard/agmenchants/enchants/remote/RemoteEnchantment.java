@@ -12,11 +12,11 @@ import java.util.List;
 public class RemoteEnchantment {
     public final static String REMOTE = "https://raw.githubusercontent.com/Ashengaurd/AGMEnchants/master/Enchantments.md";
 
-    private final String id;
-    private final Version current;
-    private final Version version;
-    private final boolean official;
-    private final RemoteEnchantmentStatus status;
+    public final String id;
+    public final Version current;
+    public final Version version;
+    public final boolean official;
+    public final RemoteEnchantmentStatus status;
 
     public static List<RemoteEnchantment> getAllEnchantments() {
         List<RemoteEnchantment> found = new ArrayList<>();
@@ -46,11 +46,11 @@ public class RemoteEnchantment {
                     break;
                 case NOT_INSTALLED:
                     enchantments.add(enchantment);
-                    AGMEnchants.Messenger.Debug("Enchants", "A new enchantment found on page", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Official= §6" + (enchantment.official ? "Yes" : "No"));
+                    AGMEnchants.Messenger.Debug("Update", "A new enchantment found on page", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Official= §6" + (enchantment.official ? "Yes" : "No"));
                     break;
                 case UPDATE_AVAILABLE:
                     enchantments.add(enchantment);
-                    AGMEnchants.Messenger.Debug("Enchants", "An update was found on page for an enchantment", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Current= §6" + enchantment.current);
+                    AGMEnchants.Messenger.Debug("Update", "An update was found on page for an enchantment", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Current= §6" + enchantment.current);
                     break;
             }
         }
@@ -72,25 +72,7 @@ public class RemoteEnchantment {
         else status = RemoteEnchantmentStatus.INSTALLED;
 
         current = enchantment != null ? enchantment.getVersion() : new Version(0, 0);
-    }
 
-    public RemoteEnchantmentStatus getStatus() {
-        return status;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public boolean isOfficial() {
-        return official;
-    }
-
-    public Version getVersion() {
-        return version;
-    }
-
-    public Version getCurrent() {
-        return current;
+        AGMEnchants.Messenger.Debug("Update", "An enchantment was found on remote server", "Enchantment= §6" + id, "Version= §6" + version);
     }
 }

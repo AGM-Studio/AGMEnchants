@@ -30,6 +30,7 @@ Debug:
   Enable: false
   General: true
   Enchants: true
+  Update: true
   GUI: true
   PlaceholderAPI: true
 

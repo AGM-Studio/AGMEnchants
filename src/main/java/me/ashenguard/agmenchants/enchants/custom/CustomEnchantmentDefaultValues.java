@@ -14,6 +14,7 @@ public abstract class CustomEnchantmentDefaultValues {
     public abstract CustomEnchantmentMultiplier multiplier();
     public abstract int maxLevel();
     public abstract List<CustomEnchantmentLevel> levels();
+    public abstract String info();
     /* Solid result */
     public abstract List<String> conflicts();
 
@@ -28,6 +29,7 @@ public abstract class CustomEnchantmentDefaultValues {
         defaults.put("Multiplier.Book", multiplier().bookMultiplier);
         defaults.put("Multiplier.Item", multiplier().itemMultiplier);
         defaults.put("MaxLevel", maxLevel());
+        defaults.put("LevelInfo", info());
 
         List<CustomEnchantmentLevel> levels = levels();
         for (CustomEnchantmentLevel level : levels) {

@@ -47,7 +47,7 @@ public class EnchantmentTable implements Listener {
             CustomEnchantment enchant = enchantments.get(new Random().nextInt(enchantments.size()));
             int level = 1;
             while (level < enchant.getMaxLevel() && (cost - power - level) / (double) cost < new Random().nextDouble()) level += 1;
-            EnchantmentManager.addEnchantment(item, enchant, level);
+            EnchantmentManager.addEnchantment(item, enchant, level, true);
             power += level * CustomEnchantmentMultiplier.getMultiplier(enchant).bookMultiplier;
         }
     }
