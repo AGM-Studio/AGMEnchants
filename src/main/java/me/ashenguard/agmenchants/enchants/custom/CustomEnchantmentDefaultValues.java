@@ -33,7 +33,7 @@ public abstract class CustomEnchantmentDefaultValues {
 
         List<CustomEnchantmentLevel> levels = levels();
         for (CustomEnchantmentLevel level : levels) {
-            LinkedHashMap<String, Object> levelDetails = level.getLevelDetails();
+            LinkedHashMap<String, Object> levelDetails = level.getLevelConfig();
             for (Map.Entry<String, Object> entry : levelDetails.entrySet())
                 defaults.put("Levels." + level.level + "." + entry.getKey(), entry.getValue());
         }

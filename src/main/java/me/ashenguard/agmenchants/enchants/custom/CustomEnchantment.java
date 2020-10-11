@@ -130,7 +130,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
         return name + " " + RomanInteger.toRoman(Math.min(level, getMaxLevel()));
     }
 
-    protected abstract CustomEnchantmentLevel getLevelInfo(int level);
+    protected abstract CustomEnchantmentLevel getCustomEnchantmentLevel(int level);
     public List<String> getLevelDetails(Map<String, Object> details) {
         details = details == null ? new LinkedHashMap<>() : details;
         String levelInfo = config.getString("LevelInfo");
@@ -140,8 +140,8 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
         return new ArrayList<>(Arrays.asList(levelInfo.split("\n")));
     }
     public List<String> getLevelDetails(int level) {
-        CustomEnchantmentLevel customLevel = getLevelInfo(level);
-        LinkedHashMap<String, Object> details = customLevel == null? new LinkedHashMap<>() : customLevel.getLevelDetails();
+        CustomEnchantmentLevel customLevel = getCustomEnchantmentLevel(level);
+        LinkedHashMap<String, Object> details = customLevel == null? new LinkedHashMap<>() : customLevel.getLevelConfig();
 
         return getLevelDetails(details);
     }
@@ -170,7 +170,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
 
         config.loadConfig();
     }
-    public void enchanted(ItemStack item) {}
+    public void enchanted(ItemStack item, int level) {}
     public void disenchanted(ItemStack item) {}
 
     public List<String> sliceDescription() { return Arrays.asList(description.split("\n")); }
@@ -187,7 +187,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
 
         return 0;
     }
-    public int getEnchantLevel(ItemStack item) {
+    public int getEnchantmentLevel(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return 0;
         List<String> lore = item.getItemMeta().getLore();
         if (lore == null) return 0;

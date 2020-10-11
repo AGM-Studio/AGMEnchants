@@ -39,7 +39,7 @@ public class EnchantmentTable implements Listener {
             List<CustomEnchantment> enchantments = new ArrayList<>();
             for (String enchant: customEnchants) {
                 CustomEnchantment enchantment = EnchantmentManager.getCustomEnchantment(enchant);
-                if (enchantment.isTreasure() && enchantment.canEnchantItem(item) && enchantment.getEnchantLevel(item) == 0)
+                if (enchantment.isTreasure() && enchantment.canEnchantItem(item) && enchantment.getEnchantmentLevel(item) == 0)
                     enchantments.add(enchantment);
             }
 

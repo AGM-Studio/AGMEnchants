@@ -9,5 +9,13 @@ public abstract class CustomEnchantmentLevel {
         this.level = level;
     }
 
-    public abstract LinkedHashMap<String, Object> getLevelDetails();
+    public abstract LinkedHashMap<String, Object> getLevelConfig();
+    public LinkedHashMap<String, Object> getLevelDetail() {
+        LinkedHashMap<String, Object> details = new LinkedHashMap<>();
+
+        details.put("Level", level);
+        details.putAll(getLevelConfig());
+
+        return details;
+    }
 }

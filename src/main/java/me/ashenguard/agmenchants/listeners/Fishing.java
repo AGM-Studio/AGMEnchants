@@ -51,7 +51,7 @@ public class Fishing implements Listener {
             List<CustomEnchantment> customEnchantments = new ArrayList<>();
             for (String enchant: customEnchants) {
                 CustomEnchantment enchantment = EnchantmentManager.getCustomEnchantment(enchant);
-                if (enchantment.isTreasure() && enchantment.canEnchantItem(itemStack) && enchantment.getEnchantLevel(itemStack) == 0)
+                if (enchantment.isTreasure() && enchantment.canEnchantItem(itemStack) && enchantment.getEnchantmentLevel(itemStack) == 0)
                     customEnchantments.add(enchantment);
             }
 
@@ -59,7 +59,7 @@ public class Fishing implements Listener {
             CustomEnchantment enchant = customEnchantments.get(new Random().nextInt(customEnchantments.size()));
             int level = 1;
             while (level < enchant.getMaxLevel() && (30 - power - level) / (double) 30 < new Random().nextDouble()) level += 1;
-            EnchantmentManager.addEnchantment(itemStack, enchant, level);
+            EnchantmentManager.addEnchantment(itemStack, enchant, level, !itemStack.getType().equals(Material.ENCHANTED_BOOK));
             power += level * CustomEnchantmentMultiplier.getMultiplier(enchant).bookMultiplier;
         }
     }

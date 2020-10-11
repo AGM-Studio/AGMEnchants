@@ -28,7 +28,7 @@ public class EnchantmentManager {
         HashMap<CustomEnchantment, Integer> enchants = new HashMap<>();
         if (item == null || item.getType().equals(Material.AIR)) return enchants;
         for (CustomEnchantment enchantment: enchantmentHashMap.values()) {
-            int level = enchantment.getEnchantLevel(item);
+            int level = enchantment.getEnchantmentLevel(item);
             if (level > 0) enchants.put(enchantment, level);
         }
 
@@ -63,7 +63,7 @@ public class EnchantmentManager {
     }
     public static void addEnchantment(ItemStack item, CustomEnchantment enchantment, int level, boolean call) {
         rebase(item, Collections.singletonMap(enchantment, level), true);
-        if (call) enchantment.enchanted(item);
+        if (call) enchantment.enchanted(item, level);
     }
     public static void addEnchantment(ItemStack item, CustomEnchantment enchantment, int level) {
         addEnchantment(item, enchantment, level, false);

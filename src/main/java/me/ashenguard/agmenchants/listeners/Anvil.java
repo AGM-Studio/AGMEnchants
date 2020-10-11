@@ -53,6 +53,8 @@ public class Anvil implements Listener {
         boolean repairing = false;
         boolean naming = false;
         ItemStack result = item.clone();
+        for (Enchantment enchantment: result.getEnchantments().keySet()) result.removeEnchantment(enchantment);
+        EnchantmentManager.removeAllEnchantments(result);
         ItemMeta resultMeta = result.getItemMeta();
 
         // ---- Naming and durability ---- //

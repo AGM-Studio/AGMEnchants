@@ -30,6 +30,8 @@ Name: Example
 OtherNames: []
 Description: |-
   Example Description
+LevelInfo: |-
+  The per level description
 Applicable: []
 Treasure: false
 Cursed: false
@@ -37,3 +39,4 @@ Multiplier:
   Book: 1
   Item: 1
 MaxLevel: 1
+Levels: []
