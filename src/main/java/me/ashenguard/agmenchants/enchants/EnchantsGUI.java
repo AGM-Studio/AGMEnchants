@@ -12,6 +12,7 @@ import java.util.List;
 public class EnchantsGUI extends GUIInventory {
     private int page;
     private CustomEnchantment selected;
+    private MenuType type;
     private List<CustomEnchantment> enchantments = new ArrayList<>();
 
     public EnchantsGUI(Player player) {
@@ -19,6 +20,7 @@ public class EnchantsGUI extends GUIInventory {
         GUI.saveGUIInventory(player, this);
 
         page = 0;
+        type = MenuType.List;
         selected = null;
 
         reload();
@@ -35,7 +37,7 @@ public class EnchantsGUI extends GUIInventory {
         inventory.setItem(45, GUI.getItemStack(player, Items.LeftButton.getPath()));
         inventory.setItem(53, GUI.getItemStack(player, Items.RightButton.getPath()));
 
-        if (selected == null) addEnchants();
+        if (type == MenuType.List) addEnchants();
         else showLevels();
     }
 
@@ -47,11 +49,17 @@ public class EnchantsGUI extends GUIInventory {
         if (slot == 45) this.left();
         else if (slot == 53) this.right();
         else if (slot < 45 && slot > 8) {
-            if (selected == null) {
+            if (type == MenuType.List) {
                 selected = enchantments.get(slot - 9);
+                type = MenuType.Levels;
                 reload();
             } else if (slot - 9 < selected.getMaxLevel() && player.hasPermission("AGMEnchants.admin"))
                 player.getInventory().addItem(selected.getBook(slot - 8));
+        } else if (slot == 50 && type == MenuType.Levels) {
+            page = 0;
+            type = MenuType.List;
+            selected = null;
+            reload();
         }
     }
 
@@ -87,6 +95,8 @@ public class EnchantsGUI extends GUIInventory {
     }
 
     private void showLevels() {
+        inventory.setItem(50, GUI.getItemStack(player, Items.Return.getPath()));
+
         for (int i = 0; i < 36; i++) {
             if (i < selected.getMaxLevel()) inventory.setItem(i + 9, selected.getInfoBook(i + 1));
             else inventory.setItem(i + 9, null);
@@ -98,7 +108,8 @@ enum Items {
     TopBorder,
     BottomBorder,
     LeftButton,
-    RightButton;
+    RightButton,
+    Return;
 
     private String path;
 
@@ -111,3 +122,6 @@ enum Items {
     }
 }
 
+enum MenuType {
+    List, Levels;
+}
