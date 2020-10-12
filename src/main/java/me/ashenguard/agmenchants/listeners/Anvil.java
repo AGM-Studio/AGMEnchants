@@ -97,7 +97,13 @@ public class Anvil implements Listener {
                 repairCost += 1;
             }
         }
-        result.addUnsafeEnchantments(enchants);
+        if (result.getType().equals(Material.ENCHANTED_BOOK)) {
+            EnchantmentStorageMeta storage = (EnchantmentStorageMeta) sacrifice.getItemMeta();
+            for (Map.Entry<Enchantment, Integer> enchant: enchants.entrySet())
+                storage.addStoredEnchant(enchant.getKey(), enchant.getValue(), true);
+        } else {
+            result.addUnsafeEnchantments(enchants);
+        }
 
         // ---- Custom enchantments ---- //
         Map<CustomEnchantment, Integer> customEnchants = new HashMap<>(oldCustomEnchants);

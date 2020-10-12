@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class CustomEnchantmentDefaultValues {
-    /* Configurable */
     protected abstract String name();
     protected abstract String description();
     protected abstract List<String> applicable();
@@ -15,8 +14,7 @@ public abstract class CustomEnchantmentDefaultValues {
     protected abstract int maxLevel();
     protected abstract List<CustomEnchantmentLevel> levels();
     protected abstract String info();
-    /* Solid result */
-    public abstract List<String> conflicts();
+    protected abstract List<String> conflicts();
 
     public LinkedHashMap<String, Object> getDefaultConfig() {
         LinkedHashMap<String, Object> defaults = new LinkedHashMap<>();
@@ -30,6 +28,7 @@ public abstract class CustomEnchantmentDefaultValues {
         defaults.put("Multiplier.Item", multiplier().itemMultiplier);
         defaults.put("MaxLevel", maxLevel());
         defaults.put("LevelInfo", info());
+        defaults.put("Conflicts", conflicts());
 
         List<CustomEnchantmentLevel> levels = levels();
         for (CustomEnchantmentLevel level : levels) {

@@ -22,21 +22,17 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
     protected BukkitScheduler scheduler = Bukkit.getScheduler();
     protected JavaPlugin plugin = AGMEnchants.getInstance();
 
-    protected final String ID; public String getID() { return ID; }
-    protected final Version version; public Version getVersion() { return version; }
-
-    protected final String name; public String getName() { return name; }
-    protected final List<String> otherNames; public List<String> getOtherNames() { return otherNames; }
-    protected final String description; public String getDescription() { return description; }
-
-    protected final List<String> applicable; public List<String> getApplicable() { return applicable; }
-
-    protected final boolean treasure; public boolean isTreasure() { return treasure; }
-    protected final boolean cursed; public boolean isCursed() { return cursed; }
-
-    protected final int maxLevel; public int getMaxLevel() { return maxLevel; }
-
-    protected final CustomEnchantmentMultiplier multiplier; public CustomEnchantmentMultiplier getMultiplier() { return multiplier; }
+    protected final String ID;
+    protected final Version version;
+    protected final String name;
+    protected final List<String> otherNames;
+    protected final String description;
+    protected final List<String> applicable;
+    protected final List<String> conflicts;
+    protected final boolean treasure;
+    protected final boolean cursed;
+    protected final int maxLevel;
+    protected final CustomEnchantmentMultiplier multiplier;
 
     protected Configuration config;
 
@@ -57,6 +53,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
         if (!otherNames.contains(name)) otherNames.add(name);
         this.description = config.getString("Description", "");
         this.applicable = config.getStringList("Applicable");
+        this.conflicts = config.getStringList("Conflicts");
         this.maxLevel = config.getInt("MaxLevel", 1);
         this.multiplier = new CustomEnchantmentMultiplier(config.getInt("Multiplier.Item", 1), config.getInt("Multiplier.Book", 1));
         this.treasure = config.getBoolean("Treasure", false);
@@ -70,8 +67,8 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
 
     public boolean isApplicable(Material material) {
         if (material == null) return false;
-        if (applicable.contains(material.name())) return true;
-        for (String applicableName : applicable) {
+        if (getApplicable().contains(material.name())) return true;
+        for (String applicableName : getApplicable()) {
             List<String> applicable = AGMEnchants.config.getStringList("ItemsList." + applicableName);
             if (applicable.contains(material.name())) return true;
         }
@@ -82,11 +79,14 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
         if (item.getType().equals(Material.ENCHANTED_BOOK)) return true;
         if (!isApplicable(item.getType())) return false;
 
-        for (Enchantment enchantment: item.getEnchantments().keySet())
+        for (Enchantment enchantment: item.getEnchantments().keySet()) {
             if (conflictsWith(enchantment)) return false;
+        }
 
-        for (CustomEnchantment enchantment: EnchantmentManager.extractEnchantments(item).keySet())
+        for (CustomEnchantment enchantment: EnchantmentManager.extractEnchantments(item).keySet()) {
             if (conflictsWith(enchantment)) return false;
+            if (enchantment.conflictsWith(this)) return false;
+        }
 
         return true;
     }
@@ -147,10 +147,10 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
     }
 
     public boolean conflictsWith(Enchantment enchantment) {
-        return conflicts().contains(enchantment.getName());
+        return getConflicts().contains(enchantment.getName());
     }
     public boolean conflictsWith(CustomEnchantment enchantment) {
-        return conflicts().contains(enchantment.getID());
+        return getConflicts().contains(enchantment.getID());
     }
 
     protected void saveDefaultConfig() {
@@ -173,7 +173,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
     public void enchanted(ItemStack item, int level) {}
     public void disenchanted(ItemStack item) {}
 
-    public List<String> sliceDescription() { return Arrays.asList(description.split("\n")); }
+    public List<String> sliceDescription() { return Arrays.asList(getDescription().split("\n")); }
 
     public int getLevel(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR) || item.getType().equals(Material.ENCHANTED_BOOK)) return 0;
@@ -200,7 +200,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
         return 0;
     }
     public int getLevelFromLine(String line) {
-        for (String name : otherNames)
+        for (String name : getOtherNames())
             if (line.contains(name)) {
                 if (maxLevel == 1) return 1;
                 return Math.min(RomanInteger.toInteger(line.substring(line.lastIndexOf(" "))), maxLevel);
@@ -211,5 +211,39 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
     @Override
     public int compareTo(@NotNull CustomEnchantment o) {
         return ID.compareTo(o.ID);
+    }
+
+    public String getID() {
+        return ID;
+    }
+    public Version getVersion() {
+        return version;
+    }
+    public String getName() {
+        return name;
+    }
+    public List<String> getOtherNames() {
+        return otherNames;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public List<String> getApplicable() {
+        return applicable;
+    }
+    public List<String> getConflicts() {
+        return conflicts;
+    }
+    public boolean isTreasure() {
+        return treasure;
+    }
+    public boolean isCursed() {
+        return cursed;
+    }
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+    public CustomEnchantmentMultiplier getMultiplier() {
+        return multiplier;
     }
 }

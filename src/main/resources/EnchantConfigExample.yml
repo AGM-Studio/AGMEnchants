@@ -33,6 +33,7 @@ Description: |-
 LevelInfo: |-
   The per level description
 Applicable: []
+Conflicts: []
 Treasure: false
 Cursed: false
 Multiplier:
