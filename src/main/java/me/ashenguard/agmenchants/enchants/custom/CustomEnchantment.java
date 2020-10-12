@@ -141,7 +141,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
     }
     public List<String> getLevelDetails(int level) {
         CustomEnchantmentLevel customLevel = getCustomEnchantmentLevel(level);
-        LinkedHashMap<String, Object> details = customLevel == null? new LinkedHashMap<>() : customLevel.getLevelConfig();
+        LinkedHashMap<String, Object> details = customLevel == null? new LinkedHashMap<>() : customLevel.getLevelDetail();
 
         return getLevelDetails(details);
     }

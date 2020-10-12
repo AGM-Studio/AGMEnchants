@@ -6,15 +6,15 @@ import java.util.Map;
 
 public abstract class CustomEnchantmentDefaultValues {
     /* Configurable */
-    public abstract String name();
-    public abstract String description();
-    public abstract List<String> applicable();
-    public abstract boolean treasure();
-    public abstract boolean cursed();
-    public abstract CustomEnchantmentMultiplier multiplier();
-    public abstract int maxLevel();
-    public abstract List<CustomEnchantmentLevel> levels();
-    public abstract String info();
+    protected abstract String name();
+    protected abstract String description();
+    protected abstract List<String> applicable();
+    protected abstract boolean treasure();
+    protected abstract boolean cursed();
+    protected abstract CustomEnchantmentMultiplier multiplier();
+    protected abstract int maxLevel();
+    protected abstract List<CustomEnchantmentLevel> levels();
+    protected abstract String info();
     /* Solid result */
     public abstract List<String> conflicts();
 
