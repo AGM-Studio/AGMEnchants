@@ -16,7 +16,10 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues implements Comparable<CustomEnchantment> {
     protected BukkitScheduler scheduler = Bukkit.getScheduler();
@@ -137,7 +140,7 @@ public abstract class CustomEnchantment extends CustomEnchantmentDefaultValues i
         for(Map.Entry<String, Object> detail: details.entrySet())
             levelInfo = levelInfo.replace("%" + detail.getKey() + "%", String.valueOf(detail.getValue()));
 
-        return new ArrayList<>(Arrays.asList(levelInfo.split("\n")));
+        return AGMEnchants.PAPI.translate(Arrays.asList(levelInfo.split("\n")));
     }
     public List<String> getLevelDetails(int level) {
         CustomEnchantmentLevel customLevel = getCustomEnchantmentLevel(level);

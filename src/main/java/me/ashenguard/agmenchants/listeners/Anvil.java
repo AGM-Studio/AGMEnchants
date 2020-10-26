@@ -53,7 +53,13 @@ public class Anvil implements Listener {
         boolean repairing = false;
         boolean naming = false;
         ItemStack result = item.clone();
-        for (Enchantment enchantment: result.getEnchantments().keySet()) result.removeEnchantment(enchantment);
+        if (result.getType().equals(Material.ENCHANTED_BOOK)) {
+            EnchantmentStorageMeta storage = (EnchantmentStorageMeta) sacrifice.getItemMeta();
+            for (Enchantment enchantment: storage.getStoredEnchants().keySet()) storage.removeStoredEnchant(enchantment);
+            result.setItemMeta(storage);
+        } else {
+            for (Enchantment enchantment: result.getEnchantments().keySet()) result.removeEnchantment(enchantment);
+        }
         EnchantmentManager.removeAllEnchantments(result);
         ItemMeta resultMeta = result.getItemMeta();
 
@@ -101,6 +107,7 @@ public class Anvil implements Listener {
             EnchantmentStorageMeta storage = (EnchantmentStorageMeta) sacrifice.getItemMeta();
             for (Map.Entry<Enchantment, Integer> enchant: enchants.entrySet())
                 storage.addStoredEnchant(enchant.getKey(), enchant.getValue(), true);
+            result.setItemMeta(storage);
         } else {
             result.addUnsafeEnchantments(enchants);
         }
@@ -135,7 +142,7 @@ public class Anvil implements Listener {
             if (enchanting || repairing) {
                 if (result.getItemMeta() instanceof Repairable) {
                     ItemMeta itemMeta = result.getItemMeta();
-                    ((Repairable) itemMeta).setRepairCost((repairCost * 2) + 1);
+                    ((Repairable) itemMeta).setRepairCost((initCost * 2) + 1);
                     result.setItemMeta(itemMeta);
                 }
             }

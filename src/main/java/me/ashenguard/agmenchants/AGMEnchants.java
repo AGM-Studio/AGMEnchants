@@ -89,7 +89,7 @@ public final class AGMEnchants extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        GUI.closeAll();
+        if (GUI != null) GUI.closeAll();
         Messenger.Info("Plugin disabled");
     }
 }
