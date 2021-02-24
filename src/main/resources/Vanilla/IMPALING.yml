@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Impaling
+Description: Trident deals additional damage to mobs that spawn naturally in the ocean.
+Lore: Trident deals additional damage to mobs that spawn naturally in the ocean.
+Multiplier: 4

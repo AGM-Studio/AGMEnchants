@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Respiration
+Description: Extends underwater breathing time. Stacks with a Turtle Shell.
+Lore: Extends underwater breathing time.
+Multiplier: 4

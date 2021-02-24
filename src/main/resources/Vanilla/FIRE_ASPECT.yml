@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Fire Aspect
+Description: Sets target on fire.
+Lore: Sets target on fire.
+Multiplier: 4

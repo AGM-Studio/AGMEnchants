@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Throns
+Description: Reflects some of the damage taken when hit, at the cost of reducing durability with each proc.
+Lore: Reflects some of the damage taken when hit, at the cost of reducing durability with each proc.
+Multiplier: 8

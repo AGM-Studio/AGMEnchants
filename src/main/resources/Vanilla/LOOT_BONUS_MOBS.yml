@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Looting
+Description: Increases mob loot. Higher levels increase loot dropped.
+Lore: Increases mob loot. Higher levels increase loot dropped.
+Multiplier: 4

@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Channeling
+Description: Trident "channels" a bolt of lightning toward a hit entity. Functions only during thunderstorms and if target is unobstructed with opaque blocks.
+Lore: Trident "channels" a bolt of lightning toward a hit entity.
+Multiplier: 8

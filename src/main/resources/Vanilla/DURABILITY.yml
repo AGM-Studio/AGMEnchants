@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Unbreaking
+Description: Increases item durability. Higher levels increase durability further. Recommended for Gold and Iron equipment but not as much for Diamond or Netherite.
+Lore: Increases item durability. Higher levels increase durability further.
+Multiplier: 2

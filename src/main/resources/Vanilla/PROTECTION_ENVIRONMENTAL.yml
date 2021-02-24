@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Protection
+Description: Reduces most types of damage by 4% for each level.
+Lore: Reduces most types of damage by 4% for each level.
+Multiplier: 1

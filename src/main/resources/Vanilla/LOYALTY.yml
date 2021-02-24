@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Loyalty
+Description: Trident returns after being thrown. Higher levels reduce return time.
+Lore: Trident returns after being thrown.
+Multiplier: 1

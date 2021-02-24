@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Piercing
+Description: Arrows pass through multiple entities. Only available to the Crossbow.
+Lore: Arrows pass through multiple entities.
+Multiplier: 1

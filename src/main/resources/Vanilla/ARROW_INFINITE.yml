@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Infinity
+Description: Shooting consumes no regular arrows. Does not include Tipped Arrows or Spectral Arrows.
+Lore: Shooting consumes no regular arrows.
+Multiplier: 8

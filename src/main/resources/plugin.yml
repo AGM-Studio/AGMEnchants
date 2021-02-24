@@ -7,9 +7,12 @@ authors: [Ashenguard]
 description: More magics in game
 website: https://agmdev.xyz
 commands:
-  CustomEnchantments:
+  Enchants:
     description: Access to enchantments list
-    aliases: [ce, customenchants, enchants]
+    aliases: [ce, enchants]
+  Runes:
+    description: Access to runes list
+    aliases: [rune]
 
 permissions:
   AGMEnchants.*:

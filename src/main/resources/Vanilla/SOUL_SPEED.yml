@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Soul Speed
+Description: Increases walking speed on soul sand or Soul Soil, but damages the Boots overtime.
+Lore: Increases walking speed on soul sand or Soul Soil, but damages the Boots overtime.
+Multiplier: 8

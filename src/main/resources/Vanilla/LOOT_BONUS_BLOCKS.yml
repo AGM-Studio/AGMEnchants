@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Fortune
+Description: Increases certain block drops. Higher levels increase chances.
+Lore: Increases certain block drops. Higher levels increase chances.
+Multiplier: 4

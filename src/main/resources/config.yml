@@ -21,15 +21,16 @@
 
 Prefix: AGMEnchants
 Check:
-  Enchantments: true
-  Updates: true
+  PluginUpdates: true
 
-  BlacklistedEnchantments: []
+  BlacklistedEnchants: []
+  BlacklistedRunes: []
 
 Debug:
   Enable: false
   General: true
   Enchants: true
+  Runes: true
   Update: true
   GUI: true
   PlaceholderAPI: true
@@ -38,6 +39,25 @@ InGameMessages:
   Info: true
   Debug: true
   Warning: true
+
+LoreConfig:
+  AboveItemLore: true
+  ShowLore: true
+  SeparatorLine: '§f------------------------------'
+  Compress: false
+  CompressLimit: 8
+
+Colors:
+  Enchants:
+    Normal: '§7'
+    Cursed: '§c'
+    Treasure: '§b'
+  Runes:
+    Common: '§7'
+    Uncommon: '§a'
+    Rare: '§b'
+    Epic: '§d'
+    Legendary: '§6'
 
 ItemsList:
   SWORDS:
@@ -68,6 +88,13 @@ ItemsList:
     - GOLD_SHOVEL
     - STONE_SHOVEL
     - WOODEN_SHOVEL
+  HOES:
+    - NETHERITE_HOE
+    - DIAMOND_HOE
+    - IRON_HOE
+    - GOLD_HOE
+    - STONE_HOE
+    - WOODEN_HOE
   ARMORS:
     - NETHERITE_HELMET
     - NETHERITE_CHESTPLATE

@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Riptide
+Description: Trident launches player with itself when thrown. Functions only in water or rain.
+Lore: Trident launches player with itself when thrown.
+Multiplier: 4

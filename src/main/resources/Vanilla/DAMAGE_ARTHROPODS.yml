@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Bane of Arthropods
+Description: Increases damage and applies Slowness IV to arthropod mobs
+Lore: Increases damage and applies Slowness IV to arthropod mobs
+Multiplier: 2

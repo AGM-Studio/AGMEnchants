@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Flame
+Description: Arrows set the target on fire, and ignite TNT if hit.
+Lore: Arrows set the target on fire, and ignite TNT if hit.
+Multiplier: 4

@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Silk Touch
+Description: Mined blocks drop themselves, with a few exceptions.
+Lore: Mined blocks drop themselves, with a few exceptions.
+Multiplier: 8

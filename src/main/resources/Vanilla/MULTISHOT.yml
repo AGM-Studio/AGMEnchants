@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Multishot
+Description: Shoot 3 arrows at the cost of one; only one arrow can be recovered.
+Lore: Shoot 3 arrows at the cost of one.
+Multiplier: 4

@@ -1,95 +1,98 @@
 package me.ashenguard.agmenchants;
 
-import me.ashenguard.agmenchants.commands.CommandCustomEnchantment;
-import me.ashenguard.agmenchants.enchants.EnchantmentLoader;
-import me.ashenguard.api.SpigotUpdater;
+import me.ashenguard.agmenchants.enchants.EnchantManager;
+import me.ashenguard.agmenchants.managers.ItemManager;
+import me.ashenguard.agmenchants.managers.MainManager;
+import me.ashenguard.agmenchants.runes.RuneManager;
 import me.ashenguard.api.gui.GUI;
 import me.ashenguard.api.messenger.Messenger;
-import me.ashenguard.api.placeholderapi.PAPI;
-import me.ashenguard.api.utils.VersionUtils;
-import org.bstats.bukkit.Metrics;
+import me.ashenguard.api.messenger.PHManager;
+import me.ashenguard.api.spigot.SpigotPlugin;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public final class AGMEnchants extends JavaPlugin {
-    public static final int pluginID = 8218;
-    public static final int resourceID = 81800;
-    public static SpigotUpdater spigotupdater;
-    public static FileConfiguration config;
-
-    public static GUI GUI = null;
-    public static PAPI PAPI = null;
-    public static Messenger Messenger = null;
-
-    private static boolean legacy;
-    private static JavaPlugin instance;
-    private static File enchantsFolder;
-
-    // ---- Getters ---- //
-    public static JavaPlugin getInstance() {
+@SuppressWarnings("unused")
+public final class AGMEnchants extends SpigotPlugin {
+    private static AGMEnchants instance;
+    public static AGMEnchants getInstance() {
         return instance;
     }
-    public static boolean isLegacy() {
-        return legacy;
+
+    public static GUI getGUI() {
+        return instance.GUI;
     }
-    public static File getEnchantsFolder() {
-        return enchantsFolder;
+    public static MainManager getMainManager() {
+        return instance.manager;
+    }
+    public static ItemManager getItemManager() {
+        return instance.manager.getItemManager();
+    }
+    public static EnchantManager getEnchantManager() {
+        return instance.manager.getEnchantManager();
+    }
+    public static RuneManager getRuneManager() {
+        return instance.manager.getRuneManager();
+    }
+    public static ConfigurationSection getItemsList() {
+        return getConfiguration().getConfigurationSection("ItemsList");
+    }
+
+    public static FileConfiguration getConfiguration() {
+        return instance.getConfig();
+    }
+    public static Messenger getMessenger() {
+        return instance.messenger;
+    }
+
+    public GUI GUI = null;
+    public MainManager manager = null;
+
+    @Override
+    public int getBStatsID() {
+        return 8218;
+    }
+
+    @Override
+    public int getSpigotID() {
+        return 81800;
+    }
+
+    public void loadPlugin() {
+        saveDefaultConfig();
+        reloadConfig();
+
+        updateNotification = getConfig().getBoolean("Check.PluginUpdates", true);
+
+        GUI = new GUI(this);
+        manager = new MainManager();
+        manager.reload();
     }
 
     @Override
     public void onEnable() {
-        // ---- Load config ---- //
         instance = this;
-        loadConfig();
 
-        Messenger = new Messenger(this, config);
-        Messenger.Info("§5Config§r has been loaded");
+        if (getServer().getPluginManager().getPlugin("AGMCore") == null) {
+            messenger.Warning("AGMCore is not installed. Disabling plugin...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
-        // ---- Development ---- //
-        new Metrics(this, pluginID);
-        spigotupdater = new SpigotUpdater(this, resourceID);
-        Messenger.updateNotification(getServer().getConsoleSender(), spigotupdater);
+        File pluginFolder = getDataFolder();
+        if (!pluginFolder.exists() && pluginFolder.mkdirs()) messenger.Debug("General", "Plugin folder wasn't found, A new one created");
+        if (isLegacy()) messenger.Debug("General", "Legacy version detected");
 
-        // ---- Check legacy ---- //
-        legacy = VersionUtils.isLegacy(this);
-        if (isLegacy()) Messenger.Debug("General", "Legacy version detected");
+        loadPlugin();
 
-        // ---- Setup data ---- //
-        setup();
-        new CommandCustomEnchantment();
-        new Placeholders(this).register();
-    }
-
-    public static void loadConfig() {
-        // ---- Get configuration ---- //
-        JavaPlugin plugin = getInstance();
-
-        config = plugin.getConfig();
-
-        plugin.saveDefaultConfig();
-        plugin.reloadConfig();
-
-        // ---- Set other configs ---- //
-        File pluginFolder = plugin.getDataFolder();
-        if (!pluginFolder.exists()) pluginFolder.mkdirs();
-        enchantsFolder = new File(pluginFolder, "Enchants");
-        if (!enchantsFolder.exists()) enchantsFolder.mkdirs();
-    }
-
-    public static void setup() {
-        PAPI = new PAPI(getInstance());
-        GUI = new GUI(getInstance(), PAPI, isLegacy());
-
-        new Listeners();
-
-        new EnchantmentLoader(getInstance()).registerAllEnchantments();
+        if (PHManager.enable) new Placeholders().register();
+        messenger.Info("Plugin has been enabled successfully");
     }
 
     @Override
     public void onDisable() {
         if (GUI != null) GUI.closeAll();
-        Messenger.Info("Plugin disabled");
+        messenger.Info("Plugin has been disabled");
     }
 }

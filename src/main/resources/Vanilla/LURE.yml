@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Lure
+Description: Decreases wait time until fish/junk/loot "bites". Higher Levels increase speed.
+Lore: Decreases wait time until fish/junk/loot "bites".
+Multiplier: 4

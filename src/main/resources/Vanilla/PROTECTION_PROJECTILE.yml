@@ -1,0 +1,9 @@
+# ---------------------------------------------------------------------------- #
+# Vanilla enchantment -------------------------------------------------------- #
+# Since this enchantment is built-in there are only 4 fields available to edit #
+# These fields are same as custom enchantments ------------------------------- #
+# ---------------------------------------------------------------------------- #
+Name: Projectile Protection
+Description: Reduces projectile damage such as damage from arrows, thrown tridents, ghast and blaze fireballs, etc.
+Lore: Reduces projectile damage such as damage from arrows, thrown tridents, ghast and blaze fireballs, etc.
+Multiplier: 2

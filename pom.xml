@@ -6,7 +6,7 @@
 
     <groupId>me.ashenguard</groupId>
     <artifactId>AGMEnchants</artifactId>
-    <version>3.1</version>
+    <version>4.0.1</version>
     <packaging>jar</packaging>
 
     <name>AGMEnchants</name>
@@ -34,15 +34,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.1.0</version>
-                <!-- Do not include the <configuration>...</configuration> part if you are using Sponge! -->
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>me.ashenguard</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -78,17 +69,19 @@
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
-        <repository>
-            <id>CodeMC</id>
-            <url>https://repo.codemc.org/repository/maven-public</url>
-        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
+            <groupId>com.github.Ashengaurd</groupId>
+            <artifactId>SpigotApplication</artifactId>
+            <version>1.1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>me.ashenguard</groupId>
             <artifactId>AGMCore</artifactId>
-            <version>1.1</version>
+            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -104,15 +97,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>1.7</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.10.8</version>
+            <version>2.10.9</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
