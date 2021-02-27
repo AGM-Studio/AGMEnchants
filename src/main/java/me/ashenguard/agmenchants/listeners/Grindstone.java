@@ -3,6 +3,7 @@ package me.ashenguard.agmenchants.listeners;
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.enchants.EnchantManager;
+import me.ashenguard.agmenchants.runes.RuneManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ import static org.bukkit.Bukkit.getServer;
 
 public class Grindstone implements Listener {
     private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
+    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
 
     public Grindstone() {
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
@@ -51,5 +53,8 @@ public class Grindstone implements Listener {
         for (Map.Entry<Enchant, Integer> enchant: item2Enchants.entrySet()) exp += enchant.getValue() * enchant.getKey().getMultiplier();
         exp *= new Random().nextDouble() * 0.2 + 0.4;
         player.giveExp((int) exp);
+
+        if (RUNE_MANAGER.hasItemRune(item1)) player.getWorld().dropItem(player.getLocation(), RUNE_MANAGER.getItemRune(item1).getRune());
+        if (RUNE_MANAGER.hasItemRune(item2)) player.getWorld().dropItem(player.getLocation(), RUNE_MANAGER.getItemRune(item2).getRune());
     }
 }

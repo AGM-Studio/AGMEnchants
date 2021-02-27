@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 
 
-@SuppressWarnings({"UnusedReturnValue", "unused"})
+@SuppressWarnings({"UnusedReturnValue", "unused", "deprecation"})
 public class EnchantManager {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     private static final Messenger MESSENGER = AGMEnchants.getMessenger();
@@ -97,8 +97,9 @@ public class EnchantManager {
         return nbt.getCompoundList(NBT_TAG_NAME);
     }
     private NBTListCompound NBTFindEnchant(ItemStack item, Enchant enchant) {
+        if (item == null || enchant == null) return null;
         NBTCompoundList enchantsNBT = NBTExtractEnchants(item);
-        for (NBTListCompound entry:enchantsNBT) if (entry.getString(NBT_ID_NAME).equals(enchant.ID)) return entry;
+        for (NBTListCompound entry:enchantsNBT) if (entry.hasKey(NBT_ID_NAME) && entry.getString(NBT_ID_NAME).equals(enchant.ID)) return entry;
         return null;
     }
     private Pair<Enchant, Integer> NBTTranslateEnchant(NBTCompound compound) {
@@ -129,7 +130,7 @@ public class EnchantManager {
             EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
             meta.addStoredEnchant(enchant, level, true);
             item.setItemMeta(meta);
-        } else {
+        } else if (item.getItemMeta() != null) {
             ItemMeta meta = item.getItemMeta();
             meta.addEnchant(enchant, level, true);
             item.setItemMeta(meta);
@@ -167,7 +168,8 @@ public class EnchantManager {
         return compound.getInteger(NBT_LVL_NAME);
     }
     public int setItemEnchant(ItemStack item, Enchant enchant, int level) {
-        if (!enchant.isSafe(level)) return -1;
+        if (enchant == null || !enchant.isSafe(level)) return -1;
+        AGMEnchants.getItemManager().secureItemLore(item);
         NBTCompoundList enchantsNBT = NBTExtractEnchants(item);
         NBTCompound target = NBTFindEnchant(item, enchant);
         if (target == null) {
@@ -186,9 +188,7 @@ public class EnchantManager {
     }
     public boolean delItemEnchant(ItemStack item, Enchant enchant) {
         NBTCompoundList enchantsNBT = NBTExtractEnchants(item);
-        boolean result = enchantsNBT.removeIf(compound -> compound.getString(NBT_ID_NAME).equals(enchant.ID));
-        AGMEnchants.getItemManager().applyItemLore(item);
-        return result;
+        return enchantsNBT.removeIf(compound -> compound.getString(NBT_ID_NAME).equals(enchant.ID));
     }
     public boolean addItemEnchant(ItemStack item, Enchant enchant, int level) {
         if (NBTFindEnchant(item, enchant) != null) return false;

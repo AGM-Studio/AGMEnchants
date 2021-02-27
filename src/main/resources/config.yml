@@ -33,6 +33,7 @@ Debug:
   Runes: true
   Update: true
   GUI: true
+  ProtocolLib: true
   PlaceholderAPI: true
 
 InGameMessages:

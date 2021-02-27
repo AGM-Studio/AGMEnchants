@@ -88,7 +88,7 @@ public abstract class Rune implements Listener {
         this.rarity = reader.readRarity();
         this.item = reader.readItem();
 
-        AGMEnchants.getItemManager().setItemName(this.item, getColoredName());
+        AGMEnchants.getItemManager().setItemDisplay(this.item, getColoredName(), null, null);
     }
 
     public abstract List<Placeholder> getPlaceholders(ItemStack item);
@@ -161,7 +161,7 @@ public abstract class Rune implements Listener {
     public ItemStack getInfoItem() {
         ItemStack item = this.item.clone();
         List<String> lore = Arrays.asList(description.split("\n"));
-        return AGMEnchants.getItemManager().setItemNameLore(item, getColoredName(), lore);
+        return AGMEnchants.getItemManager().setItemDisplay(item, getColoredName(), lore, null);
     }
 
     @Override public String toString() {
@@ -219,11 +219,14 @@ public abstract class Rune implements Listener {
         }
 
         Rarity(String path, String def, double chance, int cost) {
-            this(PHManager.translate(AGMEnchants.getConfiguration().getString(path, def)), chance, cost);
+            String color = AGMEnchants.getConfiguration().getString(path, def);
+            if (color == null) this.color = def;
+            else this.color = PHManager.translate(color);
+            this.chance = chance;
+            this.cost = cost;
         }
 
-        @Override
-        public String toString() {
+        @Override public String toString() {
             return name();
         }
 

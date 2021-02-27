@@ -23,8 +23,7 @@ public class Fishing implements Listener {
         Entity caught = event.getCaught();
         if (!event.getState().equals(PlayerFishEvent.State.CAUGHT_FISH) || !(caught instanceof Item)) return;
 
-        ItemStack item = ((Item) event.getCaught()).getItemStack();
-        AGMEnchants.getItemManager().applyItemLore(item);
-        AGMEnchants.getItemManager().randomEnchant(item, new Random().nextInt(22) + 8, true, false);
+        ItemStack item = ((Item) caught).getItemStack();
+        AGMEnchants.getItemManager().randomize(item, new Random().nextInt(22) + 8, true, false);
     }
 }

@@ -6,9 +6,6 @@ import me.ashenguard.api.nbt.NBTItem;
 import me.ashenguard.api.utils.FileUtils;
 import me.ashenguard.exceptions.ConstructorNotFound;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -18,14 +15,13 @@ import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings("UnusedReturnValue")
-public class RuneManager implements Listener {
+public class RuneManager {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     private static final Messenger MESSENGER = AGMEnchants.getMessenger();
 
     private static final String NBT_TAG_NAME = "Rune";
     private static final String NBT_ORIGINAL = "OriginalRune";
     private static final File RUNES_FOLDER = new File(PLUGIN.getDataFolder(), "Runes");
-
     static {
         if (!RUNES_FOLDER.exists() && RUNES_FOLDER.mkdirs()) MESSENGER.Debug("General", "Rune folder wasn't found, A new one created");
     }
@@ -98,6 +94,8 @@ public class RuneManager implements Listener {
     }
     private boolean NBTSetRuneOriginal(ItemStack item, Rune rune, boolean orig) {
         if (item == null || item.getType().equals(Material.AIR)) return false;
+        AGMEnchants.getItemManager().secureItemLore(item);
+
         NBTItem nbt = new NBTItem(item, true);
         if (rune == null) nbt.removeKey(NBT_TAG_NAME);
         else nbt.setString(NBT_TAG_NAME, rune.ID);
@@ -130,13 +128,6 @@ public class RuneManager implements Listener {
     }
     public boolean isItemRune(ItemStack item) {
         return NBTIsOriginalRune(item);
-    }
-
-    // AntiPlace
-    @EventHandler
-    public void OnBlockPlace(BlockPlaceEvent event) {
-        ItemStack item = event.getItemInHand();
-        if (getItemRune(item) != null) event.setCancelled(true);
     }
     
     // Loader

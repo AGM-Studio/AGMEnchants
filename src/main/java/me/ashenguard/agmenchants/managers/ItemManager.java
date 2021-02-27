@@ -6,7 +6,9 @@ import me.ashenguard.agmenchants.enchants.EnchantManager;
 import me.ashenguard.agmenchants.enchants.VanillaEnchant;
 import me.ashenguard.agmenchants.runes.Rune;
 import me.ashenguard.agmenchants.runes.RuneManager;
-import me.ashenguard.api.utils.encoding.HexCode;
+import me.ashenguard.api.messenger.PHManager;
+import me.ashenguard.api.nbt.NBTItem;
+import me.ashenguard.api.nbt.NBTList;
 import me.ashenguard.api.utils.extra.Pair;
 import me.ashenguard.api.utils.extra.RandomCollection;
 import org.bukkit.ChatColor;
@@ -24,12 +26,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+
 @SuppressWarnings("UnusedReturnValue")
 public class ItemManager {
     private static EnchantManager ENCHANT_MANAGER = null;
     private static RuneManager RUNE_MANAGER = null;
-    private static final String START_LORE = HexCode.toHidden("ST");
-    private static final String END_LORE = HexCode.toHidden("EN");
+
+    private static final String NBT_SECURE_LORE = "SecureLore";
 
     private String SEPARATOR_LINE = "§f------------------------------";
     private boolean ABOVE_LORE = true;
@@ -52,66 +55,60 @@ public class ItemManager {
         RUNE_MANAGER = AGMEnchants.getRuneManager();
     }
 
+    public void secureItemLore(ItemStack item) {
+        if (ENCHANT_MANAGER.extractEnchants(item, false).size() > 0) return;
+        setSecureItemLore(item, getItemLore(item));
+    }
+    public void setSecureItemLore(ItemStack item, List<String> lore) {
+        if (item == null || item.getType().equals(Material.AIR)) return;
+        NBTItem nbt = new NBTItem(item, true);
+        NBTList<String> list = nbt.getStringList(NBT_SECURE_LORE);
+        list.clear();
+        list.addAll(lore);
+    }
+    public List<String> getSecureLore(ItemStack item) {
+        if (item == null || item.getType().equals(Material.AIR)) return null;
+        NBTItem nbt = new NBTItem(item);
+        return nbt.hasKey(NBT_SECURE_LORE) ? new ArrayList<>(nbt.getStringList(NBT_SECURE_LORE)) : null;
+    }
     public List<String> getItemLore(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) return new ArrayList<>();
+        if (item == null || !item.hasItemMeta() || item.getItemMeta() == null) return new ArrayList<>();
+        List<String> secure = getSecureLore(item);
+        if (secure == null || secure.size() == 0) {
+            if (ENCHANT_MANAGER.extractEnchants(item, false).size() > 0) return new ArrayList<>();
+            ItemMeta meta = item.getItemMeta();
+            return meta.hasLore() ? meta.getLore() : new ArrayList<>();
+        } else return secure;
+    }
+    public ItemStack setItemDisplay(ItemStack item, String name, List<String> lore, Iterator<ItemFlag> flags) {
         ItemMeta meta = item.getItemMeta();
-        return meta.hasLore() ? meta.getLore() : new ArrayList<>();
-    }
-    public ItemStack setItemLore(ItemStack item, List<String> lore) {
-        return setItemNameLore(item, null, lore);
-    }
-    public ItemStack setItemName(ItemStack item, String name) {
-        return setItemNameLore(item, name, null);
-    }
-    public ItemStack setItemNameLore(ItemStack item, String name, List<String> lore) {
-        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
         if (lore != null) meta.setLore(trimList(lore));
         if (name != null) meta.setDisplayName(name);
+        if (flags != null) flags.forEachRemaining(meta::addItemFlags);
         item.setItemMeta(meta);
         return item;
     }
 
     public ItemStack applyItemLore(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return item;
-        item = clearItemLore(item);
-        item = applyItemGlow(item);
+        if (ENCHANT_MANAGER.extractEnchants(item).size() == 0) return item;
 
-        List<String> oldLore = getItemLore(item);
-
-        List<String> lore = new ArrayList<>();
-        lore.addAll(getEnchantsLore(item));
-        lore.addAll(getRuinsLore(item));
-        if (oldLore.size() > 0) lore.add(ABOVE_LORE ? lore.size() : 0, SEPARATOR_LINE);
-
-        String loreString = START_LORE + String.join("\n", lore) + END_LORE + "\n" + String.join("\n", oldLore);
-
-        return setItemLore(item, Arrays.asList(loreString.split("\n")));
-    }
-    public ItemStack clearItemLore(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) return item;
-        String lore = String.join("\n", getItemLore(item));
-        int startIndex = lore.indexOf(START_LORE);
-        int endIndex = lore.lastIndexOf(END_LORE);
-
-        if (startIndex != -1 && endIndex != -1) {
-            String before = lore.substring(0, startIndex);
-            String after = lore.substring(endIndex + END_LORE.length());
-            lore = before + after;
-        }
-
-        return setItemLore(item, Arrays.asList(lore.split("\n")));
-    }
-    public ItemStack applyItemGlow(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) return item;
-        if (AGMEnchants.getEnchantManager().extractEnchants(item).size() > 0 && item.getEnchantments().size() == 0) item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 0);
+        if (item.getEnchantments().size() == 0) item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 0);
         else if (item.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) == 0) item.removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
-
-        ItemMeta meta = item.getItemMeta();
-        if (item.getType().equals(Material.ENCHANTED_BOOK)) meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
-
-        return item;
+        
+        final List<ItemFlag> flags = new ArrayList<>();
+        flags.add(ItemFlag.HIDE_ENCHANTS);
+        if (item.getType().equals(Material.ENCHANTED_BOOK)) flags.add(ItemFlag.HIDE_POTION_EFFECTS);
+        final List<String> oldLore = getItemLore(item);
+        final List<String> newLore = new ArrayList<>();
+        newLore.addAll(getRuinsLore(item));
+        newLore.addAll(getEnchantsLore(item));
+        if (oldLore.size() > 0) {
+            newLore.add(ABOVE_LORE ? newLore.size() : 0, SEPARATOR_LINE);
+            newLore.addAll(ABOVE_LORE ? newLore.size() : 0, oldLore);
+        }
+        return setItemDisplay(item, null, newLore, flags.iterator());
     }
 
     private List<String> trimList(List<String> list) {
@@ -143,25 +140,24 @@ public class ItemManager {
     }
     private List<String> getEnchantsLore(ItemStack item) {
         List<String> lore = new ArrayList<>();
-        LinkedHashMap<Enchant, Integer> enchants = AGMEnchants.getEnchantManager().extractEnchants(item);
+        LinkedHashMap<Enchant, Integer> enchants = ENCHANT_MANAGER.extractEnchants(item);
 
         if (COMPRESSIBLE && enchants.size() > COMPRESS_LIMIT) {
             lore.add(enchants.entrySet().stream().map(enchant -> enchant.getKey().getColoredName(enchant.getValue())).collect(Collectors.joining("§r, ")));
         } else {
             for (Map.Entry<Enchant, Integer> enchant : enchants.entrySet()) {
                 lore.add(enchant.getKey().getColoredName(enchant.getValue()));
-                if (SHOW_LORE) lore.add("    " + enchant.getKey().getLore(enchant.getValue()));
+                if (SHOW_LORE) lore.add("    " + PHManager.translate(enchant.getKey().getLore(enchant.getValue())));
             }
         }
         return lore;
     }
     private List<String> getRuinsLore(ItemStack item) {
-        RuneManager manager = AGMEnchants.getRuneManager();
         List<String> lore = new ArrayList<>();
-        if (manager.hasItemRune(item)) {
-            Rune rune = manager.getItemRune(item);
+        if (RUNE_MANAGER.hasItemRune(item)) {
+            Rune rune = RUNE_MANAGER.getItemRune(item);
             lore.add(rune.getColoredName());
-            if (SHOW_LORE) lore.add("    " + rune.getLore());
+            if (SHOW_LORE) lore.add("    " + PHManager.translate(rune.getLore()));
         }
 
         return lore;
@@ -181,13 +177,15 @@ public class ItemManager {
     private double calculateEnchantPower(ItemStack item, Collection<? extends Map.Entry<Enchant, Integer>> list) {
         return calculateEnchantPower(item) + calculateEnchantPower(list);
     }
-    public void randomEnchant(ItemStack item, int cost, boolean allowTreasure, boolean filterVanilla) {
+    public void randomize(ItemStack item, int cost, boolean allowTreasure, boolean filterVanilla) {
+        if (item == null || item.getType().equals(Material.AIR)) return; applyItemLore(item);
+        if (item.getType().equals(Material.BOOK) && 0.25 <= new Random().nextDouble()) item.setType(Material.ENCHANTED_BOOK);
+
         List<Enchant> enchants = ENCHANT_MANAGER.STORAGE.getAll();
         if (!allowTreasure) enchants.removeIf(TREASURE_FILTER);
         if (filterVanilla) enchants.removeIf(VANILLA_FILTER);
 
         Predicate<Enchant> filter = enchant -> !EXISTS_FILTER.test(enchant, item) && AVAILABLE_FILTER.test(enchant, item);
-
         while (true) {
             double power = calculateEnchantPower(item);
             double chance =  (cost - power) / (double) cost;

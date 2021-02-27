@@ -18,7 +18,6 @@ public class EnchantmentTable implements Listener {
     public void Event(EnchantItemEvent event) {
         ItemStack item = event.getItem();
         item.addEnchantments(event.getEnchantsToAdd());
-        AGMEnchants.getItemManager().applyItemLore(item);
-        AGMEnchants.getItemManager().randomEnchant(item, event.getExpLevelCost(), false, true);
+        AGMEnchants.getItemManager().randomize(item, event.getExpLevelCost(), false, true);
     }
 }

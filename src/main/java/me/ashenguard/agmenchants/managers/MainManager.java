@@ -8,12 +8,9 @@ import me.ashenguard.agmenchants.runes.RuneCommand;
 import me.ashenguard.agmenchants.runes.RuneManager;
 import me.ashenguard.api.messenger.Messenger;
 
-import static org.bukkit.Bukkit.getServer;
-
 public class MainManager {
     private final AGMEnchants plugin = AGMEnchants.getInstance();
     private final Messenger messenger = AGMEnchants.getMessenger();
-
 
     private final ItemManager itemManager;
     private final EnchantManager enchantManager;
@@ -54,8 +51,7 @@ public class MainManager {
         new EnchantmentTable();
         new Grindstone();
         new Fishing();
-        new UpdateCheck();
-        getServer().getPluginManager().registerEvents(runeManager, plugin);
+        new Miscellanies();
 
         messenger.Debug("General", "All listeners has been registered");
     }

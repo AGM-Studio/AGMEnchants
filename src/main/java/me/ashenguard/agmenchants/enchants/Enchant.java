@@ -173,7 +173,7 @@ public abstract class Enchant {
     public ItemStack getInfoBook() {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         List<String> lore = Arrays.asList(description.split("\n"));
-        return AGMEnchants.getItemManager().setItemNameLore(book, getColoredName(), lore);
+        return AGMEnchants.getItemManager().setItemDisplay(book, getColoredName(), lore, null);
     }
 
     @Override public String toString() {
@@ -255,7 +255,9 @@ public abstract class Enchant {
         }
 
         Rarity(String path, String def) {
-            this(PHManager.translate(AGMEnchants.getConfiguration().getString(path, def)));
+            String color = AGMEnchants.getConfiguration().getString(path, def);
+            if (color == null) this.color = def;
+            else this.color = PHManager.translate(color);
         }
 
         @Override
