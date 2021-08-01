@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 
@@ -23,6 +24,7 @@ import java.util.Map;
 
 import static org.bukkit.Bukkit.getServer;
 
+@SuppressWarnings("ConstantConditions")
 public class Anvil implements Listener {
     private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
     private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
@@ -62,11 +64,17 @@ public class Anvil implements Listener {
             naming = true;
         }
         if (item.getType().equals(sacrifice.getType())) {
-            if (result.getDurability() < result.getType().getMaxDurability()) {
-                short durability = (short) (item.getDurability() + sacrifice.getDurability() + Math.floor(item.getType().getMaxDurability() / 20.0));
-                result.setDurability((short) Math.max(item.getType().getMaxDurability(), durability));
-                repairCost += 2;
-                repairing = true;
+            if (result.getItemMeta() instanceof Damageable && sacrifice.getItemMeta() instanceof Damageable) {
+                Damageable resultMeta = (Damageable) result.getItemMeta();
+                Damageable sacrificeMeta = (Damageable) sacrifice.getItemMeta();
+                short max = result.getType().getMaxDurability();
+                if (resultMeta.getDamage() > 0) {
+                    short durability = (short) ((2.025 + Math.random() / 10) * max - resultMeta.getDamage() - sacrificeMeta.getDamage());
+                    resultMeta.setDamage((short) Math.max(0, max - durability));
+                    result.setItemMeta((ItemMeta) resultMeta);
+                    repairCost += 2;
+                    repairing = true;
+                }
             }
         }
 

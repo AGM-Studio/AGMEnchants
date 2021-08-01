@@ -9,8 +9,7 @@ import me.ashenguard.agmenchants.runes.RuneManager;
 import me.ashenguard.api.messenger.PHManager;
 import me.ashenguard.api.nbt.NBTItem;
 import me.ashenguard.api.nbt.NBTList;
-import me.ashenguard.api.utils.extra.Pair;
-import me.ashenguard.api.utils.extra.RandomCollection;
+import me.ashenguard.api.utils.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,6 +32,7 @@ public class ItemManager {
     private static RuneManager RUNE_MANAGER = null;
 
     private static final String NBT_SECURE_LORE = "SecureLore";
+    private static final String NBT_SECURE_DONE = "LoreSecured";
 
     private String SEPARATOR_LINE = "§f------------------------------";
     private boolean ABOVE_LORE = true;
@@ -56,26 +56,31 @@ public class ItemManager {
     }
 
     public void secureItemLore(ItemStack item) {
-        if (ENCHANT_MANAGER.extractEnchants(item, false).size() > 0) return;
-        setSecureItemLore(item, getItemLore(item));
+        if (ENCHANT_MANAGER.extractEnchants(item, false).size() > 0 || RUNE_MANAGER.hasItemRune(item))
+            setSecureItemLore(item, new ArrayList<>());
+        else
+            setSecureItemLore(item, getItemLore(item));
     }
     public void setSecureItemLore(ItemStack item, List<String> lore) {
         if (item == null || item.getType().equals(Material.AIR)) return;
         NBTItem nbt = new NBTItem(item, true);
+
+        if (nbt.hasKey(NBT_SECURE_DONE) && nbt.getBoolean(NBT_SECURE_DONE)) return;
         NBTList<String> list = nbt.getStringList(NBT_SECURE_LORE);
+        nbt.setBoolean(NBT_SECURE_DONE, true);
         list.clear();
         list.addAll(lore);
     }
     public List<String> getSecureLore(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return null;
         NBTItem nbt = new NBTItem(item);
-        return nbt.hasKey(NBT_SECURE_LORE) ? new ArrayList<>(nbt.getStringList(NBT_SECURE_LORE)) : null;
+        return nbt.hasKey(NBT_SECURE_LORE) ? new ArrayList<>(nbt.getStringList(NBT_SECURE_LORE)) : nbt.hasKey(NBT_SECURE_DONE) && nbt.getBoolean(NBT_SECURE_DONE) ? new ArrayList<>() : null;
     }
     public List<String> getItemLore(ItemStack item) {
         if (item == null || !item.hasItemMeta() || item.getItemMeta() == null) return new ArrayList<>();
         List<String> secure = getSecureLore(item);
-        if (secure == null || secure.size() == 0) {
-            if (ENCHANT_MANAGER.extractEnchants(item, false).size() > 0) return new ArrayList<>();
+        if (secure == null) {
+            if (ENCHANT_MANAGER.extractEnchants(item, false).size() > 0 || RUNE_MANAGER.hasItemRune(item)) return new ArrayList<>();
             ItemMeta meta = item.getItemMeta();
             return meta.hasLore() ? meta.getLore() : new ArrayList<>();
         } else return secure;
@@ -92,16 +97,18 @@ public class ItemManager {
 
     public ItemStack applyItemLore(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return item;
-        if (ENCHANT_MANAGER.extractEnchants(item).size() == 0) return item;
 
-        if (item.getEnchantments().size() == 0) item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 0);
-        else if (item.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) == 0) item.removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
-        
-        final List<ItemFlag> flags = new ArrayList<>();
-        flags.add(ItemFlag.HIDE_ENCHANTS);
-        if (item.getType().equals(Material.ENCHANTED_BOOK)) flags.add(ItemFlag.HIDE_POTION_EFFECTS);
         final List<String> oldLore = getItemLore(item);
         final List<String> newLore = new ArrayList<>();
+        final List<ItemFlag> flags = new ArrayList<>();
+        if (ENCHANT_MANAGER.extractEnchants(item).size() > 0 || RUNE_MANAGER.hasItemRune(item)) {
+            if (item.getEnchantments().size() == 0) item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 0);
+            else if (item.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) == 0)
+                item.removeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
+            flags.add(ItemFlag.HIDE_ENCHANTS);
+            if (item.getType().equals(Material.ENCHANTED_BOOK)) flags.add(ItemFlag.HIDE_POTION_EFFECTS);
+        }
+
         newLore.addAll(getRuinsLore(item));
         newLore.addAll(getEnchantsLore(item));
         if (oldLore.size() > 0) {
@@ -207,14 +214,21 @@ public class ItemManager {
 
         double power = calculateEnchantPower(item);
         double chance =  (cost - power) / (double) cost;
-        List<Rune> runes = RUNE_MANAGER.STORAGE.getAll();
-        if (allowTreasure && chance > new Random().nextDouble()) {
-            List<Rune> available = runes.stream().filter(rune -> rune.canRuneItem(item)).collect(Collectors.toList());
-            if (available.size() == 0) return;
-
-            RandomCollection<Rune> random = new RandomCollection<>(rune -> rune.getRarity().chance, available);
-            Rune rune = random.next();
-            rune.applyRune(item);
+        if (allowTreasure && chance < new Random().nextDouble()) {
+            Rune rune = getRandomRune(item);
+            if (rune != null) rune.applyRune(item);
         }
+    }
+    public Rune getRandomRune(ItemStack item) {
+        List<Rune> runes = RUNE_MANAGER.STORAGE.getAll();
+        if (item != null) runes.removeIf(rune -> !rune.canRuneItem(item));
+        double total = runes.stream().map(Rune::getRarity).mapToDouble(Rune.Rarity::getChance).sum();
+        double rnd = new Random().nextDouble() * total;
+        for (Rune rune: runes) {
+            double chance = rune.getRarity().getChance();
+            if (rnd < chance) return rune;
+            else rnd -= chance;
+        }
+        return runes.get(runes.size() - 1);
     }
 }

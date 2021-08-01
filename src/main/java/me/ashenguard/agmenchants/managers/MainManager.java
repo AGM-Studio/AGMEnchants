@@ -51,6 +51,7 @@ public class MainManager {
         new EnchantmentTable();
         new Grindstone();
         new Fishing();
+        new Villagers();
         new Miscellanies();
 
         messenger.Debug("General", "All listeners has been registered");

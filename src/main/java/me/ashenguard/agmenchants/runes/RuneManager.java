@@ -2,6 +2,7 @@ package me.ashenguard.agmenchants.runes;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.api.messenger.Messenger;
+import me.ashenguard.api.nbt.NBTCompound;
 import me.ashenguard.api.nbt.NBTItem;
 import me.ashenguard.api.utils.FileUtils;
 import me.ashenguard.exceptions.ConstructorNotFound;
@@ -19,8 +20,9 @@ public class RuneManager {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     private static final Messenger MESSENGER = AGMEnchants.getMessenger();
 
-    private static final String NBT_TAG_NAME = "Rune";
-    private static final String NBT_ORIGINAL = "OriginalRune";
+    private static final String NBT_TAG_RUNE = "Rune";
+    private static final String NBT_TAG_ORIG = "Original";
+    private static final String NBT_TAG_NAME = "ID";
     private static final File RUNES_FOLDER = new File(PLUGIN.getDataFolder(), "Runes");
     static {
         if (!RUNES_FOLDER.exists() && RUNES_FOLDER.mkdirs()) MESSENGER.Debug("General", "Rune folder wasn't found, A new one created");
@@ -83,11 +85,23 @@ public class RuneManager {
     }
 
     // NBT Related
-    private String NBTExtractRune(ItemStack item) {
+    private boolean NBTRemoveRune(ItemStack item) {
+        if (item == null || item.getType().equals(Material.AIR)) return false;
+        NBTItem nbt = new NBTItem(item, true);
+        nbt.removeKey(NBT_TAG_RUNE);
+        AGMEnchants.getItemManager().applyItemLore(item);
+
+        return true;
+    }
+    private NBTCompound NBTExtractRune(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return null;
-        NBTItem nbt = new NBTItem(item);
-        if (nbt.hasKey(NBT_TAG_NAME)) return nbt.getString(NBT_TAG_NAME);
-        return null;
+        NBTItem nbt = new NBTItem(item, true);
+        return nbt.hasKey(NBT_TAG_RUNE) ? nbt.getCompound(NBT_TAG_RUNE) : nbt.addCompound(NBT_TAG_RUNE);
+    }
+    private Rune NBTGetRune(ItemStack item) {
+        NBTCompound compound = NBTExtractRune(item);
+        if (compound == null) return null;
+        return STORAGE.get(compound.getString(NBT_TAG_NAME));
     }
     private boolean NBTSetRune(ItemStack item, Rune rune) {
         return NBTSetRuneOriginal(item, rune, false);
@@ -96,23 +110,25 @@ public class RuneManager {
         if (item == null || item.getType().equals(Material.AIR)) return false;
         AGMEnchants.getItemManager().secureItemLore(item);
 
-        NBTItem nbt = new NBTItem(item, true);
-        if (rune == null) nbt.removeKey(NBT_TAG_NAME);
-        else nbt.setString(NBT_TAG_NAME, rune.ID);
-        if (rune != null) nbt.setBoolean(NBT_ORIGINAL, orig);
+        if (rune == null) NBTRemoveRune(item);
+        else {
+            NBTCompound compound = NBTExtractRune(item);
+            if (compound == null) return false;
+            compound.setString(NBT_TAG_NAME, rune.ID);
+            compound.setBoolean(NBT_TAG_ORIG, orig);
+        }
         AGMEnchants.getItemManager().applyItemLore(item);
         return true;
     }
     private boolean NBTIsOriginalRune(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return false;
-        NBTItem nbt = new NBTItem(item, true);
-        return nbt.hasKey(NBT_ORIGINAL) && nbt.getBoolean(NBT_ORIGINAL);
+        NBTCompound nbt = NBTExtractRune(item);
+        return nbt != null && nbt.hasKey(NBT_TAG_ORIG) && nbt.getBoolean(NBT_TAG_ORIG);
     }
 
     // Items
     public Rune getItemRune(ItemStack item) {
-        String ID = NBTExtractRune(item);
-        return STORAGE.get(ID);
+        return NBTGetRune(item);
     }
     public boolean setItemRune(ItemStack item, Rune rune, boolean orig) {
         return NBTSetRuneOriginal(item, rune, orig);
@@ -121,7 +137,7 @@ public class RuneManager {
         return NBTSetRune(item, rune);
     }
     public boolean delItemRune(ItemStack item) {
-        return NBTSetRune(item, null);
+        return NBTRemoveRune(item);
     }
     public boolean hasItemRune(ItemStack item) {
         return getItemRune(item) != null;

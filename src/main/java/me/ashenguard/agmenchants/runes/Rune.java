@@ -226,6 +226,13 @@ public abstract class Rune implements Listener {
             this.cost = cost;
         }
 
+        public double getChance() {
+            return chance;
+        }
+        public int getCost() {
+            return cost;
+        }
+
         @Override public String toString() {
             return name();
         }

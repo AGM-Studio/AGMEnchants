@@ -3,6 +3,7 @@ package me.ashenguard.agmenchants.listeners;
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.enchants.EnchantManager;
+import me.ashenguard.agmenchants.managers.ItemManager;
 import me.ashenguard.agmenchants.runes.RuneManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ import static org.bukkit.Bukkit.getServer;
 public class Grindstone implements Listener {
     private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
     private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
+    private static final ItemManager ITEM_MANAGER = AGMEnchants.getItemManager();
 
     public Grindstone() {
         getServer().getPluginManager().registerEvents(this, AGMEnchants.getInstance());
@@ -35,9 +37,10 @@ public class Grindstone implements Listener {
         ItemStack result = event.getInventory().getItem(2);
 
         if (result == null || result.getType().equals(Material.AIR)) return;
+        RUNE_MANAGER.delItemRune(result);
         LinkedHashMap<Enchant, Integer> enchants = ENCHANT_MANAGER.extractEnchants(result);
         for(Map.Entry<Enchant, Integer> enchant: enchants.entrySet()) enchant.getKey().removeEnchant(result);
-        event.getInventory().setItem(2, result);
+        event.getInventory().setItem(2, ITEM_MANAGER.applyItemLore(result));
 
         if (event.getSlot() != 2) return;
         ItemStack item1 = event.getInventory().getItem(0);

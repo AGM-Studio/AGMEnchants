@@ -7,7 +7,7 @@ import me.ashenguard.api.nbt.NBTCompoundList;
 import me.ashenguard.api.nbt.NBTItem;
 import me.ashenguard.api.nbt.NBTListCompound;
 import me.ashenguard.api.utils.FileUtils;
-import me.ashenguard.api.utils.extra.Pair;
+import me.ashenguard.api.utils.Pair;
 import me.ashenguard.exceptions.ConstructorNotFound;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -142,6 +142,7 @@ public class EnchantManager {
         return extractEnchants(item, true);
     }
     public LinkedHashMap<Enchant, Integer> extractEnchants(ItemStack item, boolean vanillaCheck) {
+        if (item == null || item.getType().equals(Material.AIR)) return new LinkedHashMap<>();
         LinkedHashMap<Enchant, Integer> enchants = new LinkedHashMap<>();
 
         if (vanillaCheck) {
@@ -188,12 +189,13 @@ public class EnchantManager {
     }
     public boolean delItemEnchant(ItemStack item, Enchant enchant) {
         NBTCompoundList enchantsNBT = NBTExtractEnchants(item);
-        return enchantsNBT.removeIf(compound -> compound.getString(NBT_ID_NAME).equals(enchant.ID));
+        boolean result = enchantsNBT.removeIf(compound -> compound.getString(NBT_ID_NAME).equals(enchant.ID));
+        AGMEnchants.getItemManager().applyItemLore(item);
+        return result;
     }
     public boolean addItemEnchant(ItemStack item, Enchant enchant, int level) {
         if (NBTFindEnchant(item, enchant) != null) return false;
-        setItemEnchant(item, enchant, level);
-        return true;
+        return setItemEnchant(item, enchant, level) > 0;
     }
 
     // Loader
