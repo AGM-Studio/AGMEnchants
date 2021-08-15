@@ -1,0 +1,18 @@
+Anvil:
+  ReverseEnchant: false
+  Penalty:
+    Enabled: true
+    Max: 0
+  Repair:
+    Boost: 2.5
+    Randomize: 10
+
+Grindstone:
+  RemoveCurses: true
+  ExtractRunes: true
+  Experience:
+    Base: 0.4
+    Randomize: 0.2
+  Repair:
+    Boost: 10
+    Randomize: 10

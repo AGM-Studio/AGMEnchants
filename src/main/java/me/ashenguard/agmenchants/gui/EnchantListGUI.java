@@ -2,7 +2,7 @@ package me.ashenguard.agmenchants.gui;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
-import me.ashenguard.agmenchants.enchants.EnchantManager;
+import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.api.gui.GUIInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -49,6 +49,7 @@ public class EnchantListGUI extends GUIInventory {
 
     @Override
     public void click(InventoryClickEvent event) {
+        if (event.getInventory() != this.inventory) return;
         int slot = event.getSlot();
 
         if (slot == 45) this.left();

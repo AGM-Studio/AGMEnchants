@@ -1,14 +1,13 @@
 package me.ashenguard.agmenchants;
 
-import me.ashenguard.agmenchants.enchants.EnchantManager;
-import me.ashenguard.agmenchants.managers.ItemManager;
+import me.ashenguard.agmenchants.managers.EnchantManager;
+import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.MainManager;
-import me.ashenguard.agmenchants.runes.RuneManager;
+import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.gui.GUI;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.messenger.PHManager;
 import me.ashenguard.api.spigot.SpigotPlugin;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -26,17 +25,14 @@ public final class AGMEnchants extends SpigotPlugin {
     public static MainManager getMainManager() {
         return instance.manager;
     }
-    public static ItemManager getItemManager() {
-        return instance.manager.getItemManager();
+    public static LoreManager getItemManager() {
+        return instance.manager.getLoreManager();
     }
     public static EnchantManager getEnchantManager() {
         return instance.manager.getEnchantManager();
     }
     public static RuneManager getRuneManager() {
         return instance.manager.getRuneManager();
-    }
-    public static ConfigurationSection getItemsList() {
-        return getConfiguration().getConfigurationSection("ItemsList");
     }
 
     public static FileConfiguration getConfiguration() {

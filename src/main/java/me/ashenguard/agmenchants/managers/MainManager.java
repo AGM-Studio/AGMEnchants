@@ -2,22 +2,25 @@ package me.ashenguard.agmenchants.managers;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.EnchantCommand;
-import me.ashenguard.agmenchants.enchants.EnchantManager;
 import me.ashenguard.agmenchants.listeners.*;
 import me.ashenguard.agmenchants.runes.RuneCommand;
-import me.ashenguard.agmenchants.runes.RuneManager;
+import me.ashenguard.api.AdvancedListener;
+import me.ashenguard.api.Configuration;
 import me.ashenguard.api.messenger.Messenger;
+import me.ashenguard.api.versions.MCVersion;
 
 public class MainManager {
-    private final AGMEnchants plugin = AGMEnchants.getInstance();
-    private final Messenger messenger = AGMEnchants.getMessenger();
+    private final AGMEnchants PLUGIN = AGMEnchants.getInstance();
+    private final Messenger MESSENGER = AGMEnchants.getMessenger();
 
-    private final ItemManager itemManager;
-    private final EnchantManager enchantManager;
-    private final RuneManager runeManager;
+    private LoreManager loreManager;
+    private EnchantManager enchantManager;
+    private RuneManager runeManager;
 
-    public ItemManager getItemManager() {
-        return itemManager;
+    private Configuration groups;
+
+    public LoreManager getLoreManager() {
+        return loreManager;
     }
     public EnchantManager getEnchantManager() {
         return enchantManager;
@@ -26,19 +29,18 @@ public class MainManager {
         return runeManager;
     }
 
-    public MainManager() {
+    public void reload() {
         enchantManager = new EnchantManager();
         runeManager = new RuneManager();
-        itemManager = new ItemManager();
-    }
+        loreManager = new LoreManager();
 
-    public void reload() {
         loadListeners();
         loadCommands();
 
-        itemManager.loadConfigs();
         enchantManager.loadEnchants();
         runeManager.loadRunes();
+
+        groups = new Configuration(PLUGIN, "Features/groups.yml");
     }
     
     private void loadCommands() {
@@ -47,13 +49,20 @@ public class MainManager {
     }
 
     private void loadListeners() {
-        new Anvil();
-        new EnchantmentTable();
-        new Grindstone();
-        new Fishing();
-        new Villagers();
-        new Miscellanies();
+        AdvancedListener.tryRegister(Anvil.class, PLUGIN);
+        AdvancedListener.tryRegister(Enchanting.class, PLUGIN);
+        AdvancedListener.tryRegister(Fishing.class, PLUGIN);
+        AdvancedListener.tryRegister(Trading.class, PLUGIN);
+        AdvancedListener.tryRegister(Miscellanies.class, PLUGIN);
+        if (!MCVersion.getMCVersion().isLowerThan(MCVersion.V1_14))
+            AdvancedListener.tryRegister(Grindstone.class, PLUGIN);
+        if (!MCVersion.getMCVersion().isLowerThan(MCVersion.V1_16))
+            AdvancedListener.tryRegister(Bartering.class, PLUGIN);
 
-        messenger.Debug("General", "All listeners has been registered");
+        MESSENGER.Debug("General", "All listeners has been registered");
+    }
+
+    public Configuration getGroups() {
+        return groups;
     }
 }

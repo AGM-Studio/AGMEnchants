@@ -4,14 +4,17 @@ import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.placeholder.Placeholder;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("deprecation")
 public class VanillaEnchant extends Enchant{
     private final Enchantment enchantment;
 
@@ -23,22 +26,31 @@ public class VanillaEnchant extends Enchant{
     }
 
     public VanillaEnchant(Enchantment enchantment) {
-        super(enchantment.getName(), getConfiguration(enchantment.getName()));
+        super(enchantment.getKey(), getConfiguration(enchantment.getKey().getKey()));
         this.enchantment = enchantment;
     }
+
+    @Override public void unregister() {}
 
     @Override public boolean isApplicable(Material material) {
         return enchantment.canEnchantItem(new ItemStack(material));
     }
-    @Override public boolean conflictsWith(Enchant enchant) {
+    @Override public @NotNull EnchantmentTarget getItemTarget() {
+        return enchantment.getItemTarget();
+    }
+    @Override public boolean conflictsWith(@NotNull Enchant enchant) {
         if (enchant instanceof VanillaEnchant) {
             VanillaEnchant vanillaEnchant = (VanillaEnchant) enchant;
             return enchantment.conflictsWith(vanillaEnchant.enchantment);
         }
         return enchant.conflictsWith(this);
     }
+
     @Override public int getMaxLevel() {
         return enchantment.getMaxLevel();
+    }
+    @Override public int getStartLevel() {
+        return enchantment.getStartLevel();
     }
     @Override public boolean isSafe(int level) {
         return true;
@@ -52,14 +64,28 @@ public class VanillaEnchant extends Enchant{
         return enchantment.isTreasure();
     }
     @Override public boolean isCursed() {
-        return enchantment.isCursed();
+        return enchantment.getKey().equals(NamespacedKey.minecraft("binding_curse")) || enchantment.getKey().equals(NamespacedKey.minecraft("vanishing_curse"));
+    }
+
+    @Override
+    public boolean canBeTraded() {
+        return !enchantment.getKey().equals(NamespacedKey.minecraft("soul_speed"));
+    }
+    @Override
+    public boolean canBeBartered() {
+        return enchantment.getKey().equals(NamespacedKey.minecraft("soul_speed"));
+    }
+    @Override
+    public boolean canBeFished() {
+        return !enchantment.getKey().equals(NamespacedKey.minecraft("soul_speed"));
+    }
+    @Override
+    public boolean canBeLooted(World world) {
+        if (!enchantment.getKey().equals(NamespacedKey.minecraft("soul_speed"))) return true;
+        return world.getEnvironment().equals(World.Environment.NETHER);
     }
 
     public Enchantment getEnchantment() {
         return enchantment;
-    }
-
-    @Override public String toString() {
-        return String.format("%s[ID=%s, Name=%s]", "VanillaEnchant", ID, getName());
     }
 }

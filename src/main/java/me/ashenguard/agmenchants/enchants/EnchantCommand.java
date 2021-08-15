@@ -2,6 +2,7 @@ package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.gui.EnchantListGUI;
+import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.api.AdvancedCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -49,7 +50,7 @@ public class EnchantCommand extends AdvancedCommand {
                 return;
             }
 
-            Enchant enchant = ENCHANT_MANAGER.STORAGE.get(args[2].toUpperCase());
+            Enchant enchant = ENCHANT_MANAGER.STORAGE.get(args[2]);
             if (enchant == null) {
                 AGMEnchants.getMessenger().send(sender, "§cEnchant was not found.");
                 return;
@@ -75,7 +76,7 @@ public class EnchantCommand extends AdvancedCommand {
         if (args.length == 0) return tab;
         if (args.length == 1) tab.addAll(Arrays.asList("list", "give"));
         if (args.length == 2 && args[0].equalsIgnoreCase("give")) tab.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
-        if (args.length == 3 && args[0].equalsIgnoreCase("give")) tab.addAll(ENCHANT_MANAGER.STORAGE.getAll().stream().map(e -> e.ID).collect(Collectors.toList()));
+        if (args.length == 3 && args[0].equalsIgnoreCase("give")) tab.addAll(ENCHANT_MANAGER.STORAGE.getAll().stream().map(e -> e.getKey().toString()).collect(Collectors.toList()));
         String lastWord = args[args.length - 1];
         return tab.stream().filter(name -> StringUtil.startsWithIgnoreCase(name, lastWord)).sorted(String.CASE_INSENSITIVE_ORDER).collect(Collectors.toList());
     }

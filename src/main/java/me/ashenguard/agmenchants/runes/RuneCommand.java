@@ -2,6 +2,7 @@ package me.ashenguard.agmenchants.runes;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.gui.RuneGUI;
+import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.AdvancedCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

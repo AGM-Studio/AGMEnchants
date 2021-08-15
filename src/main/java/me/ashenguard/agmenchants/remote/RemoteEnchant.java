@@ -3,7 +3,7 @@ package me.ashenguard.agmenchants.remote;
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.CustomEnchant;
 import me.ashenguard.agmenchants.enchants.Enchant;
-import me.ashenguard.agmenchants.enchants.EnchantManager;
+import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.utils.WebReader;
 import me.ashenguard.api.versions.Version;

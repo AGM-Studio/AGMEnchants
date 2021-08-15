@@ -43,6 +43,7 @@ public class EnchantGUI extends GUIInventory {
 
     @Override
     public void click(InventoryClickEvent event) {
+        if (event.getInventory() != this.inventory) return;
         int slot = event.getSlot();
 
         if (slot == 18) this.left();

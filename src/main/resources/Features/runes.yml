@@ -1,0 +1,25 @@
+Color:
+  Common: '§7'
+  Uncommon: '§a'
+  Rare: '§b'
+  Epic: '§d'
+  Legendary: '§6'
+
+ExtractChance:
+  Common: 20.0
+  Uncommon: 50.0
+  Rare: 75.0
+  Epic: 90.0
+  Legendary: 100.0
+
+Weight:
+  Common: 54
+  Uncommon: 30
+  Rare: 10
+  Epic: 5
+  Legendery: 1
+
+FishingChance: 0.5
+TradeAdded: 15.0
+BarterChance: 0.25
+LootGenerate: 5.0

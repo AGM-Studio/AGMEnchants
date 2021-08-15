@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.runes;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.gui.ItemMaker;
 import me.ashenguard.api.messenger.Messenger;
@@ -12,7 +13,6 @@ import me.ashenguard.api.utils.extra.MemorySectionReader;
 import me.ashenguard.api.versions.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -106,10 +106,9 @@ public abstract class Rune implements Listener {
         return rarity;
     }
 
-    private final ConfigurationSection listOfItems = AGMEnchants.getItemsList();
     private boolean isApplicable(String material, String applicable) {
         if (applicable.equalsIgnoreCase(material)) return true;
-        List<String> list = listOfItems.getStringList(applicable);
+        List<String> list = AGMEnchants.getMainManager().getGroups().getStringList(applicable);
         for (String name: list) if (isApplicable(material, name)) return true;
         return false;
     }
@@ -120,6 +119,7 @@ public abstract class Rune implements Listener {
         return false;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canRuneItem(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return false;
         if (RUNE_MANAGER.hasItemRune(item)) return false;
@@ -202,39 +202,39 @@ public abstract class Rune implements Listener {
     }
 
     public enum Rarity {
-        COMMON("Colors.Runes.Common", "§7", 54, 1),
-        UNCOMMON("Colors.Runes.Uncommon", "§a", 30, 2),
-        RARE("Colors.Runes.Rare", "§b", 10, 4),
-        EPIC("Colors.Runes.Epic", "§d", 5, 6),
-        LEGENDARY("Colors.Runes.Legendary", "§6", 1, 8);
+        COMMON("§7", 54, 1, 20),
+        UNCOMMON("§a", 30, 2, 50),
+        RARE("§b", 10, 4, 75),
+        EPIC("§d", 5, 6, 90),
+        LEGENDARY("§6", 1, 8, 100);
 
         public final String color;
+        public final double weight;
         public final double chance;
         public final int cost;
 
-        Rarity(String color, double chance, int cost) {
-            this.color = color;
-            this.chance = chance;
-            this.cost = cost;
-        }
+        Rarity(String color, double weight, int cost, double chance) {
+            Configuration config = RUNE_MANAGER.getConfig();
+            String name = getCapitalizedName();
 
-        Rarity(String path, String def, double chance, int cost) {
-            String color = AGMEnchants.getConfiguration().getString(path, def);
-            if (color == null) this.color = def;
-            else this.color = PHManager.translate(color);
-            this.chance = chance;
+            this.color = PHManager.translate(config.getString(String.format("Color.%s", name), color));
+            this.weight = config.getDouble(String.format("Weight.%s", name), weight);
+            this.chance = Math.max(0, Math.min(1, config.getDouble(String.format("ExtractChance.%s", name), chance) / 100));
             this.cost = cost;
         }
 
         public double getChance() {
             return chance;
         }
+        public double getWeight() {
+            return weight;
+        }
         public int getCost() {
             return cost;
         }
 
-        @Override public String toString() {
-            return name();
+        public String getCapitalizedName() {
+            return name().charAt(0) + name().substring(1).toLowerCase();
         }
 
         protected static Rarity get(String string) {

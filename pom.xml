@@ -18,6 +18,13 @@
     </properties>
     <url>https://agmdev.xyz</url>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
@@ -59,12 +66,12 @@
             <layout>default</layout>
         </repository>
         <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
@@ -74,15 +81,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.Ashenguard</groupId>
-            <artifactId>AGMSpigot</artifactId>
-            <version>1.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.Ashenguard</groupId>
+            <groupId>xyz.agmdev</groupId>
             <artifactId>AGMCore</artifactId>
-            <version>3.0</version>
+            <version>3.0.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

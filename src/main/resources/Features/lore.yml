@@ -1,0 +1,7 @@
+AboveItemLore: true
+ShowLore: true
+SeparatorLine: '§f------------------------------'
+Compress: false
+CompressLimit: 8
+Spacing: '    '
+UpdateOnItemPickUp: true

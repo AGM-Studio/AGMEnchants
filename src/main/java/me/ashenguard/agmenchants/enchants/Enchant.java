@@ -1,16 +1,18 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.messenger.PHManager;
 import me.ashenguard.api.placeholder.Placeholder;
 import me.ashenguard.api.utils.encoding.Roman;
-import me.ashenguard.api.utils.extra.MemorySectionReader;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -30,9 +32,6 @@ public abstract class Enchant {
     private final List<String> applicable;
     private final List<String> conflicts;
     private final Multiplier multiplier;
-    private final boolean treasure;
-    private final boolean cursed;
-    private final int maxLevel;
 
     public boolean register() {
         Enchant exists = ENCHANT_MANAGER.STORAGE.get(ID);
@@ -42,21 +41,20 @@ public abstract class Enchant {
         return true;
     }
 
+    public abstract void unregister();
+
     public Enchant(String ID, Configuration config) {
         this.ID = ID;
         this.config = config;
 
-        ConfigReader reader = new ConfigReader(config);
+        this.name = PHManager.translate(config.getString("Name", key.getKey()));
+        this.description = PHManager.translate(config.getString("Description", ""));
 
-        this.name = reader.readName(ID);
-        this.description = reader.readDescription();
-        this.lore = reader.readLore();
-        this.applicable = reader.readApplicable();
-        this.conflicts = reader.readConflicts();
-        this.maxLevel = reader.readMaxLevel();
-        this.multiplier = reader.readMultiplier();
-        this.treasure = reader.isTreasure();
-        this.cursed = reader.isCursed();
+        List<String> list = config.getStringList("Lore");
+        if (list.size() == 0)  list = Collections.singletonList(description);
+        this.lore = PHManager.translate(list);
+
+        this.multiplier = new Enchant.Multiplier(config.getInt("Multiplier", 1));
     }
 
     public abstract void onEnchanting(ItemStack item, int level);
@@ -88,31 +86,12 @@ public abstract class Enchant {
         return Rarity.get(this);
     }
 
-    private final ConfigurationSection listOfItems = AGMEnchants.getItemsList();
-    private boolean isApplicable(String material, String applicable) {
-        if (applicable.equalsIgnoreCase(material)) return true;
-        List<String> list = listOfItems.getStringList(applicable);
-        for (String name: list) if (isApplicable(material, name)) return true;
-        return false;
+    public abstract boolean isApplicable(Material material);
+    public abstract boolean conflictsWith(@NotNull Enchant enchant);
+    @Override public boolean conflictsWith(@NotNull Enchantment enchant) {
+        return conflictsWith(ENCHANT_MANAGER.STORAGE.get(enchant));
     }
-    public boolean isApplicable(Material material) {
-        if (material == null || material.equals(Material.AIR)) return false;
-        if (applicable.contains("EVERYTHING")) return true;
-        for (String name: applicable) if (isApplicable(material.name(), name)) return true;
-        return false;
-    }
-    public boolean conflictsWith(Enchant enchant) {
-        return conflicts.contains(enchant.ID) || enchant.conflicts.contains(ID);
-    }
-    public boolean isTreasure() {
-        return treasure;
-    }
-    public boolean isCursed() {
-        return cursed;
-    }
-    public int getMaxLevel() {
-        return maxLevel;
-    }
+
     public int getMultiplier() {
         return multiplier.get();
     }
@@ -123,8 +102,8 @@ public abstract class Enchant {
         return multiplier.get(book);
     }
 
-    public boolean canEnchantItem(ItemStack item) {
-        if (item == null || item.getType().equals(Material.AIR)) return false;
+    public boolean canEnchantItem(@NotNull ItemStack item) {
+        if (item.getType().equals(Material.AIR)) return false;
         if (item.getType().equals(Material.ENCHANTED_BOOK)) return true;
         if (!isApplicable(item.getType())) return false;
 
@@ -135,6 +114,7 @@ public abstract class Enchant {
         return true;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isSafe(int level) {
         return 0 < level && level <= getMaxLevel();
     }
@@ -149,13 +129,14 @@ public abstract class Enchant {
         String name = getColoredName();
 
         if (getMaxLevel() == 1 && level == 1) return name;
-        return String.format("%s %s", name, Roman.to(level));
+        String lvl = Roman.to(level);
+        return String.format("%s %s%s", name, ENCHANT_MANAGER.getLevelColor(lvl), lvl);
     }
 
     public int applyEnchant(ItemStack item, int level) {
-        return ENCHANT_MANAGER.setItemEnchant(item, this, level);
+        return ENCHANT_MANAGER.setItemEnchantAndLore(item, this, level);
     }
-    public boolean removeEnchant(ItemStack item) {
+    public int removeEnchant(ItemStack item) {
         return ENCHANT_MANAGER.delItemEnchant(item, this);
     }
 
@@ -180,45 +161,11 @@ public abstract class Enchant {
         return String.format("%s[ID=%s, Name=%s]", "Enchant", ID, getName());
     }
 
-    private static class ConfigReader extends MemorySectionReader {
-        public ConfigReader(MemorySection memory) {
-            super(memory);
-        }
+    public abstract boolean canBeTraded();
+    public abstract boolean canBeBartered();
+    public abstract boolean canBeFished();
+    public abstract boolean canBeLooted(World world);
 
-        public String readName(String ID) {
-            return PHManager.translate(readString(ID, 0, "Name"));
-        }
-        public String readDescription() {
-            return PHManager.translate(readString("", 0, "Description", "Desc"));
-        }
-        private List<String> readBareLore() {
-            List<String> list = readStringList("Lore");
-            if (list != null && list.size() > 0) return list;
-
-            return Collections.singletonList(readDescription());
-        }
-        public List<String> readLore() {
-            return PHManager.translate(readBareLore());
-        }
-        public boolean isTreasure() {
-            return readBoolean(false,"Treasure");
-        }
-        public boolean isCursed() {
-            return readBoolean(false,"Cursed");
-        }
-        public int readMaxLevel() {
-            return readInt(1, "MaxLevel");
-        }
-        public List<String> readApplicable() {
-            return readStringList("Applicable");
-        }
-        public List<String> readConflicts() {
-            return readStringList("Conflicts");
-        }
-        public Enchant.Multiplier readMultiplier() {
-            return new Enchant.Multiplier(readInt(1, "Multiplier"));
-        }
-    }
     public static class Multiplier {
         private final int multiplier;
 
@@ -245,6 +192,7 @@ public abstract class Enchant {
         CURSED("Colors.Enchants.Cursed", "§c"),
         TREASURE("Colors.Enchants.Treasure", "§b");
 
+        @SuppressWarnings("deprecation")
         public static Rarity get(Enchant enchant) {
             return enchant.isCursed() ? CURSED : enchant.isTreasure() ? TREASURE : NORMAL;
         }
@@ -255,14 +203,13 @@ public abstract class Enchant {
         }
 
         Rarity(String path, String def) {
-            String color = AGMEnchants.getConfiguration().getString(path, def);
-            if (color == null) this.color = def;
-            else this.color = PHManager.translate(color);
+            Configuration config = ENCHANT_MANAGER.getConfig();
+
+            this.color = PHManager.translate(config.getString(String.format("Colors.%s", getCapitalizedName()), def));
         }
 
-        @Override
-        public String toString() {
-            return name();
+        public String getCapitalizedName() {
+            return name().charAt(0) + name().substring(1).toLowerCase();
         }
     }
 }

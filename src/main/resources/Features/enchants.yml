@@ -1,0 +1,12 @@
+Colors:
+  Normal: '§7'
+  Cursed: '§c'
+  Treasure: '§b'
+  Levels:
+    Enable: true
+    I: '§7'
+    II: '§b'
+    III: '§e'
+    IV: '§6'
+    V: '§d'
+    Default: '§c'

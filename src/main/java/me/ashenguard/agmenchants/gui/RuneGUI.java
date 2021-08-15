@@ -1,8 +1,8 @@
 package me.ashenguard.agmenchants.gui;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.agmenchants.runes.Rune;
-import me.ashenguard.agmenchants.runes.RuneManager;
 import me.ashenguard.api.gui.GUIInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
