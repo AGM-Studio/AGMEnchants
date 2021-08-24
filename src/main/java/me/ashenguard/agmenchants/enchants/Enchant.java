@@ -17,24 +17,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @SuppressWarnings({"UnusedReturnValue", "unused", "EmptyMethod"})
-public abstract class Enchant {
+public abstract class Enchant extends Enchantment {
     protected final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     protected final Messenger MESSENGER = AGMEnchants.getMessenger();
     protected static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
-
-    public final String ID;
 
     protected final Configuration config;
 
     private final String name;
     private final String description;
     private final List<String> lore;
-    private final List<String> applicable;
-    private final List<String> conflicts;
     private final Multiplier multiplier;
 
     public boolean register() {
-        Enchant exists = ENCHANT_MANAGER.STORAGE.get(ID);
+        Enchant exists = ENCHANT_MANAGER.STORAGE.get(this.getKey());
         if (exists != null) return false;
         ENCHANT_MANAGER.STORAGE.save(this);
         MESSENGER.Debug("Enchants", "Enchantment has been registered.", "Enchantment= §6" + toString());
@@ -43,8 +39,8 @@ public abstract class Enchant {
 
     public abstract void unregister();
 
-    public Enchant(String ID, Configuration config) {
-        this.ID = ID;
+    public Enchant(@NotNull NamespacedKey key, Configuration config) {
+        super(key);
         this.config = config;
 
         this.name = PHManager.translate(config.getString("Name", key.getKey()));
@@ -64,7 +60,7 @@ public abstract class Enchant {
         return getPlaceholders(getLevel(item));
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
     public String getDescription() {
@@ -158,7 +154,7 @@ public abstract class Enchant {
     }
 
     @Override public String toString() {
-        return String.format("%s[ID=%s, Name=%s]", "Enchant", ID, getName());
+        return String.format("Enchantment[ID=%s, Name=%s]", getKey(), getName());
     }
 
     public abstract boolean canBeTraded();
