@@ -61,13 +61,13 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
             <layout>default</layout>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -83,7 +83,7 @@
         <dependency>
             <groupId>xyz.agmdev</groupId>
             <artifactId>AGMCore</artifactId>
-            <version>3.0.4</version>
+            <version>3.0.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
