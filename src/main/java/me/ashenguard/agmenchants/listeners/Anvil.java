@@ -103,7 +103,7 @@ public class Anvil extends AdvancedListener {
             short max = item.getType().getMaxDurability();
             short durability = (short) (REPAIR_BOOST.call() * max - itemMeta.getDamage() - sacrificeMeta.getDamage());
             itemMeta.setDamage((short) Math.max(0, max - durability));
-            item.setItemMeta((ItemMeta) itemMeta);
+            item.setItemMeta(itemMeta);
             repairing = true;
             cost += 2;
         }

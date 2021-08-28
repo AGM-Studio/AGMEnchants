@@ -9,11 +9,9 @@ import me.ashenguard.api.messenger.PHManager;
 import me.ashenguard.api.placeholder.Placeholder;
 import me.ashenguard.api.spigot.SpigotPlugin;
 import me.ashenguard.api.utils.FileUtils;
-import me.ashenguard.api.utils.extra.MemorySectionReader;
 import me.ashenguard.api.versions.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -79,14 +77,15 @@ public abstract class Rune implements Listener {
         this.version = version;
         this.config = config;
 
-        ConfigReader reader = new ConfigReader(config);
+        this.name = PHManager.translate(config.getString("Name", ID));
+        this.description = PHManager.translate(config.getString("Description", ""));
+        this.lore = PHManager.translate(config.getString("Lore", description));
+        this.applicable = config.getStringList("Applicable");
+        this.rarity = Rarity.get(config.getString("Rarity", ""));
 
-        this.name = reader.readName(ID);
-        this.description = reader.readDescription();
-        this.lore = reader.readLore();
-        this.applicable = reader.readApplicable();
-        this.rarity = reader.readRarity();
-        this.item = reader.readItem();
+        String texture = config.getString("Texture", "");
+        String UUID = config.getString("UUID", "");
+        this.item = ItemMaker.getCustomHead(UUID, texture);
 
         AGMEnchants.getItemManager().setItemDisplay(this.item, getColoredName(), null, null);
     }
@@ -173,33 +172,6 @@ public abstract class Rune implements Listener {
     }
 
     public void onRuneApply(ItemStack result) {}
-
-    private static class ConfigReader extends MemorySectionReader {
-        public ConfigReader(MemorySection memory) {
-            super(memory);
-        }
-
-        public String readName(String ID) {
-            return PHManager.translate(readString(ID, 0, "Name"));
-        }
-        public String readDescription() {
-            return PHManager.translate(readString("", 0, "Description", "Desc"));
-        }
-        public String readLore() {
-            return PHManager.translate(readString(readDescription(), 0, "Lore"));
-        }
-        public List<String> readApplicable() {
-            return readStringList("Applicable");
-        }
-        public Rarity readRarity() {
-            return Rarity.get(readString("Common", 0, "Rarity"));
-        }
-        public ItemStack readItem() {
-            String texture = readString("", 0, "Texture", "Value");
-            String UUID = readString("", 0, "UUID");
-            return ItemMaker.getCustomHead(UUID, texture);
-        }
-    }
 
     public enum Rarity {
         COMMON("§7", 54, 1, 20),
