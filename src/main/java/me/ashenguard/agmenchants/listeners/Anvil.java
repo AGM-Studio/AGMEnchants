@@ -93,7 +93,7 @@ public class Anvil extends AdvancedListener {
 
         // Costs: 2 Levels
         public void repair(ItemStack sacrifice) {
-            if (!item.getType().equals(sacrifice.getType())) return;
+            if (sacrifice == null || !item.getType().equals(sacrifice.getType())) return;
 
             Damageable itemMeta = getDamageable(item);
             Damageable sacrificeMeta = getDamageable(sacrifice);
@@ -188,7 +188,7 @@ public class Anvil extends AdvancedListener {
         if (item == null || item.getType().equals(Material.AIR)) return;
 
         if (!RUNE_MANAGER.isItemRune(sacrifice))
-            if (!sacrifice.getType().name().equals("ENCHANTED_BOOK"))
+            if (sacrifice != null && !sacrifice.getType().name().equals("ENCHANTED_BOOK"))
                 if (item.getType().equals(sacrifice.getType())) {
                     if (!EXTRACTION) return;
                     if (item.getType().name().equals("ENCHANTED_BOOK")) return;

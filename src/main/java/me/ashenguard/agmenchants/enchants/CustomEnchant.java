@@ -49,16 +49,24 @@ public abstract class CustomEnchant extends Enchant implements Listener {
         return true;
     }
     @Override public boolean register() {
-        boolean result = super.register();
-        if (result) {
-            Bukkit.getPluginManager().registerEvents(this, PLUGIN);
-            Enchantment.registerEnchantment(this);
-        }
-        return result;
+        Enchant exists = ENCHANT_MANAGER.STORAGE.get(this.getKey());
+        if (exists != null) return false;
+        ENCHANT_MANAGER.STORAGE.save(this);
+        Bukkit.getPluginManager().registerEvents(this, PLUGIN);
+        Enchantment.registerEnchantment(this);
+        onRegister();
+        MESSENGER.Debug("Enchants", "Enchantment has been registered.", "Enchantment= §6" + toString());
+
+        return true;
     }
     @Override public void unregister() {
         ENCHANT_MANAGER.unregisterEnchantment(this);
+        onUnregister();
+        MESSENGER.Debug("Enchants", "Enchantment's registration has been removed.", "Enchantment= §6" + toString());
     }
+
+    public void onRegister() {}
+    public void onUnregister() {}
 
     public abstract List<ItemStack> getItemStacks(Entity entity);
 

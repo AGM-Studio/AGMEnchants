@@ -127,12 +127,16 @@ public class EnchantManager {
             KEY_ENCHANTMENT_MAP.remove(enchantment.getKey());
             NAME_ENCHANTMENT_MAP.remove(enchantment.getName());
         } catch (Throwable ignored) {}
+        STORAGE.remove(enchantment);
     }
 
     public HashMap<Enchant, Integer> extractEnchants(ItemStack item) {
+        return extractEnchants(item, true);
+    }
+    public HashMap<Enchant, Integer> extractEnchants(ItemStack item, boolean checkStorage) {
         if (item == null || item.getType().equals(Material.AIR)) return new HashMap<>();
         Map<Enchantment, Integer> enchants = new HashMap<>(item.getEnchantments());
-        if (item.getItemMeta() instanceof EnchantmentStorageMeta) {
+        if (checkStorage && item.getItemMeta() instanceof EnchantmentStorageMeta) {
             Map<Enchantment, Integer> storages = ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants();
             for (Map.Entry<Enchantment, Integer> enchant: storages.entrySet()) {
                 if (enchant.getValue() == 0) continue;
@@ -143,7 +147,14 @@ public class EnchantManager {
         return STORAGE.translate(enchants);
     }
     public int getItemEnchant(ItemStack item, Enchant enchant) {
-        return item.getEnchantmentLevel(enchant);
+        int level = item.getEnchantmentLevel(enchant);
+        // For some reason some of custom enchantments won't be found with above method.
+        if (level == 0) {
+            Map<Enchant, Integer> enchants = extractEnchants(item, false);
+            for (Map.Entry<Enchant, Integer> entry: enchants.entrySet())
+                if (entry.getKey().equals(enchant)) level = entry.getValue();
+        }
+        return level;
     }
     public int setItemEnchantAndLore(ItemStack item, Enchant enchant, int level) {
         if (enchant == null || !enchant.isSafe(level)) return -1;
@@ -263,15 +274,25 @@ public class EnchantManager {
         private final List<Enchant> list = new ArrayList<>();
 
         public Enchant get(NamespacedKey key) {
+            if (key == null) return null;
             for (Enchant enchant: list)
                 if (enchant.getKey().toString()
                         .equalsIgnoreCase(key.toString())) return enchant;
             return null;
         }
         public Enchant get(String ID) {
-            Enchant result = get(NamespacedKey.fromString(ID));
-            if (result != null) return result;
-            return get(NamespacedKey.fromString(ID, PLUGIN));
+            ID = ID.toLowerCase();
+            NamespacedKey key = NamespacedKey.fromString(ID);
+            Enchant result = get(key);
+            if (result == null) {
+                key = NamespacedKey.minecraft(ID);
+                result = get(key);
+            }
+            if (result == null) {
+                key = new NamespacedKey(PLUGIN, ID);
+                result = get(key);
+            }
+            return result;
         }
         public Enchant get(Enchantment enchant) {
             return get(enchant.getKey());
@@ -312,6 +333,11 @@ public class EnchantManager {
         public int size() {
             return list.size();
         }
+
+        public void remove(Enchantment enchantment) {
+            Enchant enchant = get(enchantment);
+            list.remove(enchant);
+        }
     }
     private static class Loader {
         private static boolean isEnchantEnabled(CustomEnchant enchantment) {
@@ -342,6 +368,7 @@ public class EnchantManager {
         private static CustomEnchant createInstance(Class<?> clazz, File JAR) {
             if (clazz == null) return null;
             if (!CustomEnchant.class.isAssignableFrom(clazz)) return null;
+            CustomEnchant enchant = null;
             Class<? extends CustomEnchant> enchantClass = clazz.asSubclass(CustomEnchant.class);
 
             try {
@@ -351,13 +378,15 @@ public class EnchantManager {
                 } else {
                     for (Constructor<?> constructor : constructors) {
                         if (constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0].isAssignableFrom(File.class)) {
-                            return (CustomEnchant) constructor.newInstance(JAR);
+                            enchant = (CustomEnchant) constructor.newInstance(JAR);
                         }
                     }
                 }
-            } catch (Throwable ignored) {}
-            MESSENGER.Warning("Failed to initialize enchantment from class: " + enchantClass.getName());
-            return null;
+            } catch (Throwable throwable) {
+                MESSENGER.Warning(String.format("Failed to load enchantment from class named %s (%s)", enchantClass.getSimpleName(), enchantClass.getName()));
+                MESSENGER.handleException(throwable, "EnchantmentLoader_Exception");
+            }
+            return enchant;
         }
     }
 }

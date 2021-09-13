@@ -55,8 +55,14 @@ public abstract class Rune implements Listener {
         if (exists != null) return false;
         RUNE_MANAGER.STORAGE.save(this);
         Bukkit.getPluginManager().registerEvents(this, PLUGIN);
+        onRegister();
         MESSENGER.Debug("Runes", "Rune has been registered.", "Rune= §6" + toString());
         return true;
+    }
+    public void unregister() {
+        RUNE_MANAGER.STORAGE.remove(this);
+        onUnregister();
+        MESSENGER.Debug("Runes", "Rune's registration has been removed.", "Rune= §6" + toString());
     }
 
     public Rune(File JAR) {
@@ -91,6 +97,11 @@ public abstract class Rune implements Listener {
     }
 
     public abstract List<Placeholder> getPlaceholders(ItemStack item);
+
+    public void onRegister() {}
+    public void onUnregister() {}
+
+    public void onInteract() {}
 
     public String getName() {
         return name;

@@ -92,12 +92,12 @@ public class LoreManager {
         ItemMeta meta = item.getItemMeta();
         return meta.hasLore() ? meta.getLore() : new ArrayList<>();
     }
-    public ItemStack setItemDisplay(ItemStack item, String name, List<String> lore, Iterator<ItemFlag> flags) {
+    public ItemStack setItemDisplay(ItemStack item, String name, List<String> lore, Iterable<ItemFlag> flags) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
         if (lore != null) meta.setLore(trimList(lore));
         if (name != null) meta.setDisplayName(name);
-        if (flags != null) flags.forEachRemaining(meta::addItemFlags);
+        if (flags != null) flags.forEach(meta::addItemFlags);
         item.setItemMeta(meta);
         return item;
     }
@@ -114,7 +114,7 @@ public class LoreManager {
             newLore.add(ABOVE_LORE ? newLore.size() : 0, SEPARATOR_LINE);
             newLore.addAll(ABOVE_LORE ? newLore.size() : 0, oldLore);
         }
-        return setItemDisplay(item, null, newLore, null);
+        return setItemDisplay(item, null, newLore, Arrays.asList(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS));
     }
 
     private List<String> trimList(List<String> list) {

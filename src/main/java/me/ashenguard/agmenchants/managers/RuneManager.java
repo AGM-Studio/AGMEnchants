@@ -137,6 +137,10 @@ public class RuneManager {
         public int size() {
             return list.size();
         }
+
+        public void remove(Rune rune) {
+            list.remove(rune);
+        }
     }
     private static class NBT {
         private static final String NBT_TAG_RUNE = "Rune";
