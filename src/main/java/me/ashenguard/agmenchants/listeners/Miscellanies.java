@@ -12,8 +12,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -50,10 +52,52 @@ public class Miscellanies extends AdvancedListener {
             return;
         }
 
-        boolean consume = rune.onInteract();
+        boolean consume = rune.onBlockInteract(event.getPlayer(), event.getItem(), event.getClickedBlock());
         if (consume) {
             int newAmount = item.getAmount() - 1;
             item.setAmount(newAmount);
+        }
+    }
+
+    @EventHandler public void OnRuneInteractEntity(PlayerInteractEntityEvent event) {
+        EntityEquipment equipment = event.getPlayer().getEquipment();
+        if (equipment == null) return;
+
+        ItemStack mainHand = event.getPlayer().getEquipment().getItemInMainHand();
+        ItemStack offHand = equipment.getItemInOffHand();
+
+        Rune mainRune = RUNE_MANAGER.getItemRune(mainHand);
+        Rune offRune = RUNE_MANAGER.getItemRune(offHand);
+
+        if (mainRune != null) {
+            RuneInteractEvent interactEvent = new RuneInteractEvent(event.getPlayer(), mainRune, mainHand);
+            Bukkit.getServer().getPluginManager().callEvent(interactEvent);
+
+            if (interactEvent.isCancelled()) {
+                event.setCancelled(true);
+                return;
+            }
+
+            boolean consume = mainRune.onEntityInteract(event.getPlayer(), mainHand, event.getRightClicked());
+            if (consume) {
+                int newAmount = mainHand.getAmount() - 1;
+                mainHand.setAmount(newAmount);
+            }
+        }
+        if (offRune != null) {
+            RuneInteractEvent interactEvent = new RuneInteractEvent(event.getPlayer(), offRune, mainHand);
+            Bukkit.getServer().getPluginManager().callEvent(interactEvent);
+
+            if (interactEvent.isCancelled()) {
+                event.setCancelled(true);
+                return;
+            }
+
+            boolean consume = offRune.onEntityInteract(event.getPlayer(), mainHand, event.getRightClicked());
+            if (consume) {
+                int newAmount = mainHand.getAmount() - 1;
+                mainHand.setAmount(newAmount);
+            }
         }
     }
 

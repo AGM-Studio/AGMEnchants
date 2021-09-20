@@ -12,6 +12,9 @@ import me.ashenguard.api.utils.FileUtils;
 import me.ashenguard.api.versions.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -101,8 +104,14 @@ public abstract class Rune implements Listener {
     public void onRegister() {}
     public void onUnregister() {}
 
-    public boolean onInteract() {
+    public boolean onInteract(Player player, ItemStack item) {
         return false;
+    }
+    public boolean onBlockInteract(Player player, ItemStack item, Block clickedBlock) {
+        return onInteract(player, item);
+    }
+    public boolean onEntityInteract(Player player, ItemStack item, Entity entity) {
+        return onInteract(player, item);
     }
 
     public String getName() {

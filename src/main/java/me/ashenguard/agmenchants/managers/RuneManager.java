@@ -10,6 +10,8 @@ import me.ashenguard.api.utils.FileUtils;
 import me.ashenguard.exceptions.ConstructorNotFound;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -59,22 +61,22 @@ public class RuneManager {
         MESSENGER.Info(String.format("Loaded %d Runes", STORAGE.size()));
     }
 
-    public Rune getItemRune(ItemStack item) {
+    @Nullable public Rune getItemRune(@NotNull ItemStack item) {
         return NBT.GetRune(item);
     }
-    public boolean setItemRune(ItemStack item, Rune rune, boolean orig) {
+    public boolean setItemRune(@NotNull ItemStack item,@NotNull Rune rune, boolean orig) {
         return NBT.SetRuneOriginal(item, rune, orig);
     }
-    public boolean setItemRune(ItemStack item, Rune rune) {
+    public boolean setItemRune(@NotNull ItemStack item, @NotNull Rune rune) {
         return NBT.SetRune(item, rune);
     }
-    public boolean delItemRune(ItemStack item) {
+    public boolean delItemRune(@NotNull ItemStack item) {
         return NBT.RemoveRune(item);
     }
-    public boolean hasItemRune(ItemStack item) {
+    public boolean hasItemRune(@NotNull ItemStack item) {
         return getItemRune(item) != null;
     }
-    public boolean isItemRune(ItemStack item) {
+    public boolean isItemRune(@NotNull ItemStack item) {
         return NBT.IsOriginalRune(item);
     }
 
