@@ -2,7 +2,7 @@ name: AGMEnchants
 version: ${project.version}
 main: me.ashenguard.agmenchants.AGMEnchants
 api-version: 1.13
-softdepend: [AGMCore, PlaceholderAPI]
+softdepend: [AGMCore, PlaceholderAPI, Citizens]
 authors: [Ashenguard]
 description: More magics in game
 website: https://agmdev.xyz
