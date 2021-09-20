@@ -229,22 +229,25 @@ public class RuneManager {
         private static Rune createInstance(Class<?> clazz, File JAR) {
             if (clazz == null) return null;
             if (!Rune.class.isAssignableFrom(clazz)) return null;
-            Class<? extends Rune> enchantClass = clazz.asSubclass(Rune.class);
+            Rune rune = null;
+            Class<? extends Rune> runeClass = clazz.asSubclass(Rune.class);
 
             try {
-                Constructor<?>[] constructors = enchantClass.getConstructors();
+                Constructor<?>[] constructors = runeClass.getConstructors();
                 if (constructors.length == 0) {
-                    throw new ConstructorNotFound(enchantClass);
+                    throw new ConstructorNotFound(runeClass);
                 } else {
                     for (Constructor<?> constructor : constructors) {
                         if (constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0].isAssignableFrom(File.class)) {
-                            return (Rune) constructor.newInstance(JAR);
+                            rune = (Rune) constructor.newInstance(JAR);
                         }
                     }
                 }
-            } catch (Throwable ignored) {}
-            MESSENGER.Warning("Failed to initialize rune from class: " + enchantClass.getName());
-            return null;
+            } catch (Throwable throwable) {
+                MESSENGER.Warning(String.format("Failed to load rune from class named %s (%s)", runeClass.getSimpleName(), runeClass.getName()));
+                MESSENGER.handleException(throwable, "RuneLoader_Exception");
+            }
+            return rune;
         }
     }
 }

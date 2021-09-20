@@ -101,7 +101,9 @@ public abstract class Rune implements Listener {
     public void onRegister() {}
     public void onUnregister() {}
 
-    public void onInteract() {}
+    public boolean onInteract() {
+        return false;
+    }
 
     public String getName() {
         return name;

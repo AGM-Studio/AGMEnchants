@@ -50,7 +50,8 @@ public class Miscellanies extends AdvancedListener {
             return;
         }
 
-        if (interactEvent.willConsume()) {
+        boolean consume = rune.onInteract();
+        if (consume) {
             int newAmount = item.getAmount() - 1;
             item.setAmount(newAmount);
         }

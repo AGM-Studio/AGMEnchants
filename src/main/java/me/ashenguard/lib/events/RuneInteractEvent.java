@@ -13,11 +13,13 @@ public class RuneInteractEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final Rune rune;
-    private boolean consume = true;
     private final ItemStack item;
     private boolean cancelled = false;
 
     @Override public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
@@ -33,14 +35,6 @@ public class RuneInteractEvent extends PlayerEvent implements Cancellable {
 
     public Rune getRune() {
         return rune;
-    }
-
-    public boolean willConsume() {
-        return consume;
-    }
-
-    public void setConsume(boolean consume) {
-        this.consume = consume;
     }
 
     public boolean isOriginal() {
