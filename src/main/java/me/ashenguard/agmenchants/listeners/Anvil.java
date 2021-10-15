@@ -147,7 +147,7 @@ public class Anvil extends AdvancedListener {
         }
 
         public boolean hasResult() {
-            return enchanting || repairing || renaming;
+            return enchanting || ruined || repairing || renaming;
         }
 
         public ItemStack getResult() {
