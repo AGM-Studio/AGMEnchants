@@ -54,6 +54,7 @@ public class MainManager {
         AdvancedListener.tryRegister(Fishing.class, PLUGIN);
         AdvancedListener.tryRegister(Trading.class, PLUGIN);
         AdvancedListener.tryRegister(Miscellanies.class, PLUGIN);
+        AdvancedListener.tryRegister(WorldGeneration.class, PLUGIN);
         if (!MCVersion.getMCVersion().isLowerThan(MCVersion.V1_14))
             AdvancedListener.tryRegister(Grindstone.class, PLUGIN);
         if (!MCVersion.getMCVersion().isLowerThan(MCVersion.V1_16))
