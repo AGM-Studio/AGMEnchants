@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class VanillaEnchant extends Enchant{
     private final Enchantment enchantment;
 

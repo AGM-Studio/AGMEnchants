@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RuneCommand extends AdvancedCommand {
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
 
     public RuneCommand() {
         super(AGMEnchants.getInstance(), "Runes", true);
@@ -38,7 +37,7 @@ public class RuneCommand extends AdvancedCommand {
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            String loaded = "§a" + RUNE_MANAGER.STORAGE.getAll().stream().map(Rune::getName).collect(Collectors.joining("§r, §a")) + "§r";
+            String loaded = "§a" + RuneManager.STORAGE.getAll().stream().map(Rune::getName).collect(Collectors.joining("§r, §a")) + "§r";
             AGMEnchants.getMessenger().send(sender, "Runes: " + loaded);
         }
 
@@ -49,7 +48,7 @@ public class RuneCommand extends AdvancedCommand {
                 return;
             }
             
-            Rune rune = RUNE_MANAGER.STORAGE.get(args[2].toUpperCase());
+            Rune rune = RuneManager.STORAGE.get(args[2].toUpperCase());
             if (rune == null) {
                 AGMEnchants.getMessenger().send(sender, "§cRune was not found.");
                 return;
@@ -65,7 +64,7 @@ public class RuneCommand extends AdvancedCommand {
         if (args.length == 0) return tab;
         if (args.length == 1) tab.addAll(Arrays.asList("list", "give"));
         if (args.length == 2 && args[0].equalsIgnoreCase("give")) tab.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
-        if (args.length == 3 && args[0].equalsIgnoreCase("give")) tab.addAll(RUNE_MANAGER.STORAGE.getAll().stream().map(e -> e.ID).collect(Collectors.toList()));
+        if (args.length == 3 && args[0].equalsIgnoreCase("give")) tab.addAll(RuneManager.STORAGE.getAll().stream().map(e -> e.ID).collect(Collectors.toList()));
         String lastWord = args[args.length - 1];
         return tab.stream().filter(name -> StringUtil.startsWithIgnoreCase(name, lastWord)).sorted(String.CASE_INSENSITIVE_ORDER).collect(Collectors.toList());
     }

@@ -1,6 +1,5 @@
 package me.ashenguard.agmenchants.listeners;
 
-import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
@@ -15,18 +14,16 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Fishing extends AdvancedListener {
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
     private static final Filter<Enchant> FILTER = EnchantManager.EnchantFilter.CAN_BE_FISHED;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void runes(PlayerFishEvent event) {
         Entity caught = event.getCaught();
         if (!event.getState().equals(PlayerFishEvent.State.CAUGHT_FISH) || !(caught instanceof Item)) return;
-        if (Math.random() > RUNE_MANAGER.BARTER_CHANCE) return;
+        if (Math.random() > RuneManager.getFishingChance()) return;
 
         Item item = (Item) caught;
-        Rune rune = RUNE_MANAGER.getRandomRune();
+        Rune rune = RuneManager.getRandomRune();
         item.setItemStack(rune.getRune());
     }
 
@@ -42,8 +39,8 @@ public class Fishing extends AdvancedListener {
         ItemStack item = ((Item) caught).getItemStack();
         int power = (int) (Math.random() * 30);
         if (power <= 16) power = power / 2 + 8;
-        ENCHANT_MANAGER.clearItemEnchants(item);
-        ENCHANT_MANAGER.randomEnchantItem(item, power + 8, FILTER.AND(WorldFilter));
+        EnchantManager.clearItemEnchants(item);
+        EnchantManager.randomEnchantItem(item, power + 8, FILTER.AND(WorldFilter));
     }
 
     @Override protected void onRegister() {

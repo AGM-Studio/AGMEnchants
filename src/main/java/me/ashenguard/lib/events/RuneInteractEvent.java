@@ -1,6 +1,6 @@
 package me.ashenguard.lib.events;
 
-import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.agmenchants.runes.Rune;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public class RuneInteractEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
@@ -38,7 +39,7 @@ public class RuneInteractEvent extends PlayerEvent implements Cancellable {
     }
 
     public boolean isOriginal() {
-        return AGMEnchants.getRuneManager().isItemRune(item);
+        return RuneManager.isItemRune(item);
     }
 
     @Override

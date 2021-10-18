@@ -57,42 +57,44 @@ public class EnchantManager {
         NAME_ENCHANTMENT_MAP = NAME_MAP;
     }
 
-    private final Configuration config;
-    private final Map<String, String> LEVEL_COLOR;
-    private final String LEVEL_COLOR_DEFAULT;
-    private final boolean LEVEL_COLOR_ENABLED;
-    public final boolean REVERSE_ENCHANT;
+    private static final Configuration config = new Configuration(PLUGIN, "Features/runes.yml");
+    private static Map<String, String> levelColor;
+    private static String levelColorDefault;
+    private static boolean levelColorEnabled;
+    private static boolean reverseEnchant;
 
-    public final Storage STORAGE = new Storage();
+    public static boolean isReverseEnchant() {
+        return reverseEnchant;
+    }
 
-    public EnchantManager() {
-        config = new Configuration(PLUGIN, "Features/runes.yml");
+    public static final Storage STORAGE = new Storage();
 
-        REVERSE_ENCHANT = config.getBoolean("ReverseEnchant", false);
+    public static void loadConfig() {
+        reverseEnchant = config.getBoolean("ReverseEnchant", false);
         ConfigurationSection section = config.getConfigurationSection("Colors.Levels");
-        LEVEL_COLOR = new HashMap<>();
+        levelColor = new HashMap<>();
         if (section == null) {
-            LEVEL_COLOR_ENABLED = false;
-            LEVEL_COLOR_DEFAULT = "";
+            levelColorEnabled = false;
+            levelColorDefault = "";
         } else {
-            LEVEL_COLOR_ENABLED = section.getBoolean("Enable", false);
-            LEVEL_COLOR_DEFAULT = section.getString("Default",  "");
+            levelColorEnabled = section.getBoolean("Enable", false);
+            levelColorDefault = section.getString("Default",  "");
             for (String key: section.getKeys(false)) {
                 if (key.equals("Enable") || key.equals("Default")) continue;
-                LEVEL_COLOR.put(key, section.getString(key, LEVEL_COLOR_DEFAULT));
+                levelColor.put(key, section.getString(key, levelColorDefault));
             }
         }
     }
 
-    public Configuration getConfig() {
+    public static Configuration getConfig() {
         return config;
     }
-    public String getLevelColor(String level) {
-        if (!LEVEL_COLOR_ENABLED) return "";
-        return LEVEL_COLOR.getOrDefault(level, LEVEL_COLOR_DEFAULT);
+    public static String getLevelColor(String level) {
+        if (!levelColorEnabled) return "";
+        return levelColor.getOrDefault(level, levelColorDefault);
     }
 
-    public void loadEnchants() {
+    public static void loadEnchants() {
         try {
             Field acceptingNew = Enchantment.class.getDeclaredField("acceptingNew");
             acceptingNew.setAccessible(true);
@@ -121,7 +123,7 @@ public class EnchantManager {
         MESSENGER.Info(String.format("Loaded %d enchantments(Including the vanilla)", STORAGE.size()));
     }
 
-    public void unregisterEnchantment(Enchantment enchantment) {
+    public static void unregisterEnchantment(Enchantment enchantment) {
         if (enchantment.getKey().getNamespace().equals(NamespacedKey.MINECRAFT) || enchantment.getKey().getNamespace().equals(NamespacedKey.BUKKIT)) return;
         try {
             KEY_ENCHANTMENT_MAP.remove(enchantment.getKey());
@@ -130,10 +132,10 @@ public class EnchantManager {
         STORAGE.remove(enchantment);
     }
 
-    public HashMap<Enchant, Integer> extractEnchants(ItemStack item) {
+    public static HashMap<Enchant, Integer> extractEnchants(ItemStack item) {
         return extractEnchants(item, true);
     }
-    public HashMap<Enchant, Integer> extractEnchants(ItemStack item, boolean checkStorage) {
+    public static HashMap<Enchant, Integer> extractEnchants(ItemStack item, boolean checkStorage) {
         if (item == null || item.getType().equals(Material.AIR)) return new HashMap<>();
         Map<Enchantment, Integer> enchants = new HashMap<>(item.getEnchantments());
         if (checkStorage && item.getItemMeta() instanceof EnchantmentStorageMeta) {
@@ -146,7 +148,7 @@ public class EnchantManager {
         }
         return STORAGE.translate(enchants);
     }
-    public int getItemEnchant(ItemStack item, Enchant enchant) {
+    public static int getItemEnchant(ItemStack item, Enchant enchant) {
         int level = item.getEnchantmentLevel(enchant);
         // For some reason some of custom enchantments won't be found with above method.
         if (level == 0) {
@@ -156,14 +158,7 @@ public class EnchantManager {
         }
         return level;
     }
-    public int setItemEnchantAndLore(ItemStack item, Enchant enchant, int level) {
-        if (enchant == null || !enchant.isSafe(level)) return -1;
-        AGMEnchants.getItemManager().secureItemLore(item);
-        int oldLevel = setItemEnchant(item, enchant, level);
-        AGMEnchants.getItemManager().applyItemLore(item);
-        return oldLevel;
-    }
-    public int setItemEnchant(ItemStack item, Enchant enchant, int level) {
+    public static int setItemEnchant(ItemStack item, Enchant enchant, int level) {
         if (enchant == null || !enchant.isSafe(level)) return -1;
         int oldLevel = getItemEnchant(item, enchant);
         if (item.getItemMeta() instanceof EnchantmentStorageMeta) {
@@ -175,33 +170,34 @@ public class EnchantManager {
             meta.addEnchant(enchant, level, true);
             item.setItemMeta(meta);
         }
+        LoreManager.updateItem(item);
         return oldLevel;
     }
-    public int delItemEnchant(ItemStack item, Enchant enchant) {
+    public static int delItemEnchant(ItemStack item, Enchant enchant) {
         int result = item.removeEnchantment(enchant);
-        AGMEnchants.getItemManager().applyItemLore(item);
+        LoreManager.updateItem(item);
         return result;
     }
-    public void clearItemEnchants(ItemStack item) {
+    public static void clearItemEnchants(ItemStack item) {
         for (Enchant enchant: extractEnchants(item).keySet()) item.removeEnchantment(enchant);
-        AGMEnchants.getItemManager().applyItemLore(item);
+        LoreManager.updateItem(item);
     }
-    public boolean addItemEnchant(ItemStack item, Enchant enchant, int level) {
-        if (getItemEnchant(item, enchant) > 0) return false;
-        return setItemEnchant(item, enchant, level) > 0;
+    public static int addItemEnchant(ItemStack item, Enchant enchant, int level) {
+        if (getItemEnchant(item, enchant) > 0) return -1;
+        return setItemEnchant(item, enchant, level);
     }
 
-    private double calculateEnchantWeight(Collection<? extends Map.Entry<Enchant, Integer>> list) {
+    private static double calculateEnchantWeight(Collection<? extends Map.Entry<Enchant, Integer>> list) {
         return list.stream().mapToDouble(entry -> entry.getValue() * entry.getKey().getMultiplier()).sum();
     }
-    private double calculateEnchantWeight(ItemStack item) {
+    private static double calculateEnchantWeight(ItemStack item) {
         return calculateEnchantWeight(extractEnchants(item).entrySet());
     }
-    private double calculateEnchantWeight(ItemStack item, Collection<? extends Map.Entry<Enchant, Integer>> list) {
+    private static double calculateEnchantWeight(ItemStack item, Collection<? extends Map.Entry<Enchant, Integer>> list) {
         return calculateEnchantWeight(item) + calculateEnchantWeight(list);
     }
 
-    @Nullable public Pair<Enchant, Integer> getRandomEnchant(@NotNull ItemStack item, List<Enchant> enchants, int power) {
+    @Nullable static public Pair<Enchant, Integer> getRandomEnchant(@NotNull ItemStack item, List<Enchant> enchants, int power) {
         Predicate<Enchant> filter = enchant -> item.getEnchantmentLevel(enchant) == 0 && enchant.canEnchantItem(item);
         double weight = calculateEnchantWeight(item);
         double chance =  power / weight;
@@ -220,7 +216,7 @@ public class EnchantManager {
         }
         return new Pair<>(enchant, level);
     }
-    public void randomEnchantItem(ItemStack item, List<Enchant> enchants, int power) {
+    public static void randomEnchantItem(ItemStack item, List<Enchant> enchants, int power) {
         if (item == null || item.getType().equals(Material.AIR)) return;
         do {
             Pair<Enchant, Integer> random = getRandomEnchant(item, enchants, power);
@@ -229,10 +225,10 @@ public class EnchantManager {
             setItemEnchant(item, random.getKey(), random.getValue());
         } while (true);
     }
-    public void randomEnchantItem(ItemStack item, int power) {
+    public static void randomEnchantItem(ItemStack item, int power) {
         randomEnchantItem(item, STORAGE.getAll(), power);
     }
-    public void randomEnchantItem(ItemStack item, int power, Filter<Enchant> filter) {
+    public static void randomEnchantItem(ItemStack item, int power, Filter<Enchant> filter) {
         randomEnchantItem(item, filter.apply(STORAGE.getAll()), power);
     }
 

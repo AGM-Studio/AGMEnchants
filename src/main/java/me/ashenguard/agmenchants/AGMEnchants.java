@@ -1,16 +1,16 @@
 package me.ashenguard.agmenchants;
 
-import me.ashenguard.agmenchants.managers.EnchantManager;
-import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.MainManager;
-import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.gui.GUI;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.messenger.PHManager;
 import me.ashenguard.api.spigot.SpigotPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public final class AGMEnchants extends SpigotPlugin {
@@ -24,15 +24,6 @@ public final class AGMEnchants extends SpigotPlugin {
     }
     public static MainManager getMainManager() {
         return instance.manager;
-    }
-    public static LoreManager getItemManager() {
-        return instance.manager.getLoreManager();
-    }
-    public static EnchantManager getEnchantManager() {
-        return instance.manager.getEnchantManager();
-    }
-    public static RuneManager getRuneManager() {
-        return instance.manager.getRuneManager();
     }
 
     public static FileConfiguration getConfiguration() {
@@ -55,39 +46,31 @@ public final class AGMEnchants extends SpigotPlugin {
         return 81800;
     }
 
-    public void loadPlugin() {
-        saveDefaultConfig();
-        reloadConfig();
-
-        updateNotification = getConfig().getBoolean("Check.PluginUpdates", true);
-
-        GUI = new GUI(this);
-        manager = new MainManager();
-        manager.reload();
+    @Override
+    public @NotNull List<String> getRequirements() {
+        return Collections.singletonList("AGMCore");
     }
 
     @Override
-    public void onEnable() {
+    public void onPluginEnable() {
         instance = this;
-
-        if (getServer().getPluginManager().getPlugin("AGMCore") == null) {
-            messenger.Warning("AGMCore is not installed. Disabling plugin...");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
 
         File pluginFolder = getDataFolder();
         if (!pluginFolder.exists() && pluginFolder.mkdirs()) messenger.Debug("General", "Plugin folder wasn't found, A new one created");
         if (isLegacy()) messenger.Debug("General", "Legacy version detected");
 
-        loadPlugin();
+        saveDefaultConfig();
+        reloadConfig();
+
+        GUI = new GUI(this);
+        manager = new MainManager();
+        manager.reload();
 
         if (PHManager.enable) new Placeholders().register();
-        messenger.Info("Plugin has been enabled successfully");
     }
 
     @Override
-    public void onDisable() {
+    public void onPluginDisable() {
         if (GUI != null) GUI.closeAll();
         messenger.Info("Plugin has been disabled");
     }

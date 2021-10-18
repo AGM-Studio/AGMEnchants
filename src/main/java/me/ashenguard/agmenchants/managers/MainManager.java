@@ -13,32 +13,17 @@ public class MainManager {
     private final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     private final Messenger MESSENGER = AGMEnchants.getMessenger();
 
-    private LoreManager loreManager;
-    private EnchantManager enchantManager;
-    private RuneManager runeManager;
-
     private Configuration groups;
 
-    public LoreManager getLoreManager() {
-        return loreManager;
-    }
-    public EnchantManager getEnchantManager() {
-        return enchantManager;
-    }
-    public RuneManager getRuneManager() {
-        return runeManager;
-    }
-
     public void reload() {
-        enchantManager = new EnchantManager();
-        runeManager = new RuneManager();
-        loreManager = new LoreManager();
-
         loadListeners();
         loadCommands();
 
-        enchantManager.loadEnchants();
-        runeManager.loadRunes();
+        LoreManager.loadConfig();
+        EnchantManager.loadConfig();
+        EnchantManager.loadEnchants();
+        RuneManager.loadConfig();
+        RuneManager.loadRunes();
 
         groups = new Configuration(PLUGIN, "Features/groups.yml");
     }

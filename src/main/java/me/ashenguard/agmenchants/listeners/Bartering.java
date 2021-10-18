@@ -1,6 +1,5 @@
 package me.ashenguard.agmenchants.listeners;
 
-import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
@@ -17,14 +16,12 @@ import java.util.List;
 import static me.ashenguard.agmenchants.managers.EnchantManager.EnchantFilter.CAN_BE_BARTERED;
 
 public class Bartering extends AdvancedListener {
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
     private static final Filter<Enchant> FILTER = CAN_BE_BARTERED;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void runes(PiglinBarterEvent event) {
-        if (Math.random() > RUNE_MANAGER.BARTER_CHANCE) return;
-        Rune rune = RUNE_MANAGER.getRandomRune();
+        if (Math.random() > RuneManager.getBarterChance()) return;
+        Rune rune = RuneManager.getRandomRune();
         event.getOutcome().add(rune.getRune());
     }
 
@@ -33,8 +30,8 @@ public class Bartering extends AdvancedListener {
         for (ItemStack item: outcome) {
             int power = (int) (Math.random() * 40);
             if (power > 20) power -= 10;
-            ENCHANT_MANAGER.clearItemEnchants(item);
-            ENCHANT_MANAGER.randomEnchantItem(item, power, FILTER);
+            EnchantManager.clearItemEnchants(item);
+            EnchantManager.randomEnchantItem(item, power, FILTER);
         }
     }
 

@@ -1,7 +1,6 @@
 package me.ashenguard.agmenchants.listeners;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.agmenchants.remote.RemoteEnchant;
 import me.ashenguard.agmenchants.remote.RemoteRune;
@@ -21,8 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class Miscellanies extends AdvancedListener {
-    private static final LoreManager ITEM_MANAGER = AGMEnchants.getItemManager();
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
 
     @EventHandler public void PlayerJoin(PlayerJoinEvent event) {
         if (!AGMEnchants.getConfiguration().getBoolean("Check.Updates") || !event.getPlayer().isOp()) return;
@@ -35,14 +32,15 @@ public class Miscellanies extends AdvancedListener {
 
     @EventHandler public void OnBlockPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
-        if (RUNE_MANAGER.hasItemRune(item)) event.setCancelled(true);
+        if (RuneManager.hasItemRune(item)) event.setCancelled(true);
     }
 
     @EventHandler public void OnRuneInteract(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
-        if (item == null || !RUNE_MANAGER.hasItemRune(item)) return;
+        if (item == null || !RuneManager.hasItemRune(item)) return;
         if (!event.getAction().equals(Action.RIGHT_CLICK_AIR) && !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-        Rune rune = RUNE_MANAGER.getItemRune(item);
+        Rune rune = RuneManager.getItemRune(item);
+        if (rune == null) return;
 
         RuneInteractEvent interactEvent = new RuneInteractEvent(event.getPlayer(), rune, item);
         Bukkit.getServer().getPluginManager().callEvent(interactEvent);
@@ -66,8 +64,8 @@ public class Miscellanies extends AdvancedListener {
         ItemStack mainHand = event.getPlayer().getEquipment().getItemInMainHand();
         ItemStack offHand = equipment.getItemInOffHand();
 
-        Rune mainRune = RUNE_MANAGER.getItemRune(mainHand);
-        Rune offRune = RUNE_MANAGER.getItemRune(offHand);
+        Rune mainRune = RuneManager.getItemRune(mainHand);
+        Rune offRune = RuneManager.getItemRune(offHand);
 
         if (mainRune != null) {
             RuneInteractEvent interactEvent = new RuneInteractEvent(event.getPlayer(), mainRune, mainHand);

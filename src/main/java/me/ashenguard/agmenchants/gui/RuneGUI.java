@@ -11,10 +11,9 @@ import java.util.List;
 
 public class RuneGUI extends GUIInventory {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
-    private static final RuneManager ENCHANT_MANAGER = AGMEnchants.getRuneManager();
 
     private int page;
-    private final List<Rune> list = ENCHANT_MANAGER.STORAGE.getAll();
+    private final List<Rune> list = RuneManager.STORAGE.getAll();
 
     public RuneGUI(Player player) {
         super(PLUGIN.GUI, PLUGIN.getConfig().getString("Prefix"), player, 54);

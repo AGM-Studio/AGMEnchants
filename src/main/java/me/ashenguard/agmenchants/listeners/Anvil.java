@@ -3,7 +3,6 @@ package me.ashenguard.agmenchants.listeners;
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.managers.EnchantManager;
-import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.agmenchants.runes.Rune;
 import me.ashenguard.api.AdvancedListener;
@@ -32,9 +31,6 @@ import static org.bukkit.Bukkit.getServer;
 
 @SuppressWarnings("ConstantConditions")
 public class Anvil extends AdvancedListener {
-    private static final LoreManager ITEM_MANAGER = AGMEnchants.getItemManager();
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
 
     private static boolean PENALTY;
     private static int PENALTY_MAX;
@@ -122,9 +118,7 @@ public class Anvil extends AdvancedListener {
                         if (oldLevel > 0) removedEnchants.put(enchant, oldLevel);
                     }
 
-                    ITEM_MANAGER.secureItemLore(item);
-                    ENCHANT_MANAGER.setItemEnchant(item, enchant, target);
-                    ITEM_MANAGER.applyItemLore(item);
+                    EnchantManager.setItemEnchant(item, enchant, target);
 
                     cost += target * enchant.getMultiplier(item);
                     enchanting = true;
@@ -136,7 +130,7 @@ public class Anvil extends AdvancedListener {
 
         public void addRune(Rune rune) {
             if (rune == null || !rune.canRuneItem(item)) return;
-            RUNE_MANAGER.setItemRune(item, rune);
+            RuneManager.setItemRune(item, rune);
             cost += rune.getRarity().cost;
             ruined = true;
         }
@@ -152,7 +146,7 @@ public class Anvil extends AdvancedListener {
 
         public ItemStack getResult() {
             if (!hasResult()) return null;
-            if ((repairing || enchanting) && item.getItemMeta() instanceof Repairable) {
+            if ((repairing || enchanting || ruined) && item.getItemMeta() instanceof Repairable) {
                 ItemMeta resultMeta = item.getItemMeta();
                 ((Repairable) resultMeta).setRepairCost((penalty * 2) + 1);
                 item.setItemMeta(resultMeta);
@@ -187,7 +181,7 @@ public class Anvil extends AdvancedListener {
 
         if (item == null || item.getType().equals(Material.AIR)) return;
 
-        if (!RUNE_MANAGER.isItemRune(sacrifice))
+        if (!RuneManager.isItemRune(sacrifice))
             if (sacrifice != null && !sacrifice.getType().name().equals("ENCHANTED_BOOK"))
                 if (item.getType().equals(sacrifice.getType())) {
                     if (!EXTRACTION) return;
@@ -199,11 +193,11 @@ public class Anvil extends AdvancedListener {
         boolean translate = event.getViewers().get(0).hasPermission("AGMEnchants.Anvil.Colors");
         data.rename(event.getInventory().getRenameText(), translate);
         data.repair(sacrifice);
-        data.addEnchants(ENCHANT_MANAGER.extractEnchants(sacrifice));
-        data.addRune(RUNE_MANAGER.getItemRune(sacrifice));
+        data.addEnchants(EnchantManager.extractEnchants(sacrifice));
+        data.addRune(RuneManager.getItemRune(sacrifice));
 
         if (data.hasResult()) {
-            event.setResult(AGMEnchants.getItemManager().applyItemLore(data.getResult()));
+            event.setResult(data.getResult());
 
             getServer().getScheduler().runTask(AGMEnchants.getInstance(), () -> event.getInventory().setRepairCost(data.getTotalCost()));
         } else {
@@ -229,18 +223,18 @@ public class Anvil extends AdvancedListener {
         if (compound.hasKey("Enchanted") && compound.getBoolean("Enchanted")) {
             NBTCompoundList removed = compound.getCompoundList("Removed");
             for (NBTCompound temp: removed) {
-                Enchant enchant = ENCHANT_MANAGER.STORAGE.get(temp.getString("id"));
+                Enchant enchant = EnchantManager.STORAGE.get(temp.getString("id"));
                 enchant.onDisenchanting(result, temp.getInteger("lvl"));
             }
             NBTCompoundList added = compound.getCompoundList("Added");
             for (NBTCompound temp: added) {
-                Enchant enchant = ENCHANT_MANAGER.STORAGE.get(temp.getString("id"));
+                Enchant enchant = EnchantManager.STORAGE.get(temp.getString("id"));
                 enchant.onEnchanting(result, temp.getInteger("lvl"));
             }
         }
 
         if (compound.hasKey("Ruined") && compound.getBoolean("Ruined")) {
-            Rune rune = RUNE_MANAGER.getItemRune(result);
+            Rune rune = RuneManager.getItemRune(result);
             if (rune != null) rune.onRuneApply(result);
         }
         nbt.removeKey("AnvilStatus");

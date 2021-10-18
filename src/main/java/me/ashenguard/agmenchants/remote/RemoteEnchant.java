@@ -14,7 +14,6 @@ import java.util.List;
 public class RemoteEnchant {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     private static final Messenger MESSENGER = AGMEnchants.getMessenger();
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
 
     private static final String REMOTE_LINK = "https://raw.githubusercontent.com/Ashengaurd/AGMEnchants/master/Enchants.md";
 
@@ -70,7 +69,7 @@ public class RemoteEnchant {
         this.official = official;
 
         List<String> blacklist = PLUGIN.getConfig().getStringList("Check.BlacklistedEnchants");
-        Enchant temp = ENCHANT_MANAGER.STORAGE.get(id);
+        Enchant temp = EnchantManager.STORAGE.get(id);
         if (temp instanceof CustomEnchant) {
             CustomEnchant enchantment = (CustomEnchant) temp;
             if (blacklist.contains(id)) status = Status.BLACKLISTED;

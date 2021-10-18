@@ -2,6 +2,7 @@ package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.managers.EnchantManager;
+import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.messenger.PHManager;
@@ -20,7 +21,6 @@ import java.util.*;
 public abstract class Enchant extends Enchantment {
     protected final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     protected final Messenger MESSENGER = AGMEnchants.getMessenger();
-    protected static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
 
     protected final Configuration config;
 
@@ -30,9 +30,9 @@ public abstract class Enchant extends Enchantment {
     private final Multiplier multiplier;
 
     public boolean register() {
-        Enchant exists = ENCHANT_MANAGER.STORAGE.get(this.getKey());
+        Enchant exists = EnchantManager.STORAGE.get(this.getKey());
         if (exists != null) return false;
-        ENCHANT_MANAGER.STORAGE.save(this);
+        EnchantManager.STORAGE.save(this);
         MESSENGER.Debug("Enchants", "Enchantment has been registered.", "Enchantment= §6" + toString());
         return true;
     }
@@ -85,7 +85,7 @@ public abstract class Enchant extends Enchantment {
     public abstract boolean isApplicable(Material material);
     public abstract boolean conflictsWith(@NotNull Enchant enchant);
     @Override public boolean conflictsWith(@NotNull Enchantment enchant) {
-        return conflictsWith(ENCHANT_MANAGER.STORAGE.get(enchant));
+        return conflictsWith(EnchantManager.STORAGE.get(enchant));
     }
 
     public int getMultiplier() {
@@ -103,14 +103,13 @@ public abstract class Enchant extends Enchantment {
         if (item.getType().equals(Material.ENCHANTED_BOOK)) return true;
         if (!isApplicable(item.getType())) return false;
 
-        Set<Enchant> enchants = ENCHANT_MANAGER.extractEnchants(item).keySet();
+        Set<Enchant> enchants = EnchantManager.extractEnchants(item).keySet();
         for (Enchant enchant: enchants)
             if (conflictsWith(enchant)) return false;
 
         return true;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isSafe(int level) {
         return 0 < level && level <= getMaxLevel();
     }
@@ -126,19 +125,19 @@ public abstract class Enchant extends Enchantment {
 
         if (getMaxLevel() == 1 && level == 1) return name;
         String lvl = Roman.to(level);
-        return String.format("%s %s%s", name, ENCHANT_MANAGER.getLevelColor(lvl), lvl);
+        return String.format("%s %s%s", name, EnchantManager.getLevelColor(lvl), lvl);
     }
 
     public int applyEnchant(ItemStack item, int level) {
-        return ENCHANT_MANAGER.setItemEnchantAndLore(item, this, level);
+        return EnchantManager.setItemEnchant(item, this, level);
     }
     public int removeEnchant(ItemStack item) {
-        return ENCHANT_MANAGER.delItemEnchant(item, this);
+        return EnchantManager.delItemEnchant(item, this);
     }
 
     public int getLevel(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR) || item.getType().equals(Material.ENCHANTED_BOOK)) return 0;
-        return ENCHANT_MANAGER.getItemEnchant(item, this);
+        return EnchantManager.getItemEnchant(item, this);
     }
 
     public ItemStack getEnchantedBook(int level) {
@@ -150,7 +149,7 @@ public abstract class Enchant extends Enchantment {
     public ItemStack getInfoBook() {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         List<String> lore = Arrays.asList(description.split("\n"));
-        return AGMEnchants.getItemManager().setItemDisplay(book, getColoredName(), lore, null);
+        return LoreManager.setItemDisplay(book, getColoredName(), lore, null);
     }
 
     @Override public String toString() {
@@ -199,7 +198,7 @@ public abstract class Enchant extends Enchantment {
         }
 
         Rarity(String path, String def) {
-            Configuration config = ENCHANT_MANAGER.getConfig();
+            Configuration config = EnchantManager.getConfig();
 
             this.color = PHManager.translate(config.getString(String.format("Colors.%s", getCapitalizedName()), def));
         }

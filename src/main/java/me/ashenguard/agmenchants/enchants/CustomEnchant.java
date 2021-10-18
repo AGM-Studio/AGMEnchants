@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.spigot.SpigotPlugin;
 import me.ashenguard.api.utils.FileUtils;
@@ -22,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SuppressWarnings({"SameReturnValue", "unused"})
+@SuppressWarnings({"SameReturnValue", "unused", "EmptyMethod"})
 public abstract class CustomEnchant extends Enchant implements Listener {
     private final Version version;
 
@@ -49,9 +50,9 @@ public abstract class CustomEnchant extends Enchant implements Listener {
         return true;
     }
     @Override public boolean register() {
-        Enchant exists = ENCHANT_MANAGER.STORAGE.get(this.getKey());
+        Enchant exists = EnchantManager.STORAGE.get(this.getKey());
         if (exists != null) return false;
-        ENCHANT_MANAGER.STORAGE.save(this);
+        EnchantManager.STORAGE.save(this);
         Bukkit.getPluginManager().registerEvents(this, PLUGIN);
         Enchantment.registerEnchantment(this);
         onRegister();
@@ -60,7 +61,7 @@ public abstract class CustomEnchant extends Enchant implements Listener {
         return true;
     }
     @Override public void unregister() {
-        ENCHANT_MANAGER.unregisterEnchantment(this);
+        EnchantManager.unregisterEnchantment(this);
         onUnregister();
         MESSENGER.Debug("Enchants", "Enchantment's registration has been removed.", "Enchantment= §6" + toString());
     }

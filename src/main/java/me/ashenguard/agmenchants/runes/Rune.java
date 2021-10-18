@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.runes;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.gui.ItemMaker;
@@ -27,7 +28,6 @@ import java.util.List;
 public abstract class Rune implements Listener {
     protected final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     protected final Messenger MESSENGER = AGMEnchants.getMessenger();
-    protected static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
 
     private final Version version;
 
@@ -54,16 +54,16 @@ public abstract class Rune implements Listener {
         return true;
     }
     public boolean register() {
-        Rune exists = RUNE_MANAGER.STORAGE.get(ID);
+        Rune exists = RuneManager.STORAGE.get(ID);
         if (exists != null) return false;
-        RUNE_MANAGER.STORAGE.save(this);
+        RuneManager.STORAGE.save(this);
         Bukkit.getPluginManager().registerEvents(this, PLUGIN);
         onRegister();
         MESSENGER.Debug("Runes", "Rune has been registered.", "Rune= §6" + toString());
         return true;
     }
     public void unregister() {
-        RUNE_MANAGER.STORAGE.remove(this);
+        RuneManager.STORAGE.remove(this);
         onUnregister();
         MESSENGER.Debug("Runes", "Rune's registration has been removed.", "Rune= §6" + toString());
     }
@@ -96,7 +96,7 @@ public abstract class Rune implements Listener {
         String UUID = config.getString("UUID", "");
         this.item = ItemMaker.getCustomHead(UUID, texture);
 
-        AGMEnchants.getItemManager().setItemDisplay(this.item, getColoredName(), null, null);
+        LoreManager.setItemDisplay(this.item, getColoredName(), null, null);
     }
 
     public abstract List<Placeholder> getPlaceholders(ItemStack item);
@@ -143,7 +143,7 @@ public abstract class Rune implements Listener {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canRuneItem(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return false;
-        if (RUNE_MANAGER.hasItemRune(item)) return false;
+        if (RuneManager.hasItemRune(item)) return false;
         return isApplicable(item.getType());
     }
 
@@ -155,17 +155,17 @@ public abstract class Rune implements Listener {
     }
 
     public boolean applyOriginalRune(ItemStack item) {
-        return RUNE_MANAGER.setItemRune(item, this, true);
+        return RuneManager.setItemRune(item, this, true);
     }
     public boolean applyRune(ItemStack item) {
-        return RUNE_MANAGER.setItemRune(item, this);
+        return RuneManager.setItemRune(item, this);
     }
     public boolean removeRune(ItemStack item) {
-        if (RUNE_MANAGER.getItemRune(item).equals(this)) return RUNE_MANAGER.delItemRune(item);
+        if (RuneManager.getItemRune(item) == this) return RuneManager.delItemRune(item);
         else return false;
     }
     public boolean hasRune(ItemStack item) {
-        return this.equals(RUNE_MANAGER.getItemRune(item));
+        return this.equals(RuneManager.getItemRune(item));
     }
 
     public ItemStack getRune() {
@@ -182,7 +182,7 @@ public abstract class Rune implements Listener {
     public ItemStack getInfoItem() {
         ItemStack item = this.item.clone();
         List<String> lore = Arrays.asList(description.split("\n"));
-        return AGMEnchants.getItemManager().setItemDisplay(item, getColoredName(), lore, null);
+        return LoreManager.setItemDisplay(item, getColoredName(), lore, null);
     }
 
     @Override public String toString() {
@@ -208,7 +208,7 @@ public abstract class Rune implements Listener {
         public final int cost;
 
         Rarity(String color, double weight, int cost, double chance) {
-            Configuration config = RUNE_MANAGER.getConfig();
+            Configuration config = RuneManager.getConfig();
             String name = getCapitalizedName();
 
             this.color = PHManager.translate(config.getString(String.format("Color.%s", name), color));

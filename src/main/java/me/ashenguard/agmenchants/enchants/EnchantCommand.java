@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EnchantCommand extends AdvancedCommand {
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
 
     public EnchantCommand() {
         super(AGMEnchants.getInstance(), "Enchants", true);
@@ -39,7 +38,7 @@ public class EnchantCommand extends AdvancedCommand {
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            String loaded = "§a" + ENCHANT_MANAGER.STORAGE.getAll().stream().map(Enchant::getName).collect(Collectors.joining("§r, §a")) + "§r";
+            String loaded = "§a" + EnchantManager.STORAGE.getAll().stream().map(Enchant::getName).collect(Collectors.joining("§r, §a")) + "§r";
             AGMEnchants.getMessenger().send(sender, "Enchants: " + loaded);
         }
 
@@ -50,7 +49,7 @@ public class EnchantCommand extends AdvancedCommand {
                 return;
             }
 
-            Enchant enchant = ENCHANT_MANAGER.STORAGE.get(args[2]);
+            Enchant enchant = EnchantManager.STORAGE.get(args[2]);
             if (enchant == null) {
                 AGMEnchants.getMessenger().send(sender, "§cEnchant was not found.");
                 return;
@@ -76,7 +75,7 @@ public class EnchantCommand extends AdvancedCommand {
         if (args.length == 0) return tab;
         if (args.length == 1) tab.addAll(Arrays.asList("list", "give"));
         if (args.length == 2 && args[0].equalsIgnoreCase("give")) tab.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
-        if (args.length == 3 && args[0].equalsIgnoreCase("give")) tab.addAll(ENCHANT_MANAGER.STORAGE.getAll().stream().map(e -> e.getKey().toString()).collect(Collectors.toList()));
+        if (args.length == 3 && args[0].equalsIgnoreCase("give")) tab.addAll(EnchantManager.STORAGE.getAll().stream().map(e -> e.getKey().toString()).collect(Collectors.toList()));
         String lastWord = args[args.length - 1];
         return tab.stream().filter(name -> StringUtil.startsWithIgnoreCase(name, lastWord)).sorted(String.CASE_INSENSITIVE_ORDER).collect(Collectors.toList());
     }

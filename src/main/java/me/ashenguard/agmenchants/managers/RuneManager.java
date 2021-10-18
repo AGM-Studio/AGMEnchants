@@ -20,34 +20,46 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-@SuppressWarnings("UnusedReturnValue")
+@SuppressWarnings("unused")
 public class RuneManager {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     private static final Messenger MESSENGER = AGMEnchants.getMessenger();
 
-    private final Configuration config;
-    public final double FISHING_CHANCE;
-    public final double TRADE_CHANCE;
-    public final double BARTER_CHANCE;
-    public final double LOOT_CHANCE;
+    private static final Configuration config = new Configuration(PLUGIN, "Features/runes.yml");
 
-    public final Storage STORAGE = new Storage();
-    private final NBT NBT = new NBT(this);
+    private static double fishingChance = 0.005;
+    private static double tradeChance = 0.15;
+    private static double barterChance = 0.0025;
+    private static double lootChance = 0.05;
 
-    public RuneManager() {
-        config = new Configuration(PLUGIN, "Features/runes.yml");
+    public static final Storage STORAGE = new Storage();
+    private static final NBT NBT = new NBT();
 
-        FISHING_CHANCE = config.getDouble("FishingChance", 0.5) / 100;
-        TRADE_CHANCE = config.getDouble("TradeAdded", 15) / 100;
-        BARTER_CHANCE = config.getDouble("BarterChance", 0.25) / 100;
-        LOOT_CHANCE = config.getDouble("LootGenerate", 5) / 100;
+    public static void loadConfig() {
+        fishingChance = config.getDouble("FishingChance", fishingChance * 100) / 100;
+        tradeChance = config.getDouble("TradeAdded", tradeChance * 100) / 100;
+        barterChance = config.getDouble("BarterChance", barterChance * 100) / 100;
+        lootChance = config.getDouble("LootGenerate", lootChance * 100) / 100;
     }
 
-    public Configuration getConfig() {
+    public static double getFishingChance() {
+        return fishingChance;
+    }
+    public static double getTradeChance() {
+        return tradeChance;
+    }
+    public static double getBarterChance() {
+        return barterChance;
+    }
+    public static double getLootChance() {
+        return lootChance;
+    }
+
+    public static Configuration getConfig() {
         return config;
     }
 
-    public void loadRunes() {
+    public static void loadRunes() {
         STORAGE.clear();
         for (Rune rune: Loader.getAllRunes()) {
             try {
@@ -61,34 +73,40 @@ public class RuneManager {
         MESSENGER.Info(String.format("Loaded %d Runes", STORAGE.size()));
     }
 
-    @Nullable public Rune getItemRune(@NotNull ItemStack item) {
+    @Nullable public static Rune getItemRune(@NotNull ItemStack item) {
         return NBT.GetRune(item);
     }
-    public boolean setItemRune(@NotNull ItemStack item,@NotNull Rune rune, boolean orig) {
-        return NBT.SetRuneOriginal(item, rune, orig);
+    public static boolean setItemRune(@NotNull ItemStack item,@NotNull Rune rune, boolean orig) {
+        boolean result = NBT.SetRune(item, rune, orig);
+        LoreManager.updateItem(item);
+        return result;
     }
-    public boolean setItemRune(@NotNull ItemStack item, @NotNull Rune rune) {
-        return NBT.SetRune(item, rune);
+    public static boolean setItemRune(@NotNull ItemStack item, @NotNull Rune rune) {
+        boolean result = NBT.SetRune(item, rune);
+        LoreManager.updateItem(item);
+        return result;
     }
-    public boolean delItemRune(@NotNull ItemStack item) {
-        return NBT.RemoveRune(item);
+    public static boolean delItemRune(@NotNull ItemStack item) {
+        boolean result = NBT.RemoveRune(item);
+        LoreManager.updateItem(item);
+        return result;
     }
-    public boolean hasItemRune(@NotNull ItemStack item) {
+    public static boolean hasItemRune(@NotNull ItemStack item) {
         return getItemRune(item) != null;
     }
-    public boolean isItemRune(@NotNull ItemStack item) {
+    public static boolean isItemRune(@NotNull ItemStack item) {
         return NBT.IsOriginalRune(item);
     }
 
-    public Rune getRandomRune(ItemStack item) {
+    public static Rune getRandomRune(ItemStack item) {
         List<Rune> runes = STORAGE.getAll();
         if (item != null) runes.removeIf(rune -> !rune.canRuneItem(item));
         return getRandomRune(runes);
     }
-    public Rune getRandomRune() {
+    public static Rune getRandomRune() {
         return getRandomRune(STORAGE.getAll());
     }
-    public Rune getRandomRune(List<Rune> runes) {
+    public static Rune getRandomRune(List<Rune> runes) {
         double total = runes.stream().map(Rune::getRarity).mapToDouble(Rune.Rarity::getWeight).sum();
         double rnd = new Random().nextDouble() * total;
         for (Rune rune: runes) {
@@ -148,18 +166,11 @@ public class RuneManager {
         private static final String NBT_TAG_RUNE = "Rune";
         private static final String NBT_TAG_ORIG = "Original";
         private static final String NBT_TAG_NAME = "ID";
-        private final RuneManager manager;
-
-        private NBT(RuneManager manager) {
-            this.manager = manager;
-        }
 
         private boolean RemoveRune(ItemStack item) {
             if (item == null || item.getType().equals(Material.AIR)) return false;
             NBTItem nbt = new NBTItem(item, true);
             nbt.removeKey(NBT_TAG_RUNE);
-            AGMEnchants.getItemManager().applyItemLore(item);
-
             return true;
         }
         private NBTCompound ExtractRune(ItemStack item) {
@@ -172,15 +183,13 @@ public class RuneManager {
             NBTItem nbt = new NBTItem(item, true);
             if (!nbt.hasKey(NBT_TAG_RUNE)) return null;
             NBTCompound compound = nbt.getCompound(NBT_TAG_RUNE);
-            return manager.STORAGE.get(compound.getString(NBT_TAG_NAME));
+            return STORAGE.get(compound.getString(NBT_TAG_NAME));
         }
         private boolean SetRune(ItemStack item, Rune rune) {
-            return SetRuneOriginal(item, rune, false);
+            return SetRune(item, rune, false);
         }
-        private boolean SetRuneOriginal(ItemStack item, Rune rune, boolean orig) {
+        private boolean SetRune(ItemStack item, Rune rune, boolean orig) {
             if (item == null || item.getType().equals(Material.AIR)) return false;
-            AGMEnchants.getItemManager().secureItemLore(item);
-
             if (rune == null) RemoveRune(item);
             else {
                 NBTCompound compound = ExtractRune(item);
@@ -188,7 +197,6 @@ public class RuneManager {
                 compound.setString(NBT_TAG_NAME, rune.ID);
                 compound.setBoolean(NBT_TAG_ORIG, orig);
             }
-            AGMEnchants.getItemManager().applyItemLore(item);
             return true;
         }
         private boolean IsOriginalRune(ItemStack item) {

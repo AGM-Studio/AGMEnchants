@@ -3,7 +3,6 @@ package me.ashenguard.agmenchants.listeners;
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.managers.EnchantManager;
-import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.agmenchants.runes.Rune;
 import me.ashenguard.api.AdvancedListener;
@@ -17,17 +16,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Grindstone extends AdvancedListener {
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
-    private static final LoreManager ITEM_MANAGER = AGMEnchants.getItemManager();
-
     private static boolean REMOVE_CURSES;
     private static SafeCallable<Double> ENCHANT_EXP;
     private static LinkedHashMap<Rune.Rarity, Double> RUNE_EXTRACT_CHANCE;
@@ -70,8 +64,8 @@ public class Grindstone extends AdvancedListener {
         ItemStack result = item1 != null ? item1.clone() : item2.clone();
         if (result.getType().equals(Material.AIR)) return;
         
-        RUNE_MANAGER.delItemRune(result);
-        HashMap<Enchant, Integer> enchants = ENCHANT_MANAGER.extractEnchants(result);
+        RuneManager.delItemRune(result);
+        HashMap<Enchant, Integer> enchants = EnchantManager.extractEnchants(result);
         for(Map.Entry<Enchant, Integer> enchant: enchants.entrySet())
             //noinspection deprecation
             if (REMOVE_CURSES || !enchant.getKey().isCursed()) enchant.getKey().removeEnchant(result);
@@ -85,14 +79,14 @@ public class Grindstone extends AdvancedListener {
             short max = item1.getType().getMaxDurability();
             short durability = (short) (REPAIR_BOOST.call() * max - resultMeta.getDamage() - item2Meta.getDamage());
             resultMeta.setDamage((short) Math.max(0, max - durability));
-            result.setItemMeta((ItemMeta) resultMeta);
+            result.setItemMeta(resultMeta);
         }
         
-        event.getInventory().setItem(2, ITEM_MANAGER.applyItemLore(result));
+        event.getInventory().setItem(2, result);
 
         if (event.getSlot() != 2) return;
-        HashMap<Enchant, Integer> item1Enchants = ENCHANT_MANAGER.extractEnchants(item1);
-        HashMap<Enchant, Integer> item2Enchants = ENCHANT_MANAGER.extractEnchants(item2);
+        HashMap<Enchant, Integer> item1Enchants = EnchantManager.extractEnchants(item1);
+        HashMap<Enchant, Integer> item2Enchants = EnchantManager.extractEnchants(item2);
 
         Player player = (Player) event.getWhoClicked();
 
@@ -102,15 +96,15 @@ public class Grindstone extends AdvancedListener {
         exp *= ENCHANT_EXP.call();
         player.giveExp((int) exp);
 
-        if (RUNE_MANAGER.hasItemRune(item1) && EXTRACT_RUNES) {
-            Rune rune = RUNE_MANAGER.getItemRune(item1);
-            if (Math.random() * 100 < RUNE_EXTRACT_CHANCE.get(rune.getRarity()))
-                player.getWorld().dropItem(player.getLocation(), RUNE_MANAGER.getItemRune(item1).getRune());
+        if (item1 != null && RuneManager.hasItemRune(item1) && EXTRACT_RUNES) {
+            Rune rune = RuneManager.getItemRune(item1);
+            if (rune != null && Math.random() * 100 < RUNE_EXTRACT_CHANCE.get(rune.getRarity()))
+                player.getWorld().dropItem(player.getLocation(), rune.getRune());
         }
-        if (RUNE_MANAGER.hasItemRune(item2) && EXTRACT_RUNES) {
-            Rune rune = RUNE_MANAGER.getItemRune(item2);
-            if (Math.random() * 100 < RUNE_EXTRACT_CHANCE.get(rune.getRarity()))
-                player.getWorld().dropItem(player.getLocation(), RUNE_MANAGER.getItemRune(item2).getRune());
+        if (item2 != null && RuneManager.hasItemRune(item2) && EXTRACT_RUNES) {
+            Rune rune = RuneManager.getItemRune(item2);
+            if (rune != null && Math.random() * 100 < RUNE_EXTRACT_CHANCE.get(rune.getRarity()))
+                player.getWorld().dropItem(player.getLocation(), rune.getRune());
         }
     }
 }

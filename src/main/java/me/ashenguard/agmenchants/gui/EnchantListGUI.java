@@ -12,10 +12,9 @@ import java.util.List;
 
 public class EnchantListGUI extends GUIInventory {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
 
     private int page;
-    private final List<Enchant> list = ENCHANT_MANAGER.STORAGE.getAll();
+    private final List<Enchant> list = EnchantManager.STORAGE.getAll();
 
     public EnchantListGUI(Player player) {
         super(PLUGIN.GUI, PLUGIN.getConfig().getString("Prefix"), player, 54);

@@ -13,7 +13,6 @@ import java.util.List;
 public class RemoteRune {
     private static final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     private static final Messenger MESSENGER = AGMEnchants.getMessenger();
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
 
     private static final String REMOTE_LINK = "https://raw.githubusercontent.com/Ashengaurd/AGMEnchants/master/Runes.md";
 
@@ -69,7 +68,7 @@ public class RemoteRune {
         this.official = official;
 
         List<String> blacklist = PLUGIN.getConfig().getStringList("Check.BlacklistedRunes");
-        Rune temp = RUNE_MANAGER.STORAGE.get(id);
+        Rune temp = RuneManager.STORAGE.get(id);
         if (temp != null) {
             if (blacklist.contains(id)) status = Status.BLACKLISTED;
             else if (version.isHigher(temp.getVersion())) status = Status.UPDATE_AVAILABLE;

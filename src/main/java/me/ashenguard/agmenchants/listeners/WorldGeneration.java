@@ -1,6 +1,5 @@
 package me.ashenguard.agmenchants.listeners;
 
-import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
@@ -19,18 +18,15 @@ import java.util.Random;
 import static me.ashenguard.agmenchants.managers.EnchantManager.EnchantFilter.IS_VANILLA;
 
 public class WorldGeneration extends AdvancedListener {
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
-
     @EventHandler public void runes(LootGenerateEvent event) {
         InventoryHolder holder = event.getInventoryHolder();
         if (holder == null) return;
         Inventory inventory = holder.getInventory();
-        while (RUNE_MANAGER.LOOT_CHANCE > Math.random()) {
+        while (RuneManager.getLootChance() > Math.random()) {
             int slot = new Random().nextInt(inventory.getSize());
             ItemStack item = inventory.getItem(slot);
             if (item != null && !item.getType().equals(Material.AIR)) continue;
-            Rune rune = RUNE_MANAGER.getRandomRune();
+            Rune rune = RuneManager.getRandomRune();
             inventory.setItem(slot, rune.getRune());
         }
     }
@@ -44,7 +40,7 @@ public class WorldGeneration extends AdvancedListener {
         for (ItemStack item: event.getLoot()) {
             int power = (int) (Math.random() * 30);
             if (power <= 16) power = power / 2 + 8;
-            ENCHANT_MANAGER.randomEnchantItem(item, power, WorldFilter.AND(IS_VANILLA.NOT()));
+            EnchantManager.randomEnchantItem(item, power, WorldFilter.AND(IS_VANILLA.NOT()));
         }
     }
 

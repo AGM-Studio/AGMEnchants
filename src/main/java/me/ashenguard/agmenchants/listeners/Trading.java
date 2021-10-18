@@ -1,6 +1,5 @@
 package me.ashenguard.agmenchants.listeners;
 
-import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
@@ -20,16 +19,14 @@ import java.util.List;
 import java.util.Random;
 
 public class Trading extends AdvancedListener {
-    private static final RuneManager RUNE_MANAGER = AGMEnchants.getRuneManager();
-    private static final EnchantManager ENCHANT_MANAGER = AGMEnchants.getEnchantManager();
     private static final Filter<Enchant> FILTER = EnchantManager.EnchantFilter.CAN_BE_TRADED;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void runes(VillagerAcquireTradeEvent event) {
         Merchant villager = event.getEntity();
-        if (RUNE_MANAGER.TRADE_CHANCE < Math.random()) return;
+        if (RuneManager.getTradeChance() < Math.random()) return;
 
-        Rune rune = RUNE_MANAGER.getRandomRune();
+        Rune rune = RuneManager.getRandomRune();
         ItemStack price = ItemMaker.createSimpleItem(1 - rune.getRarity().getChance() > new Random().nextDouble() ? "EMERALD" : "EMERALD_BLOCK");
         price.setAmount((int) (Math.random() * (32 * rune.getRarity().getChance())) + 32);
 
@@ -45,8 +42,8 @@ public class Trading extends AdvancedListener {
         ItemStack result = recipe.getResult();
         int power = (int) (Math.random() * 40);
         if (power > 20) power -= 10;
-        ENCHANT_MANAGER.clearItemEnchants(result);
-        ENCHANT_MANAGER.randomEnchantItem(result, power, FILTER);
+        EnchantManager.clearItemEnchants(result);
+        EnchantManager.randomEnchantItem(result, power, FILTER);
     }
 
     @Override protected void onRegister() {
