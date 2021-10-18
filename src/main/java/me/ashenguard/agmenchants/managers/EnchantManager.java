@@ -152,7 +152,7 @@ public class EnchantManager {
         int level = item.getEnchantmentLevel(enchant);
         // For some reason some of custom enchantments won't be found with above method.
         if (level == 0) {
-            Map<Enchant, Integer> enchants = extractEnchants(item, false);
+            Map<Enchant, Integer> enchants = extractEnchants(item);
             for (Map.Entry<Enchant, Integer> entry: enchants.entrySet())
                 if (entry.getKey().equals(enchant)) level = entry.getValue();
         }

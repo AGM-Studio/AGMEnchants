@@ -110,8 +110,8 @@ public class Anvil extends AdvancedListener {
                 Enchant enchant = entry.getKey();
                 if (enchant.canEnchantItem(item)) {
                     int level = entry.getValue();
-                    int oldLevel = enchant.getLevel(item);
-                    int target = level == oldLevel ? level + 1 : Math.max(level, oldLevel);
+                    int oldLevel = enchant.getStoredLevel(item);
+                    int target = Math.min(level == oldLevel ? level + 1 : Math.max(level, oldLevel), enchant.getMaxLevel());
 
                     if (target > oldLevel) {
                         newEnchants.put(enchant, target);

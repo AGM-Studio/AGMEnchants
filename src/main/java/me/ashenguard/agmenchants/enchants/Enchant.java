@@ -139,6 +139,10 @@ public abstract class Enchant extends Enchantment {
         if (item == null || item.getType().equals(Material.AIR) || item.getType().equals(Material.ENCHANTED_BOOK)) return 0;
         return EnchantManager.getItemEnchant(item, this);
     }
+    public int getStoredLevel(ItemStack item) {
+        if (item == null || item.getType().equals(Material.AIR)) return 0;
+        return EnchantManager.getItemEnchant(item, this);
+    }
 
     public ItemStack getEnchantedBook(int level) {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
