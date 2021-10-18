@@ -241,7 +241,7 @@ public class EnchantManager {
         };
         public static final EnchantFilter IS_TREASURE = new EnchantFilter() {
             @Override public boolean test(Enchant enchant) {
-                return false;
+                return enchant.isTreasure();
             }
         };
         public static final EnchantFilter IS_VANILLA = new EnchantFilter() {
