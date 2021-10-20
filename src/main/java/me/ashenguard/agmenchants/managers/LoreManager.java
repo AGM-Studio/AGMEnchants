@@ -58,6 +58,9 @@ public class LoreManager {
         return config;
     }
 
+    public static boolean requireLoreSecurity(ItemStack item) {
+        return EnchantManager.extractEnchants(item).size() > 0 || RuneManager.hasItemRune(item);
+    }
     public static boolean isLoreSecured(ItemStack item) {
         NBTItem nbt = new NBTItem(item, true);
         return nbt.hasKey(NBT_SECURE_DONE) && nbt.getBoolean(NBT_SECURE_DONE);
@@ -69,6 +72,7 @@ public class LoreManager {
     }
     public static List<String> setSecureLore(ItemStack item, List<String> lore) {
         if (item == null || item.getType().equals(Material.AIR)) return lore;
+        if (!requireLoreSecurity(item)) return lore;
         NBTItem nbt = new NBTItem(item, true);
 
         NBTList<String> list = nbt.getStringList(NBT_SECURE_LORE);
