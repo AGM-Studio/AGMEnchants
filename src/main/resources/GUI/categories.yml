@@ -1,0 +1,104 @@
+Title: 'AGMEnchants - Enchantments & Runes'
+Size: 6
+
+Slots:
+  Border:
+    Slots: [
+        0-0 ,   1-1 ,  2-2 ,  3-3 ,  4-4 ,  5-5 ,  6-6 ,  7-7 ,  8-8 ,
+        9-1 ,  10-2 ,        12-4 ,        14-6 ,        16-8 , 17-9 ,
+        18-2 , 19-3 ,        21-5 ,        23-7 ,        25-9 , 26-10,
+        27-3 , 28-4 ,        30-6 ,        32-8 ,        34-10, 35-11,
+        36-4 , 37-5 ,        39-7 ,        41-9 ,        43-11, 44-12,
+        45-5 , 46-6 , 47-7 , 48-8 ,        50-10, 51-11, 52-12, 53-13
+    ]
+  Items:
+    - '12xAGMEnchants:RedBorder'
+    - '3xAGMEnchants:BlueBorder'
+
+  Helmet:
+    Slots: [ 11 ]
+    Items: [ Helmet ]
+  Chestplate:
+    Slots: [ 20 ]
+    Items: [ Chestplate ]
+  Leggings:
+    Slots: [ 29 ]
+    Items: [ Leggings ]
+  Boots:
+    Slots: [ 38 ]
+    Items: [ Boots ]
+
+  Pickaxe:
+    Slots: [ 13 ]
+    Items: [ Pickaxe ]
+  Axe:
+    Slots: [ 22 ]
+    Items: [ Axe ]
+  Shovel:
+    Slots: [ 31 ]
+    Items: [ Shovel ]
+  Hoe:
+    Slots: [ 40 ]
+    Items: [ Hoe ]
+
+  Sword:
+    Slots: [ 15 ]
+    Items: [ Sword ]
+  Shield:
+    Slots: [ 24 ]
+    Items: [ Shield ]
+  Bow:
+    Slots: [ 33 ]
+    Items: [ Bow ]
+  Trident:
+    Slots: [ 42 ]
+    Items: [ Trident ]
+
+  All:
+    Slots: [ 49 ]
+    Items: [ All ]
+
+
+Items:
+  Helmet:
+    Material: 'IRON_HELMET'
+    Name: '&bHelmet &7Enchantments & Runes'
+  Chestplate:
+    Material: 'IRON_CHESTPLATE'
+    Name: '&bChestplate &7Enchantments & Runes'
+  Leggings:
+    Material: 'IRON_LEGGINGS'
+    Name: '&bLeggings &7Enchantments & Runes'
+  Boots:
+    Material: 'IRON_BOOTS'
+    Name: '&bBoots &7Enchantments & Runes'
+
+  Pickaxe:
+    Material: 'IRON_PICKAXE'
+    Name: '&bPickaxe &7Enchantments & Runes'
+  Axe:
+    Material: 'IRON_AXE'
+    Name: '&bAxe &7Enchantments & Runes'
+  Shovel:
+    Material: 'IRON_SHOVEL'
+    Name: '&bShovel &7Enchantments & Runes'
+  Hoe:
+    Material: 'IRON_HOE'
+    Name: '&bHoe &7Enchantments & Runes'
+
+  Sword:
+    Material: 'IRON_SWORD'
+    Name: '&bSword &7Enchantments & Runes'
+  Shield:
+    Material: 'SHIELD'
+    Name: '&bShield &7Enchantments & Runes'
+  Bow:
+    Material: 'BOW'
+    Name: '&bBow &7&& &bCrossbow &7Enchantments & Runes'
+  Trident:
+    Material: 'TRIDENT'
+    Name: '&bTrident &7Enchantments & Runes'
+
+  All:
+    Material: 'ENDER_CHEST'
+    Name: '&bAll &7Enchantments & Runes'

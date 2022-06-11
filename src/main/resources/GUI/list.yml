@@ -1,0 +1,56 @@
+# Placeholders - This is a list of local placeholders that you can use!
+# %page%
+# This will show the page number
+# %total_pages%
+# This will show the total pages
+
+Title: 'AGMEnchants - Enchantments & Runes'
+Size: 6
+
+# Slots that will be filled with enchantments and runes
+EmptySlots: [
+    10, 11, 12, 13, 14, 15, 16,
+    19, 20, 21, 22, 23, 24, 25,
+    28, 29, 30, 31, 32, 33, 34,
+        38, 39, 40, 41, 42
+]
+
+Slots:
+  Border:
+    Slots: [
+        0-0 ,   1-1 ,  2-2 ,  3-3 ,  4-4 ,  5-5 ,  6-6 ,  7-7 ,  8-8 ,
+        9-1 ,                                                   17-9 ,
+        18-2 ,                                                  26-10,
+        27-3 ,                                                  35-11,
+        36-4 , 37-5 ,                                    43-11, 44-12,
+               46-6 , 47-7 , 48-8 ,        50-10, 51-11, 52-12
+    ]
+    Items:
+      - '12xAGMEnchants:RedBorder'
+      - '3xAGMEnchants:BlueBorder'
+  MenuPage:
+    Slots: [ 49 ]
+    Items: [ Menu ]
+  NextPage:
+    Slots: [ 53 ]
+    Items: [ Next ]
+  PreviousPage:
+    Slots: [ 45 ]
+    Items: [ Previous ]
+
+Items:
+  RightButton:
+    Material:
+      ID: Custom_Head
+      Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjVhODRlNjM5NGJhZjhiZDc5NWZlNzQ3ZWZjNTgyY2RlOTQxNGZjY2YyZjFjODYwOGYxYmUxOGMwZTA3OTEzOCJ9fX0=
+    Name: '&e&lNext'
+  LeftButton:
+    Material:
+      ID: Custom_Head
+      Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE1M2QwNDc5N2I0N2E2ODQ4NGQxMTEwMjVkOTQwYTM0ODg2YTBmYThkYzgwNmU3NDU3MDI0YTg3ZjFhYmQ1NiJ9fX0=
+    Name: '&e&lMove to left'
+  Return:
+    Material:
+      ID: Custom_Head
+      Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY1Y2IxODVjNjQxY2JlNzRlNzBiY2U2ZTZhMWVkOTBhMTgwZWMxYTQyMDM0ZDVjNGFlZDU3YWY1NjBmYzgzYSJ9fX0=
+    Name: '&5&lReturn'
