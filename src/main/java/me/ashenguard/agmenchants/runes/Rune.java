@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.runes;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.Describable;
 import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.Configuration;
@@ -22,10 +23,11 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"UnusedReturnValue", "unused", "EmptyMethod", "SameReturnValue"})
-public abstract class Rune implements Listener {
+public abstract class Rune implements Listener, Describable {
     protected final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     protected final Messenger MESSENGER = AGMEnchants.getMessenger();
 
@@ -183,6 +185,9 @@ public abstract class Rune implements Listener {
         ItemStack item = this.item.clone();
         List<String> lore = Arrays.asList(description.split("\n"));
         return LoreManager.setItemDisplay(item, getColoredName(), lore, null);
+    }
+    public List<ItemStack> getInfoItems() {
+        return Collections.singletonList(getRune());
     }
 
     @Override public String toString() {

@@ -1,6 +1,7 @@
 package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.Describable;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.api.Configuration;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @SuppressWarnings({"UnusedReturnValue", "unused", "EmptyMethod"})
-public abstract class Enchant extends Enchantment {
+public abstract class Enchant extends Enchantment implements Describable {
     protected final AGMEnchants PLUGIN = AGMEnchants.getInstance();
     protected final Messenger MESSENGER = AGMEnchants.getMessenger();
 
@@ -150,10 +151,15 @@ public abstract class Enchant extends Enchantment {
         return book;
     }
 
-    public ItemStack getInfoBook() {
+    public ItemStack getInfoItem() {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         List<String> lore = Arrays.asList(description.split("\n"));
         return LoreManager.setItemDisplay(book, getColoredName(), lore, null);
+    }
+    public List<ItemStack> getInfoItems() {
+        List<ItemStack> items = new ArrayList<>();
+        for (int i = 0; i < getMaxLevel(); i++) items.add(getEnchantedBook(i));
+        return items;
     }
 
     @Override public String toString() {
