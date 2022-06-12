@@ -1,8 +1,8 @@
 package me.ashenguard.agmenchants.remote;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.enchants.Rune;
 import me.ashenguard.agmenchants.managers.RuneManager;
-import me.ashenguard.agmenchants.runes.Rune;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.utils.WebReader;
 import me.ashenguard.api.versions.Version;

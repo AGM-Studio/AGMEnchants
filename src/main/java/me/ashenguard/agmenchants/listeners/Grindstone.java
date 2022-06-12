@@ -2,9 +2,9 @@ package me.ashenguard.agmenchants.listeners;
 
 import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.enchants.Enchant;
+import me.ashenguard.agmenchants.enchants.Rune;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
-import me.ashenguard.agmenchants.runes.Rune;
 import me.ashenguard.api.AdvancedListener;
 import me.ashenguard.api.utils.SafeCallable;
 import org.bukkit.Bukkit;

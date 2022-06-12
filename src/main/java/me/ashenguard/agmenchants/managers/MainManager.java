@@ -1,9 +1,7 @@
 package me.ashenguard.agmenchants.managers;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.enchants.EnchantCommand;
 import me.ashenguard.agmenchants.listeners.*;
-import me.ashenguard.agmenchants.runes.RuneCommand;
 import me.ashenguard.api.AdvancedListener;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.messenger.Messenger;
@@ -29,8 +27,7 @@ public class MainManager {
     }
     
     private void loadCommands() {
-        new EnchantCommand();
-        new RuneCommand();
+        // Removed for update
     }
 
     private void loadListeners() {

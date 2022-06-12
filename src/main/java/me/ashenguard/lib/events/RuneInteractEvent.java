@@ -1,7 +1,7 @@
 package me.ashenguard.lib.events;
 
+import me.ashenguard.agmenchants.enchants.Rune;
 import me.ashenguard.agmenchants.managers.RuneManager;
-import me.ashenguard.agmenchants.runes.Rune;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;

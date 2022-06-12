@@ -1,10 +1,10 @@
 package me.ashenguard.agmenchants.listeners;
 
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.enchants.Rune;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.agmenchants.remote.RemoteEnchant;
 import me.ashenguard.agmenchants.remote.RemoteRune;
-import me.ashenguard.agmenchants.runes.Rune;
 import me.ashenguard.api.AdvancedListener;
 import me.ashenguard.lib.events.RuneInteractEvent;
 import org.bukkit.Bukkit;

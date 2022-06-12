@@ -1,7 +1,7 @@
 package me.ashenguard.agmenchants.managers;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.runes.Rune;
+import me.ashenguard.agmenchants.enchants.Rune;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.nbt.NBTCompound;

@@ -1,4 +1,4 @@
-package me.ashenguard.agmenchants;
+package me.ashenguard.agmenchants.enchants;
 
 import org.bukkit.inventory.ItemStack;
 

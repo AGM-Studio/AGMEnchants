@@ -1,7 +1,6 @@
-package me.ashenguard.agmenchants.runes;
+package me.ashenguard.agmenchants.enchants;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.Describable;
 import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.Configuration;
