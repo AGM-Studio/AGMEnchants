@@ -51,11 +51,11 @@ public class RemoteEnchant {
                     break;
                 case NOT_INSTALLED:
                     enchantments.add(enchantment);
-                    MESSENGER.Debug("Update", "A new enchantment found on page", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Official= §6" + (enchantment.official ? "Yes" : "No"));
+                    MESSENGER.debug("Update", "A new enchantment found on page", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Official= §6" + (enchantment.official ? "Yes" : "No"));
                     break;
                 case UPDATE_AVAILABLE:
                     enchantments.add(enchantment);
-                    MESSENGER.Debug("Update", "An update was found on page for an enchantment", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Current= §6" + enchantment.current);
+                    MESSENGER.debug("Update", "An update was found on page for an enchantment", "Name= §6" + enchantment.id, "Version= §6" + enchantment.version, "Current= §6" + enchantment.current);
                     break;
             }
         }

@@ -60,13 +60,13 @@ public abstract class Rune implements Listener, Describable {
         RuneManager.STORAGE.save(this);
         Bukkit.getPluginManager().registerEvents(this, PLUGIN);
         onRegister();
-        MESSENGER.Debug("Runes", "Rune has been registered.", "Rune= §6" + toString());
+        MESSENGER.debug("Runes", "Rune has been registered.", "Rune= §6" + toString());
         return true;
     }
     public void unregister() {
         RuneManager.STORAGE.remove(this);
         onUnregister();
-        MESSENGER.Debug("Runes", "Rune's registration has been removed.", "Rune= §6" + toString());
+        MESSENGER.debug("Runes", "Rune's registration has been removed.", "Rune= §6" + toString());
     }
 
     public Rune(File JAR) {

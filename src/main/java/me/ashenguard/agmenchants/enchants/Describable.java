@@ -4,6 +4,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface Describable {
     String getName();
     String getColoredName();

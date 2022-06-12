@@ -50,11 +50,11 @@ public class RemoteRune {
                     break;
                 case NOT_INSTALLED:
                     enchantments.add(rune);
-                    MESSENGER.Debug("Update", "A new rune was found on page", "Name= §6" + rune.id, "Version= §6" + rune.version, "Official= §6" + (rune.official ? "Yes" : "No"));
+                    MESSENGER.debug("Update", "A new rune was found on page", "Name= §6" + rune.id, "Version= §6" + rune.version, "Official= §6" + (rune.official ? "Yes" : "No"));
                     break;
                 case UPDATE_AVAILABLE:
                     enchantments.add(rune);
-                    MESSENGER.Debug("Update", "An update was found on page for an rune", "Name= §6" + rune.id, "Version= §6" + rune.version, "Current= §6" + rune.current);
+                    MESSENGER.debug("Update", "An update was found on page for an rune", "Name= §6" + rune.id, "Version= §6" + rune.version, "Current= §6" + rune.current);
                     break;
             }
         }

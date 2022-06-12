@@ -46,6 +46,6 @@ public class WorldGeneration extends AdvancedListener {
 
     @Override
     protected void onRegister() {
-        plugin.messenger.Debug("General", "World generation mechanism has been implemented");
+        plugin.messenger.debug("General", "World generation mechanism has been implemented");
     }
 }

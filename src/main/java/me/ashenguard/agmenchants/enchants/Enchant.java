@@ -33,7 +33,7 @@ public abstract class Enchant extends Enchantment implements Describable {
         Enchant exists = EnchantManager.STORAGE.get(this.getKey());
         if (exists != null) return false;
         EnchantManager.STORAGE.save(this);
-        MESSENGER.Debug("Enchants", "Enchantment has been registered.", "Enchantment= §6" + toString());
+        MESSENGER.debug("Enchants", "Enchantment has been registered.", "Enchantment= §6" + toString());
         return true;
     }
 

@@ -47,6 +47,6 @@ public class Trading extends AdvancedListener {
     }
 
     @Override protected void onRegister() {
-        plugin.messenger.Debug("General", "Village Trading has been registered");
+        plugin.messenger.debug("General", "Village Trading has been registered");
     }
 }

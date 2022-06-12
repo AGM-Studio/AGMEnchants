@@ -38,7 +38,7 @@ public class EnchantManager {
     private static final Map<NamespacedKey, Enchantment> KEY_ENCHANTMENT_MAP;
     private static final Map<String, Enchantment> NAME_ENCHANTMENT_MAP;
     static {
-        if (!ENCHANTS_FOLDER.exists() && ENCHANTS_FOLDER.mkdirs()) MESSENGER.Debug("General", "Enchants folder wasn't found, A new one created");
+        if (!ENCHANTS_FOLDER.exists() && ENCHANTS_FOLDER.mkdirs()) MESSENGER.debug("General", "Enchants folder wasn't found, A new one created");
 
         Map<NamespacedKey, Enchantment> KEY_MAP = new HashMap<>();
         Map<String, Enchantment> NAME_MAP = new HashMap<>();

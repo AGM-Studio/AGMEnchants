@@ -70,7 +70,7 @@ public class RuneManager {
         }
         STORAGE.sort();
 
-        MESSENGER.Info(String.format("Loaded %d Runes", STORAGE.size()));
+        MESSENGER.info(String.format("Loaded %d Runes", STORAGE.size()));
     }
 
     @Nullable public static Rune getItemRune(@NotNull ItemStack item) {
@@ -208,7 +208,7 @@ public class RuneManager {
     private static class Loader {
         private static final File RUNES_FOLDER = new File(PLUGIN.getDataFolder(), "Runes");
         static {
-            if (!RUNES_FOLDER.exists() && RUNES_FOLDER.mkdirs()) MESSENGER.Debug("General", "Rune folder wasn't found, A new one created");
+            if (!RUNES_FOLDER.exists() && RUNES_FOLDER.mkdirs()) MESSENGER.debug("General", "Rune folder wasn't found, A new one created");
         }
 
         private static boolean isRuneEnabled(Rune rune) {
@@ -223,7 +223,7 @@ public class RuneManager {
             try {
                 if (isRuneEnabled(rune)) return rune;
             } catch (Exception exception) {
-                MESSENGER.Warning("Unable to register rune called " + rune.getName());
+                MESSENGER.warning("Unable to register rune called " + rune.getName());
                 MESSENGER.handleException(exception);
             }
             return null;
@@ -254,7 +254,7 @@ public class RuneManager {
                     }
                 }
             } catch (Throwable throwable) {
-                MESSENGER.Warning(String.format("Failed to load rune from class named %s (%s)", runeClass.getSimpleName(), runeClass.getName()));
+                MESSENGER.warning(String.format("Failed to load rune from class named %s (%s)", runeClass.getSimpleName(), runeClass.getName()));
                 MESSENGER.handleException(throwable, "RuneLoader_Exception");
             }
             return rune;

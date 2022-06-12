@@ -100,6 +100,6 @@ public class Miscellanies extends AdvancedListener {
     }
 
     @Override protected void onRegister() {
-        plugin.messenger.Debug("General", "Miscellanies has been registered");
+        plugin.messenger.debug("General", "Miscellanies has been registered");
     }
 }

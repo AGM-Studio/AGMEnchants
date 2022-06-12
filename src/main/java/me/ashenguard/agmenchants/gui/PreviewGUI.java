@@ -1,8 +1,8 @@
 package me.ashenguard.agmenchants.gui;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.classes.Describable;
-import me.ashenguard.agmenchants.classes.Enchant;
+import me.ashenguard.agmenchants.enchants.Describable;
+import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.gui.GUIInventory;
 import me.ashenguard.api.gui.GUIInventorySlot;

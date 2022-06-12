@@ -38,7 +38,7 @@ public class MainManager {
         if (!MCVersion.getMCVersion().isLowerThan(MCVersion.V1_16))
             AdvancedListener.tryRegister(Bartering.class, PLUGIN);
 
-        MESSENGER.Debug("General", "All listeners has been registered");
+        MESSENGER.debug("General", "All listeners has been registered");
     }
 
     public Configuration getGroups() {

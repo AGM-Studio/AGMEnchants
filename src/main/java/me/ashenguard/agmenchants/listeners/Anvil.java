@@ -51,7 +51,7 @@ public class Anvil extends AdvancedListener {
         REPAIR_BOOST = new SafeCallable<>(() -> bst + rnd * Math.random() / 100, 2.025);
         EXTRACTION = config.getBoolean("Anvil.ReverseEnchant", false);
 
-        plugin.messenger.Debug("General", "Anvil mechanism has been implemented");
+        plugin.messenger.debug("General", "Anvil mechanism has been implemented");
     }
 
     private static class PrepareData {

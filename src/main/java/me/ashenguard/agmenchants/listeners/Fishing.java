@@ -44,6 +44,6 @@ public class Fishing extends AdvancedListener {
     }
 
     @Override protected void onRegister() {
-        plugin.messenger.Debug("General", "Fishing mechanism has been implemented");
+        plugin.messenger.debug("General", "Fishing mechanism has been implemented");
     }
 }

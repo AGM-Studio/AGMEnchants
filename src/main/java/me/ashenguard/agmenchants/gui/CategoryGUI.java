@@ -2,8 +2,8 @@ package me.ashenguard.agmenchants.gui;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.classes.Enchant;
-import me.ashenguard.agmenchants.classes.Rune;
+import me.ashenguard.agmenchants.enchants.Enchant;
+import me.ashenguard.agmenchants.enchants.Rune;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
 import me.ashenguard.api.Configuration;
@@ -50,6 +50,7 @@ public class CategoryGUI extends GUIInventory {
         );
     }
 
+    @SuppressWarnings("SameReturnValue")
     private boolean openList(List<Enchant> enchants, List<Rune> runes) {
         this.close();
         new ListGUI(this.getPlayer(), enchants, runes).show();

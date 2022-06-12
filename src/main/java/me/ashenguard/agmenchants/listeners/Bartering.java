@@ -36,6 +36,6 @@ public class Bartering extends AdvancedListener {
     }
 
     @Override protected void onRegister() {
-        plugin.messenger.Debug("General", "Bartering mechanism has been registered");
+        plugin.messenger.debug("General", "Bartering mechanism has been registered");
     }
 }

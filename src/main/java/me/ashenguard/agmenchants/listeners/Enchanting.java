@@ -19,6 +19,6 @@ public class Enchanting extends AdvancedListener {
     }
 
     @Override protected void onRegister() {
-        plugin.messenger.Debug("General", "Enchantment table mechanism has been implemented");
+        plugin.messenger.debug("General", "Enchantment table mechanism has been implemented");
     }
 }

@@ -56,14 +56,14 @@ public abstract class CustomEnchant extends Enchant implements Listener {
         Bukkit.getPluginManager().registerEvents(this, PLUGIN);
         Enchantment.registerEnchantment(this);
         onRegister();
-        MESSENGER.Debug("Enchants", "Enchantment has been registered.", "Enchantment= §6" + toString());
+        MESSENGER.debug("Enchants", "Enchantment has been registered.", "Enchantment= §6" + toString());
 
         return true;
     }
     @Override public void unregister() {
         EnchantManager.unregisterEnchantment(this);
         onUnregister();
-        MESSENGER.Debug("Enchants", "Enchantment's registration has been removed.", "Enchantment= §6" + toString());
+        MESSENGER.debug("Enchants", "Enchantment's registration has been removed.", "Enchantment= §6" + toString());
     }
 
     public void onRegister() {}

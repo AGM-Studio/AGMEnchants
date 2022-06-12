@@ -49,7 +49,7 @@ public class Grindstone extends AdvancedListener {
         for(Rune.Rarity rarity: Rune.Rarity.values())
             RUNE_EXTRACT_CHANCE.put(rarity, config.getDouble(String.format("Features.Grindstone.Enchants.EXP.%s", rarity.getCapitalizedName()), 100.0));
 
-        plugin.messenger.Debug("General", "Grindstone mechanism has been implemented");
+        plugin.messenger.debug("General", "Grindstone mechanism has been implemented");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -59,9 +59,6 @@ public class Grindstone extends AdvancedListener {
 
         ItemStack item1 = inventory.getItem(0);
         ItemStack item2 = inventory.getItem(1);
-
-        AGMEnchants.getMessenger().Warning(String.valueOf(item1));
-        AGMEnchants.getMessenger().Warning(String.valueOf(item2));
 
         HashMap<Enchant, Integer> item1Enchants = EnchantManager.extractEnchants(item1);
         HashMap<Enchant, Integer> item2Enchants = EnchantManager.extractEnchants(item2);
