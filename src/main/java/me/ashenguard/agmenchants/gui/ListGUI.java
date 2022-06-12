@@ -1,8 +1,8 @@
 package me.ashenguard.agmenchants.gui;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.enchants.Enchant;
-import me.ashenguard.agmenchants.runes.Rune;
+import me.ashenguard.agmenchants.classes.Enchant;
+import me.ashenguard.agmenchants.classes.Rune;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.gui.GUIInventory;
 import me.ashenguard.api.gui.GUIInventorySlot;
@@ -24,7 +24,7 @@ public class ListGUI extends GUIInventory {
 
     private int page = 0;
 
-    protected ListGUI(Player player, List<Enchant> enchants, List<Rune> runes) {
+    public ListGUI(Player player, List<Enchant> enchants, List<Rune> runes) {
         super(player, config);
         this.enchants = enchants;
         this.runes = runes;

@@ -2,10 +2,10 @@ package me.ashenguard.agmenchants.gui;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.enchants.Enchant;
+import me.ashenguard.agmenchants.classes.Enchant;
+import me.ashenguard.agmenchants.classes.Rune;
 import me.ashenguard.agmenchants.managers.EnchantManager;
 import me.ashenguard.agmenchants.managers.RuneManager;
-import me.ashenguard.agmenchants.runes.Rune;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.gui.GUIInventory;
 import org.bukkit.Material;
@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CategoryGUI extends GUIInventory {
-    protected CategoryGUI(Player player) {
+    public CategoryGUI(Player player) {
         super(player, new Configuration(AGMEnchants.getInstance(), "GUI/categories.yml", true));
     }
 
@@ -40,17 +40,17 @@ public class CategoryGUI extends GUIInventory {
     }
 
     @Override protected Function<InventoryClickEvent, Boolean> getSlotActionByKey(String key) {
-        if ("All".equalsIgnoreCase(key)) return event -> openList(event, EnchantManager.STORAGE.getAll(), RuneManager.STORAGE.getAll());
+        if ("All".equalsIgnoreCase(key)) return event -> openList(EnchantManager.STORAGE.getAll(), RuneManager.STORAGE.getAll());
         Collection<String> list = actionMap.getOrDefault(key, null);
         if (list == null) return null;
         
-        return event -> openList(event,
+        return event -> openList(
                 EnchantManager.STORAGE.getAll().stream().filter(enchant -> isEnchantApplicable(enchant, list)).collect(Collectors.toList()),
                 RuneManager.STORAGE.getAll().stream().filter(rune -> isRuneApplicable(rune, list)).collect(Collectors.toList())
         );
     }
 
-    private boolean openList(InventoryClickEvent event, List<Enchant> enchants, List<Rune> runes) {
+    private boolean openList(List<Enchant> enchants, List<Rune> runes) {
         this.close();
         new ListGUI(this.getPlayer(), enchants, runes).show();
         return true;

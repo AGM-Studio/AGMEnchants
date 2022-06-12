@@ -1,8 +1,8 @@
 package me.ashenguard.agmenchants.gui;
 
 import me.ashenguard.agmenchants.AGMEnchants;
-import me.ashenguard.agmenchants.Describable;
-import me.ashenguard.agmenchants.enchants.Enchant;
+import me.ashenguard.agmenchants.classes.Describable;
+import me.ashenguard.agmenchants.classes.Enchant;
 import me.ashenguard.api.Configuration;
 import me.ashenguard.api.gui.GUIInventory;
 import me.ashenguard.api.gui.GUIInventorySlot;
@@ -23,7 +23,7 @@ public class PreviewGUI extends GUIInventory {
     private static final List<Integer> slots = config.getIntegerList("EmptySlots");
     private static final Alignment alignment = Alignment.getAlignment(config.getString("Alignment"));
 
-    protected PreviewGUI(Player player, Describable describable) {
+    public PreviewGUI(Player player, Describable describable) {
         super(player, config);
 
         placeholders.add(new Placeholder("name", (p, s) -> describable.getName()));
