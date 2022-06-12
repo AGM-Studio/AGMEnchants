@@ -15,8 +15,8 @@ public class MainManager {
 
     public void reload() {
         loadListeners();
-        loadCommands();
 
+        CommandManager.register();
         LoreManager.loadConfig();
         EnchantManager.loadConfig();
         EnchantManager.loadEnchants();
@@ -24,10 +24,6 @@ public class MainManager {
         RuneManager.loadRunes();
 
         groups = new Configuration(PLUGIN, "Features/groups.yml");
-    }
-    
-    private void loadCommands() {
-        // Removed for update
     }
 
     private void loadListeners() {
