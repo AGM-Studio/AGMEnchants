@@ -1,0 +1,6 @@
+# Commands messages
+PlayerOnly: '&cThis command can only be executed by a player.'
+PlayerNotFound: '&cPlayer was not found!'
+RuneNotFound: '&cRune was not found!'
+EnchantNotFound: '&cEnchantment was not found!'
+UnableToEnchant: '&cUnable to enchant this tool with this enchantment.'

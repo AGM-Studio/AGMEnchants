@@ -1,10 +1,12 @@
 package me.ashenguard.agmenchants;
 
+import me.ashenguard.agmcore.Placeholders;
 import me.ashenguard.agmenchants.managers.MainManager;
-import me.ashenguard.api.gui.GUI;
 import me.ashenguard.api.messenger.Messenger;
 import me.ashenguard.api.messenger.PHManager;
+import me.ashenguard.api.placeholder.Translations;
 import me.ashenguard.api.spigot.SpigotPlugin;
+import me.ashenguard.api.versions.MCVersion;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,8 +21,8 @@ public final class AGMEnchants extends SpigotPlugin {
         return instance;
     }
 
-    public static GUI getGUI() {
-        return instance.GUI;
+    public static Translations getTranslations() {
+        return instance.translation;
     }
     public static MainManager getMainManager() {
         return instance.manager;
@@ -33,7 +35,6 @@ public final class AGMEnchants extends SpigotPlugin {
         return instance.messenger;
     }
 
-    public GUI GUI = null;
     public MainManager manager = null;
 
     @Override
@@ -53,25 +54,19 @@ public final class AGMEnchants extends SpigotPlugin {
 
     @Override
     public void onPluginEnable() {
+        if (MCVersion.getMCVersion().isLowerThan(MCVersion.V1_17)) messenger.warning("This plugin is only supported on 1.17+, It might not work well on " + MCVersion.getMCVersion().version.toString(true));
+
         instance = this;
 
         File pluginFolder = getDataFolder();
-        if (!pluginFolder.exists() && pluginFolder.mkdirs()) messenger.Debug("General", "Plugin folder wasn't found, A new one created");
-        if (isLegacy()) messenger.Debug("General", "Legacy version detected");
+        if (!pluginFolder.exists() && pluginFolder.mkdirs()) messenger.debug("General", "Plugin folder wasn't found, A new one created");
 
         saveDefaultConfig();
         reloadConfig();
 
-        GUI = new GUI(this);
         manager = new MainManager();
         manager.reload();
 
         if (PHManager.enable) new Placeholders().register();
-    }
-
-    @Override
-    public void onPluginDisable() {
-        if (GUI != null) GUI.closeAll();
-        messenger.Info("Plugin has been disabled");
     }
 }
