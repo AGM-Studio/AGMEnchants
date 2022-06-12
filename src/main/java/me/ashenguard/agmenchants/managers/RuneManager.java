@@ -65,7 +65,7 @@ public class RuneManager {
             try {
                 rune.register();
             } catch (Throwable throwable) {
-                MESSENGER.handleException(throwable);
+                MESSENGER.handleException(String.format("Rune %s refuses to be registered due an issue", rune.getName()), throwable);
             }
         }
         STORAGE.sort();
@@ -223,8 +223,7 @@ public class RuneManager {
             try {
                 if (isRuneEnabled(rune)) return rune;
             } catch (Exception exception) {
-                MESSENGER.warning("Unable to register rune called " + rune.getName());
-                MESSENGER.handleException(exception);
+                MESSENGER.handleException(String.format("Unable to register rune called %s because of an exception", rune.getName()), exception);
             }
             return null;
         }
@@ -254,8 +253,7 @@ public class RuneManager {
                     }
                 }
             } catch (Throwable throwable) {
-                MESSENGER.warning(String.format("Failed to load rune from class named %s (%s)", runeClass.getSimpleName(), runeClass.getName()));
-                MESSENGER.handleException(throwable, "RuneLoader_Exception");
+                MESSENGER.handleException(String.format("Failed to load rune from class named %s (%s) due an issue", runeClass.getSimpleName(), runeClass.getName()), throwable, "RuneLoader_Exception");
             }
             return rune;
         }

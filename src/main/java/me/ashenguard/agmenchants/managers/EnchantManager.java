@@ -100,7 +100,8 @@ public class EnchantManager {
             acceptingNew.setAccessible(true);
             acceptingNew.set(null, true);
         } catch (Exception exception) {
-            MESSENGER.handleException(exception);
+            MESSENGER.handleException("Failed to unlock enchantment registration due an exception", exception);
+            return;
         }
 
         STORAGE.clear();
@@ -114,7 +115,7 @@ public class EnchantManager {
             try {
                 enchant.register();
             } catch (Throwable throwable) {
-                MESSENGER.handleException(throwable);
+                MESSENGER.handleException(String.format("Enchantment %s refuses to be registered due an issue", enchant.getName()), throwable);
             }
         }
 
@@ -348,8 +349,7 @@ public class EnchantManager {
             try {
                 if (isEnchantEnabled(enchantment)) return enchantment;
             } catch (Exception exception) {
-                MESSENGER.Warning("Unable to register enchantment called " + enchantment.getName());
-                MESSENGER.handleException(exception);
+                MESSENGER.handleException(String.format("Unable to register enchantment called %s because of an exception", enchantment.getName()), exception);
             }
             return null;
         }
@@ -379,8 +379,7 @@ public class EnchantManager {
                     }
                 }
             } catch (Throwable throwable) {
-                MESSENGER.Warning(String.format("Failed to load enchantment from class named %s (%s)", enchantClass.getSimpleName(), enchantClass.getName()));
-                MESSENGER.handleException(throwable, "EnchantmentLoader_Exception");
+                MESSENGER.handleException(String.format("Failed to load enchantment from class named %s (%s) due an issue", enchantClass.getSimpleName(), enchantClass.getName()), throwable, "EnchantmentLoader_Exception");
             }
             return enchant;
         }
