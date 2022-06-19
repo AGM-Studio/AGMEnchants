@@ -64,8 +64,10 @@ public class CommandManager {
                 if ("give".equalsIgnoreCase(args[0]))
                     player.getInventory().addItem(enchant.getEnchantedBook(level));
 
-                if ("enchant".equalsIgnoreCase(args[0]) && enchant.canEnchantItem(player.getInventory().getItemInMainHand()))
+                if ("enchant".equalsIgnoreCase(args[0])) {
+                    assert enchant.canEnchantItem(player.getInventory().getItemInMainHand()) : AGMEnchants.getTranslations().get("UnableToEnchant");
                     enchant.applyEnchant(player.getInventory().getItemInMainHand(), level);
+                }
             }
         }
 
@@ -74,13 +76,15 @@ public class CommandManager {
             List<String> tab = new ArrayList<>();
             if (args.length == 0) return tab;
             if (args.length == 1) tab.addAll(Arrays.asList("view", "give", "enchant"));
+            if (args.length == 2 && "view".equalsIgnoreCase(args[0]))
+                tab.addAll(EnchantManager.STORAGE.getAll().stream().map(e -> e.getKey().toString()).collect(Collectors.toList()));
             if (args.length == 2 && ("give".equalsIgnoreCase(args[0]) || "enchant".equalsIgnoreCase(args[0])))
                 tab.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
             if (args.length == 3 && ("give".equalsIgnoreCase(args[0]) || "enchant".equalsIgnoreCase(args[0])))
                 tab.addAll(EnchantManager.STORAGE.getAll().stream().map(e -> e.getKey().toString()).collect(Collectors.toList()));
             if (args.length == 4 && ("give".equalsIgnoreCase(args[0]) || "enchant".equalsIgnoreCase(args[0]))) {
                 Enchant enchant = EnchantManager.STORAGE.get(args[2]);
-                if (enchant != null) for (int i = 0; i < enchant.getMaxLevel(); i++)
+                if (enchant != null) for (int i = 1; i < enchant.getMaxLevel() + 1; i++)
                     tab.add(String.valueOf(i));
             }
             String lastWord = args[args.length - 1];
@@ -116,8 +120,10 @@ public class CommandManager {
                 if ("give".equalsIgnoreCase(args[0]))
                     player.getInventory().addItem(rune.getRune());
 
-                if ("enchant".equalsIgnoreCase(args[0]) && rune.canRuneItem(player.getInventory().getItemInMainHand()))
+                if ("enchant".equalsIgnoreCase(args[0])) {
+                    assert rune.canRuneItem(player.getInventory().getItemInMainHand()) : AGMEnchants.getTranslations().get("UnableToRune");
                     rune.applyRune(player.getInventory().getItemInMainHand());
+                }
             }
         }
 
@@ -126,10 +132,12 @@ public class CommandManager {
             List<String> tab = new ArrayList<>();
             if (args.length == 0) return tab;
             if (args.length == 1) tab.addAll(Arrays.asList("view", "give", "apply"));
+            if (args.length == 2 && "view".equalsIgnoreCase(args[0]))
+                tab.addAll(RuneManager.STORAGE.getAll().stream().map(e -> e.ID).collect(Collectors.toList()));
             if (args.length == 2 && ("give".equalsIgnoreCase(args[0]) || "apply".equalsIgnoreCase(args[0])))
                 tab.addAll(Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList()));
             if (args.length == 3 && ("give".equalsIgnoreCase(args[0]) || "apply".equalsIgnoreCase(args[0])))
-                tab.addAll(EnchantManager.STORAGE.getAll().stream().map(e -> e.getKey().toString()).collect(Collectors.toList()));
+                tab.addAll(RuneManager.STORAGE.getAll().stream().map(e -> e.ID).collect(Collectors.toList()));
             String lastWord = args[args.length - 1];
             return tab.stream().filter(name -> StringUtil.startsWithIgnoreCase(name, lastWord)).sorted(String.CASE_INSENSITIVE_ORDER).collect(Collectors.toList());
         }

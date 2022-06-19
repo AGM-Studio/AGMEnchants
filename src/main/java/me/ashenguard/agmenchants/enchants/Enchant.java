@@ -157,7 +157,7 @@ public abstract class Enchant extends Enchantment implements Describable {
     }
     public List<ItemStack> getInfoItems() {
         List<ItemStack> items = new ArrayList<>();
-        for (int i = 0; i < getMaxLevel(); i++) items.add(getEnchantedBook(i));
+        for (int i = 1; i < getMaxLevel() + 1; i++) items.add(getEnchantedBook(i));
         return items;
     }
 

@@ -379,7 +379,7 @@ public class EnchantManager {
                     }
                 }
             } catch (Throwable throwable) {
-                MESSENGER.handleException(String.format("Failed to load enchantment from class named %s (%s) due an issue", enchantClass.getSimpleName(), enchantClass.getName()), throwable, "EnchantmentLoader_Exception");
+                MESSENGER.handleException(String.format("Failed to load enchantment from class named %s (%s) due an issue", enchantClass.getSimpleName(), enchantClass.getName()), throwable,  enchantClass.getSimpleName() + "_LoadException");
             }
             return enchant;
         }

@@ -4,7 +4,7 @@
 # %total_pages%
 # This will show the total pages
 
-Title: 'AGMEnchants - Enchantments & Runes'
+Title: '§6Runes §7& §dEnchantments'
 Size: 6
 
 # Slots that will be filled with enchantments and runes
@@ -39,17 +39,17 @@ Slots:
     Items: [ Previous ]
 
 Items:
-  RightButton:
+  Next:
     Material:
       ID: Custom_Head
       Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjVhODRlNjM5NGJhZjhiZDc5NWZlNzQ3ZWZjNTgyY2RlOTQxNGZjY2YyZjFjODYwOGYxYmUxOGMwZTA3OTEzOCJ9fX0=
     Name: '&e&lNext'
-  LeftButton:
+  Previous:
     Material:
       ID: Custom_Head
       Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE1M2QwNDc5N2I0N2E2ODQ4NGQxMTEwMjVkOTQwYTM0ODg2YTBmYThkYzgwNmU3NDU3MDI0YTg3ZjFhYmQ1NiJ9fX0=
     Name: '&e&lMove to left'
-  Return:
+  Menu:
     Material:
       ID: Custom_Head
       Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY1Y2IxODVjNjQxY2JlNzRlNzBiY2U2ZTZhMWVkOTBhMTgwZWMxYTQyMDM0ZDVjNGFlZDU3YWY1NjBmYzgzYSJ9fX0=

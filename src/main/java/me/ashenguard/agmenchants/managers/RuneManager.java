@@ -253,7 +253,7 @@ public class RuneManager {
                     }
                 }
             } catch (Throwable throwable) {
-                MESSENGER.handleException(String.format("Failed to load rune from class named %s (%s) due an issue", runeClass.getSimpleName(), runeClass.getName()), throwable, "RuneLoader_Exception");
+                MESSENGER.handleException(String.format("Failed to load rune from class named %s (%s) due an issue", runeClass.getSimpleName(), runeClass.getName()), throwable, runeClass.getSimpleName() + "_LoadException");
             }
             return rune;
         }

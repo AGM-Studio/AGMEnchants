@@ -1,9 +1,9 @@
 package me.ashenguard.agmenchants;
 
-import me.ashenguard.agmcore.Placeholders;
+import me.ashenguard.agmenchants.managers.LoreManager;
 import me.ashenguard.agmenchants.managers.MainManager;
+import me.ashenguard.api.itemstack.placeholder.PlaceholderItemStack;
 import me.ashenguard.api.messenger.Messenger;
-import me.ashenguard.api.messenger.PHManager;
 import me.ashenguard.api.placeholder.Translations;
 import me.ashenguard.api.spigot.SpigotPlugin;
 import me.ashenguard.api.versions.MCVersion;
@@ -67,6 +67,6 @@ public final class AGMEnchants extends SpigotPlugin {
         manager = new MainManager();
         manager.reload();
 
-        if (PHManager.enable) new Placeholders().register();
+        PlaceholderItemStack.addModifier((item, placeholder) -> LoreManager.updateItem(item));
     }
 }

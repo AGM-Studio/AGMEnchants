@@ -4,8 +4,13 @@ import me.ashenguard.agmenchants.AGMEnchants;
 import me.ashenguard.agmenchants.listeners.*;
 import me.ashenguard.api.AdvancedListener;
 import me.ashenguard.api.Configuration;
+import me.ashenguard.api.itemstack.ItemLibrary;
 import me.ashenguard.api.messenger.Messenger;
+import me.ashenguard.api.messenger.PlaceholderManager;
+import me.ashenguard.api.placeholder.Placeholder;
+import me.ashenguard.api.placeholder.PlaceholderExtension;
 import me.ashenguard.api.versions.MCVersion;
+import org.jetbrains.annotations.NotNull;
 
 public class MainManager {
     private final AGMEnchants PLUGIN = AGMEnchants.getInstance();
@@ -15,6 +20,7 @@ public class MainManager {
 
     public void reload() {
         loadListeners();
+        loadConfigs();
 
         CommandManager.register();
         LoreManager.loadConfig();
@@ -24,6 +30,15 @@ public class MainManager {
         RuneManager.loadRunes();
 
         groups = new Configuration(PLUGIN, "Features/groups.yml");
+
+        if (PlaceholderManager.enable) new Placeholders().register();
+        ItemLibrary.createLibraryFile(PLUGIN, "agmenchants.yml", "GUI/items.yml");
+    }
+
+    private void loadConfigs() {
+        new Configuration(AGMEnchants.getInstance(), "GUI/categories.yml", true);
+        new Configuration(AGMEnchants.getInstance(), "GUI/list.yml", true);
+        new Configuration(AGMEnchants.getInstance(), "GUI/preview.yml", true);
     }
 
     private void loadListeners() {
@@ -43,5 +58,19 @@ public class MainManager {
 
     public Configuration getGroups() {
         return groups;
+    }
+
+    protected static class Placeholders extends PlaceholderExtension {
+        @Override
+        public @NotNull String getIdentifier() {
+            return "AGMEnchants";
+        }
+
+        public Placeholders(){
+            super(AGMEnchants.getInstance());
+
+            new Placeholder(this, "total_enchants", ((player, s) -> String.valueOf(EnchantManager.STORAGE.size())));
+            new Placeholder(this, "total_runes", ((player, s) -> String.valueOf(RuneManager.STORAGE.size())));
+        }
     }
 }

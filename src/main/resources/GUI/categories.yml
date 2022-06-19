@@ -1,4 +1,4 @@
-Title: 'AGMEnchants - Enchantments & Runes'
+Title: '§dAGMEnchants'
 Size: 6
 
 Slots:
@@ -11,52 +11,65 @@ Slots:
         36-4 , 37-5 ,        39-7 ,        41-9 ,        43-11, 44-12,
         45-5 , 46-6 , 47-7 , 48-8 ,        50-10, 51-11, 52-12, 53-13
     ]
-  Items:
-    - '12xAGMEnchants:RedBorder'
-    - '3xAGMEnchants:BlueBorder'
+    Items:
+      - '12xAGMEnchants:RedBorder'
+      - '3xAGMEnchants:BlueBorder'
 
   Helmet:
     Slots: [ 11 ]
     Items: [ Helmet ]
+    Title: 'Helmet'
   Chestplate:
     Slots: [ 20 ]
     Items: [ Chestplate ]
+    Title: 'Chestplate'
   Leggings:
     Slots: [ 29 ]
     Items: [ Leggings ]
+    Title: 'Leggings'
   Boots:
     Slots: [ 38 ]
     Items: [ Boots ]
+    Title: 'Boots'
 
   Pickaxe:
     Slots: [ 13 ]
     Items: [ Pickaxe ]
+    Title: 'Pickaxe'
   Axe:
     Slots: [ 22 ]
     Items: [ Axe ]
+    Title: 'Axe'
   Shovel:
     Slots: [ 31 ]
     Items: [ Shovel ]
+    Title: 'Shovel'
   Hoe:
     Slots: [ 40 ]
     Items: [ Hoe ]
+    Title: 'Hoe'
 
   Sword:
     Slots: [ 15 ]
     Items: [ Sword ]
+    Title: 'Sword'
   Shield:
     Slots: [ 24 ]
     Items: [ Shield ]
+    Title: 'Shield'
   Bow:
     Slots: [ 33 ]
     Items: [ Bow ]
+    Title: 'Crossbow & Bow'
   Trident:
     Slots: [ 42 ]
     Items: [ Trident ]
+    Title: 'Trident'
 
   All:
     Slots: [ 49 ]
     Items: [ All ]
+    Title: 'All'
 
 
 Items:
@@ -94,7 +107,7 @@ Items:
     Name: '&bShield &7Enchantments & Runes'
   Bow:
     Material: 'BOW'
-    Name: '&bBow &7&& &bCrossbow &7Enchantments & Runes'
+    Name: '&bCrossbow &7& &bBow &7Enchantments & Runes'
   Trident:
     Material: 'TRIDENT'
     Name: '&bTrident &7Enchantments & Runes'

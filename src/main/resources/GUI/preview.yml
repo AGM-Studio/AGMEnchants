@@ -10,7 +10,7 @@
 # %description%
 # The description of rune or enchantment
 
-Title: 'AGMEnchants - %colored_name% %max_level_roman%'
+Title: '%colored_name% %max_level_roman%'
 Size: 4
 
 # Slots that will be filled with enchantments and runes, This will override slots defined below
@@ -36,7 +36,7 @@ Slots:
     Items: [ Menu ]
 
 Items:
-  Return:
+  Menu:
     Material:
       ID: Custom_Head
       Texture: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY1Y2IxODVjNjQxY2JlNzRlNzBiY2U2ZTZhMWVkOTBhMTgwZWMxYTQyMDM0ZDVjNGFlZDU3YWY1NjBmYzgzYSJ9fX0=
