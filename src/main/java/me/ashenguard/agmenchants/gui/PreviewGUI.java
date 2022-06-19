@@ -49,8 +49,12 @@ public class PreviewGUI extends GUIInventory {
     }
 
     @Override
-    protected Function<InventoryClickEvent, Boolean> getSlotActionByKey(String s) {
-        return null;
+    protected Function<InventoryClickEvent, Boolean> getSlotActionByKey(String key) {
+        return "MenuPage".equals(key) ? event -> {
+            this.close();
+            new CategoryGUI(player).show();
+            return true;
+        } : null;
     }
 
     private List<Integer> getInfoSlots(int size) {

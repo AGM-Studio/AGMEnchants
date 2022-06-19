@@ -2,6 +2,7 @@ package me.ashenguard.agmenchants.gui;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.ashenguard.agmenchants.AGMEnchants;
+import me.ashenguard.agmenchants.enchants.Describable;
 import me.ashenguard.agmenchants.enchants.Enchant;
 import me.ashenguard.agmenchants.enchants.Rune;
 import me.ashenguard.agmenchants.managers.EnchantManager;
@@ -14,11 +15,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class CategoryGUI extends GUIInventory {
+    private static final Configuration config = new Configuration(AGMEnchants.getInstance(), "GUI/categories.yml", true);
+
     public CategoryGUI(Player player) {
-        super(player, new Configuration(AGMEnchants.getInstance(), "GUI/categories.yml", true));
+        super(player, config);
     }
 
     private static final Map<String, Collection<String>> actionMap = new HashMap<>();
@@ -40,20 +42,25 @@ public class CategoryGUI extends GUIInventory {
     }
 
     @Override protected Function<InventoryClickEvent, Boolean> getSlotActionByKey(String key) {
-        if ("All".equalsIgnoreCase(key)) return event -> openList(EnchantManager.STORAGE.getAll(), RuneManager.STORAGE.getAll());
-        Collection<String> list = actionMap.getOrDefault(key, null);
-        if (list == null) return null;
-        
-        return event -> openList(
-                EnchantManager.STORAGE.getAll().stream().filter(enchant -> isEnchantApplicable(enchant, list)).collect(Collectors.toList()),
-                RuneManager.STORAGE.getAll().stream().filter(rune -> isRuneApplicable(rune, list)).collect(Collectors.toList())
-        );
+        if ("All".equalsIgnoreCase(key)) return event -> openList(null, "All");
+        if (!actionMap.containsKey(key)) return null;
+        return event -> openList(actionMap.get(key), key);
     }
 
     @SuppressWarnings("SameReturnValue")
-    private boolean openList(List<Enchant> enchants, List<Rune> runes) {
+    private boolean openList(Collection<String> items, String key) {
+        List<Describable> list = new ArrayList<>();
+        if ("All".equals(key)) {
+            list.addAll(RuneManager.STORAGE.getAll());
+            list.addAll(EnchantManager.STORAGE.getAll());
+        } else {
+            RuneManager.STORAGE.getAll().stream().filter(rune -> isRuneApplicable(rune, items)).forEach(list::add);
+            EnchantManager.STORAGE.getAll().stream().filter(enchant -> isEnchantApplicable(enchant, items)).forEach(list::add);
+        }
+
         this.close();
-        new ListGUI(this.getPlayer(), enchants, runes).show();
+
+        new ListGUI(this.getPlayer(), list).show();
         return true;
     }
     
