@@ -35,7 +35,7 @@
                 <version>2.3.2</version>
                 <configuration>
                     <finalName>${project.name}-${project.version}</finalName>
-                    <outputDirectory>D:\\AGM\Spigot\Servers\SPIGOT1.18.1\plugins</outputDirectory>
+                    <outputDirectory>D:\\AGM\Spigot\Servers\SPIGOT1.19\plugins</outputDirectory>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

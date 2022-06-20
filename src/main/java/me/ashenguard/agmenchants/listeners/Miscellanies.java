@@ -71,28 +71,17 @@ public class Miscellanies extends AdvancedListener {
             RuneInteractEvent interactEvent = new RuneInteractEvent(event.getPlayer(), mainRune, mainHand);
             Bukkit.getServer().getPluginManager().callEvent(interactEvent);
 
-            if (interactEvent.isCancelled()) {
-                event.setCancelled(true);
-                return;
-            }
-
-            boolean consume = mainRune.onEntityInteract(event.getPlayer(), mainHand, event.getRightClicked());
-            if (consume) {
+            if (interactEvent.isCancelled()) event.setCancelled(true);
+            else if (mainRune.onEntityInteract(event.getPlayer(), mainHand, event.getRightClicked())) {
                 int newAmount = mainHand.getAmount() - 1;
                 mainHand.setAmount(newAmount);
             }
-        }
-        if (offRune != null) {
+        } else if (offRune != null) {
             RuneInteractEvent interactEvent = new RuneInteractEvent(event.getPlayer(), offRune, mainHand);
             Bukkit.getServer().getPluginManager().callEvent(interactEvent);
 
-            if (interactEvent.isCancelled()) {
-                event.setCancelled(true);
-                return;
-            }
-
-            boolean consume = offRune.onEntityInteract(event.getPlayer(), mainHand, event.getRightClicked());
-            if (consume) {
+            if (interactEvent.isCancelled()) event.setCancelled(true);
+            else if (offRune.onEntityInteract(event.getPlayer(), mainHand, event.getRightClicked())) {
                 int newAmount = mainHand.getAmount() - 1;
                 mainHand.setAmount(newAmount);
             }

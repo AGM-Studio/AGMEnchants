@@ -141,7 +141,6 @@ public abstract class Rune implements Listener, Describable {
         return false;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canRuneItem(ItemStack item) {
         if (item == null || item.getType().equals(Material.AIR)) return false;
         if (RuneManager.hasItemRune(item)) return false;
